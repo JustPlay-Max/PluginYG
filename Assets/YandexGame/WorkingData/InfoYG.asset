@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa747916aa66674d96ea40ca8a480b2, type: 3}
+  m_Name: InfoYG
+  m_EditorClassIdentifier: 
+  scopes: 1
+  playerPhotoSize: 0
+  leaderboardEnable: 1
+  siteLock: 1
+  checkAdblock: 1
+  fullscreenAdChallenge: 0
+  staticRBTInGame: 0
+  LocalizationEnable: 1
+  callingLanguageCheck: 0
+  translateMethod: 2
+  CSVFileTranslate:
+    format: 0
+    name: TranslateCSV
+  languages:
+    ru: 1
+    en: 1
+    tr: 1
+    az: 0
+    be: 0
+    he: 0
+    hy: 0
+    ka: 0
+    et: 0
+    fr: 0
+    kk: 0
+    ky: 0
+    lt: 0
+    lv: 0
+    ro: 0
+    tg: 0
+    tk: 0
+    uk: 0
+    uz: 0
+    es: 0
+    pt: 0
+    ar: 0
+    id: 0
+    ja: 0
+    it: 0
+    de: 0
+    hi: 0
+  fonts:
+    defaultFont: []
+    ru: []
+    en: []
+    tr: []
+    az: []
+    be: []
+    he: []
+    hy: []
+    ka: []
+    et: []
+    fr: []
+    kk: []
+    ky: []
+    lt: []
+    lv: []
+    ro: []
+    tg: []
+    tk: []
+    uk: []
+    uz: []
+    es: []
+    pt: []
+    ar: []
+    id: []
+    ja: []
+    it: []
+    de: []
+    hi: []
+  SDKStartDelay: 0
+  debug: 1
