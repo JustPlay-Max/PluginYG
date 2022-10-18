@@ -47,10 +47,12 @@ namespace YG
                 else
                 {
                     DownloadHandlerTexture handlerTexture = webRequest.downloadHandler as DownloadHandlerTexture;
-                    rawImage.texture = handlerTexture.texture;
+                    if (handlerTexture.isDone)
+                        rawImage.texture = handlerTexture.texture;
 
                     rawImage.enabled = true;
-                    if (loadAnimObj) loadAnimObj.SetActive(false);
+                    if (loadAnimObj)
+                        loadAnimObj.SetActive(false);
                 }
             }
 #endif

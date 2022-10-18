@@ -16,72 +16,85 @@
     <script>window.yaContextCb = window.yaContextCb || []</script>
     <script src="https://yandex.ru/ads/system/context.js" async></script>
     #endif
+
     #if BANNER_DYNAMIC_1
     <style>
         #RTB1 {
             position: fixed;
             display: none;
         }
+
         #RTB1.show {
             display: block;
         }
     </style>
     #endif
+
     #if BANNER_DYNAMIC_2
     <style>
         #RTB2 {
             position: fixed;
             display: none;
         }
+
         #RTB2.show {
             display: block;
         }
     </style>
     #endif
+
     #if BANNER_DYNAMIC_3
     <style>
         #RTB3 {
             position: fixed;
             display: none;
         }
+
         #RTB3.show {
             display: block;
         }
     </style>
     #endif
+
     #if BANNER_DYNAMIC_4
     <style>
         #RTB4 {
             position: fixed;
             display: none;
         }
+
         #RTB4.show {
             display: block;
         }
     </style>
     #endif
+
     #if BANNER_DYNAMIC_5
     <style>
         #RTB5 {
             position: fixed;
             display: none;
         }
+
         #RTB5.show {
             display: block;
         }
     </style>
     #endif
+
     #if BANNER_DYNAMIC_6
     <style>
         #RTB6 {
             position: fixed;
             display: none;
         }
+
         #RTB6.show {
             display: block;
         }
     </style>
     #endif
+
     #if BANNER_STATIC_1
     <style>
         #RTBStatic1 {
@@ -92,9 +105,11 @@
             bottom: 0;
             display: none;
         }
+
         #RTBStatic1.show {
             display: block;
         }
+
         @media screen and (max-width: 800px) {
             #RTBStatic1 {
                 width: 320px;
@@ -105,6 +120,7 @@
         }
     </style>
     #endif
+
     #if BANNER_STATIC_2
     <style>
         #RTBStatic2 {
@@ -115,9 +131,11 @@
             top: 0;
             display: none;
         }
+
         #RTBStatic2.show {
             display: block;
         }
+
         @media screen and (max-width: 800px) {
             #RTBStatic2 {
                 width: 320px;
@@ -128,6 +146,7 @@
         }
     </style>
     #endif
+
 </head>
 <body class="{{{ SPLASH_SCREEN_STYLE.toLowerCase() }}}">
 <div id="unity-container" class="unity-desktop">
@@ -142,6 +161,7 @@
         <div class="spinner"></div>
     </div>
 </div>
+
 #if BANNER_DYNAMIC_1
 <div id="RTB1">
     <div id="yandex_rtb_{{{ BANNER_DYNAMIC_1 }}}"></div>
@@ -186,6 +206,7 @@
     </script>
 </div>
 #endif
+
 #if BANNER_DYNAMIC_2
 <div id="RTB2">
     <div id="yandex_rtb_{{{ BANNER_DYNAMIC_2 }}}"></div>
@@ -230,6 +251,7 @@
     </script>
 </div>
 #endif
+
 #if BANNER_DYNAMIC_3
 <div id="RTB3">
     <div id="yandex_rtb_{{{ BANNER_DYNAMIC_3 }}}"></div>
@@ -274,6 +296,7 @@
     </script>
 </div>
 #endif
+
 #if BANNER_DYNAMIC_4
 <div id="RTB4">
     <div id="yandex_rtb_{{{ BANNER_DYNAMIC_4 }}}"></div>
@@ -318,6 +341,7 @@
     </script>
 </div>
 #endif
+
 #if BANNER_DYNAMIC_5
 <div id="RTB5">
     <div id="yandex_rtb_{{{ BANNER_DYNAMIC_5 }}}"></div>
@@ -362,6 +386,7 @@
     </script>
 </div>
 #endif
+
 #if BANNER_DYNAMIC_6
 <div id="RTB6">
     <div id="yandex_rtb_{{{ BANNER_DYNAMIC_6 }}}"></div>
@@ -406,6 +431,7 @@
     </script>
 </div>
 #endif
+
 #if BANNER_STATIC_1
 <div id="RTBStatic1">
     <div id="yandex_rtb_{{{ BANNER_STATIC_1 }}}"></div>
@@ -436,6 +462,7 @@
     </script>
 </div>
 #endif
+
 #if BANNER_STATIC_2
 <div id="RTBStatic2">
     <div id="yandex_rtb_{{{ BANNER_STATIC_2 }}}"></div>
@@ -466,6 +493,7 @@
     </script>
 </div>
 #endif
+
 <script>
     const hideFullScreenButton = "";
     const buildUrl = "Build";
@@ -538,13 +566,8 @@
         });
     };
 
-    YaGames.init({
-        adv: {
-            onAdvClose: wasShown => {
-                console.info('adv closed');
-            }
-        }
-    }).then(ysdk => {
+    YaGames.init()
+        .then(ysdk => {
             ysdk.adv.showFullscreenAdv();
             window.ysdk = ysdk;
 

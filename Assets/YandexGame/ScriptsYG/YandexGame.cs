@@ -91,7 +91,7 @@ namespace YG
 
         private void Start()
         {
-            if (infoYG.fullscreenAdChallenge == InfoYG.FullscreenAdChallenge.atStartupAndSwitchScene)
+            if (infoYG.fullscreenAdChallenge == InfoYG.FullscreenAdChallenge.atStartupEndSwitchScene)
                 _FullscreenShow();
 
 #if !UNITY_EDITOR

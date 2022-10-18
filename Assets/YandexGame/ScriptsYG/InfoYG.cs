@@ -19,15 +19,15 @@ namespace YG
         [Tooltip("Вкл/Выкл лидерборды")]
         public bool leaderboardEnable;
 
-        [Tooltip("Защита от кражи игры для публикации на пиратских сайтах.")]
-        public bool siteLock = true;
+        [Tooltip("Защита от кражи игры для дальнейшей публикации на пиратских сайтах.\nНа данный момент известно, что SiteLock может блокировать игру в браузерах Firefox (при определенных настройках), Brave и других браузерах, в которых есть повышенная конфеденциальность. По этому игра может не работать у небольшого процента игроков! SiteLock запрашивает адрес игры. В случае, если игра запущена вне сайта Яндекс.Игры, неверный домен, не верный id игры, то будет произведен краш игры.")]
+        public bool siteLock;
 
         [Header("Ad")]
 
         [Tooltip("Защита от накруток вознаграждения при использовании рекламы за вознаграждение. Не даёт награду пользователям с AdBlock и другими аналогичными расширениями браузера. Пользователям, которые закрывают рекламу раньше времени. Предотвращает открытие нескольких рекламных блоков и соответственно получения чрезмерной награды.")]
         public bool checkAdblock = true;
 
-        public enum FullscreenAdChallenge { atStartupAndSwitchScene, onlyAtStartup };
+        public enum FullscreenAdChallenge { atStartupEndSwitchScene, onlyAtStartup };
         [Tooltip("Выберите atStartupEndSwitchScene если хотите, чтобы полноэкранная реклама вызывалась при запуске игры и при переключении сцены. Выберите onlyAtStartup если хотите, чтобы реклама вызывалась только при запуске игры.")]
         public FullscreenAdChallenge fullscreenAdChallenge;
 
@@ -90,7 +90,7 @@ namespace YG
             [Tooltip("UZBEK")] public bool uz;
             [Tooltip("SPANISH")] public bool es;
             [Tooltip("PORTUGUESE")] public bool pt;
-            [Tooltip("ARABAIN")] public bool ar;
+            [Tooltip("ARABIAN")] public bool ar;
             [Tooltip("INDONESIAN")] public bool id;
             [Tooltip("JAPANESE")] public bool ja;
             [Tooltip("ITALIAN")] public bool it;
@@ -127,7 +127,7 @@ namespace YG
             [Tooltip("UZBEK")] public Font[] uz;
             [Tooltip("SPANISH")] public Font[] es;
             [Tooltip("PORTUGUESE")] public Font[] pt;
-            [Tooltip("ARABAIN")] public Font[] ar;
+            [Tooltip("ARABIAN")] public Font[] ar;
             [Tooltip("INDONESIAN")] public Font[] id;
             [Tooltip("JAPANESE")] public Font[] ja;
             [Tooltip("ITALIAN")] public Font[] it;
@@ -138,6 +138,42 @@ namespace YG
         [ConditionallyVisible(nameof(LocalizationEnable))]
         [Tooltip("Здесь вы можете выбрать одельные шрифты для каждого языка.")]
         public Fonts fonts;
+
+        [System.Serializable]
+        public class FontsSizeCorrect
+        {
+            [Tooltip("RUSSIAN")] public int[] ru;
+            [Tooltip("ENGLISH")] public int[] en;
+            [Tooltip("TURKISH")] public int[] tr;
+            [Tooltip("AZERBAIJANIAN")] public int[] az;
+            [Tooltip("BELARUSIAN")] public int[] be;
+            [Tooltip("HEBREW")] public int[] he;
+            [Tooltip("ARMENIAN")] public int[] hy;
+            [Tooltip("GEORGIAN")] public int[] ka;
+            [Tooltip("ESTONIAN")] public int[] et;
+            [Tooltip("FRENCH")] public int[] fr;
+            [Tooltip("KAZAKH")] public int[] kk;
+            [Tooltip("KYRGYZ")] public int[] ky;
+            [Tooltip("LITHUANIAN")] public int[] lt;
+            [Tooltip("LATVIAN")] public int[] lv;
+            [Tooltip("ROMANIAN")] public int[] ro;
+            [Tooltip("TAJICK")] public int[] tg;
+            [Tooltip("TURKMEN")] public int[] tk;
+            [Tooltip("UKRAINIAN")] public int[] uk;
+            [Tooltip("UZBEK")] public int[] uz;
+            [Tooltip("SPANISH")] public int[] es;
+            [Tooltip("PORTUGUESE")] public int[] pt;
+            [Tooltip("ARABIAN")] public int[] ar;
+            [Tooltip("INDONESIAN")] public int[] id;
+            [Tooltip("JAPANESE")] public int[] ja;
+            [Tooltip("ITALIAN")] public int[] it;
+            [Tooltip("GERMAN")] public int[] de;
+            [Tooltip("HINDI")] public int[] hi;
+        }
+
+        [ConditionallyVisible(nameof(LocalizationEnable))]
+        [Tooltip("Вы можете скорректировать размер шрифта для каждого языка. Допустим, для Японского языка вы можете указать -3. В таком случае, если бы базовый размер был бы, например, 10, то для японского языка он бы стал равен 7.")]
+        public FontsSizeCorrect fontsSizeCorrect;
         #endregion LanguagesEnumeration
 
         [Header("Other")]
@@ -247,6 +283,38 @@ namespace YG
             else if (i == 24) return fonts.it;
             else if (i == 25) return fonts.de;
             else if (i == 26) return fonts.hi;
+            else return null;
+        }
+
+        public int[] GetFontSize(int i)
+        {
+            if (i == 0) return fontsSizeCorrect.ru;
+            else if (i == 1) return fontsSizeCorrect.en;
+            else if (i == 2) return fontsSizeCorrect.tr;
+            else if (i == 3) return fontsSizeCorrect.az;
+            else if (i == 4) return fontsSizeCorrect.be;
+            else if (i == 5) return fontsSizeCorrect.he;
+            else if (i == 6) return fontsSizeCorrect.hy;
+            else if (i == 7) return fontsSizeCorrect.ka;
+            else if (i == 8) return fontsSizeCorrect.et;
+            else if (i == 9) return fontsSizeCorrect.fr;
+            else if (i == 10) return fontsSizeCorrect.kk;
+            else if (i == 11) return fontsSizeCorrect.ky;
+            else if (i == 12) return fontsSizeCorrect.lt;
+            else if (i == 13) return fontsSizeCorrect.lv;
+            else if (i == 14) return fontsSizeCorrect.ro;
+            else if (i == 15) return fontsSizeCorrect.tg;
+            else if (i == 16) return fontsSizeCorrect.tk;
+            else if (i == 17) return fontsSizeCorrect.uk;
+            else if (i == 18) return fontsSizeCorrect.uz;
+            else if (i == 19) return fontsSizeCorrect.es;
+            else if (i == 20) return fontsSizeCorrect.pt;
+            else if (i == 21) return fontsSizeCorrect.ar;
+            else if (i == 22) return fontsSizeCorrect.id;
+            else if (i == 23) return fontsSizeCorrect.ja;
+            else if (i == 24) return fontsSizeCorrect.it;
+            else if (i == 25) return fontsSizeCorrect.de;
+            else if (i == 26) return fontsSizeCorrect.hi;
             else return null;
         }
     }

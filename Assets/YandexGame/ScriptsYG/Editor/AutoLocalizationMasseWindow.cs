@@ -131,7 +131,7 @@ namespace YG
             }
             else
             {
-                GUILayout.Label("Выберите Autolocation Inspector в настройках плагина\nInfoYG -> Translate Metod -> AutoLocalization", GUILayout.ExpandWidth(true));
+                GUILayout.Label("Select Auto Location Inspector in the plugin settings\nInfoYG -> Translate Metod -> AutoLocalization", GUILayout.ExpandWidth(true));
             }
         }
     }

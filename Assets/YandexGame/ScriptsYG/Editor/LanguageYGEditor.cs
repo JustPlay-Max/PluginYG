@@ -209,6 +209,14 @@ namespace YG
                             scr.tk = "";
                             scr.uk = "";
                             scr.uz = "";
+                            scr.es = "";
+                            scr.pt = "";
+                            scr.ar = "";
+                            scr.id = "";
+                            scr.ja = "";
+                            scr.it = "";
+                            scr.de = "";
+                            scr.hi = "";
 
                             scr.processTranslateLabel = "";
                             scr.countLang = processTranslateLabel;
@@ -255,7 +263,6 @@ namespace YG
                             }
                         }
                     }
-
 
                     if (labelProcess == false)
                         GUILayout.Label(processTranslateLabel + " Languages", GUILayout.Height(20));
@@ -360,18 +367,6 @@ namespace YG
                     else if (i == 24) scr.it = EditorGUILayout.TextArea(scr.it, GUILayout.Height(scr.textHeight));
                     else if (i == 25) scr.de = EditorGUILayout.TextArea(scr.de, GUILayout.Height(scr.textHeight));
                     else if (i == 26) scr.hi = EditorGUILayout.TextArea(scr.hi, GUILayout.Height(scr.textHeight));
-
-                    //if (CSVFile)
-                    //{
-                    //    if (GUILayout.Button("Imp", GUILayout.Width(35)))
-                    //    {
-
-                    //    }
-                    //    if (GUILayout.Button("Exp", GUILayout.Width(35)))
-                    //    {
-                    //        CSVManager.SetKeyFile(scr);
-                    //    }
-                    //}
 
                     GUILayout.EndHorizontal();
                 }

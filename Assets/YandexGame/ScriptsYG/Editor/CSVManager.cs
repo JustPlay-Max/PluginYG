@@ -305,7 +305,7 @@ namespace YG
             s[18] = "UZBEK";
             s[19] = "SPANISH";
             s[20] = "PORTUGUESE";
-            s[21] = "ARABAIN";
+            s[21] = "ARABIAN";
             s[22] = "INDONESIAN";
             s[23] = "JAPANESE";
             s[24] = "ITALIAN";

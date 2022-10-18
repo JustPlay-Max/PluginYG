@@ -2,17 +2,17 @@ mergeInto(LibraryManager.library,
 {
 	AuthorizationCheck: function (playerPhotoSize, scopes)
 	{
-		AuthorizationCheck(Pointer_stringify(playerPhotoSize), scopes);
+		AuthorizationCheck(UTF8ToString(playerPhotoSize), scopes);
 	},
 	
 	OpenAuthDialog: function (playerPhotoSize, scopes)
 	{
-		OpenAuthDialog(Pointer_stringify(playerPhotoSize), scopes);
+		OpenAuthDialog(UTF8ToString(playerPhotoSize), scopes);
 	},
 	
 	SaveYG: function (jsonData, flush)
 	{
-		SaveCloud(Pointer_stringify(jsonData), flush);
+		SaveCloud(UTF8ToString(jsonData), flush);
 	},
 	
 	LoadYG: function ()
@@ -27,12 +27,12 @@ mergeInto(LibraryManager.library,
 	
 	SetLeaderboardScores: function (nameLB, score)
 	{
-		SetLeaderboardScores(Pointer_stringify(nameLB), score);
+		SetLeaderboardScores(UTF8ToString(nameLB), score);
 	},
 	
 	GetLeaderboardScores: function (nameLB, maxPlayers, quantityTop, quantityAround, photoSizeLB, auth)
 	{
-		GetLeaderboardScores(Pointer_stringify(nameLB), maxPlayers, quantityTop, quantityAround, Pointer_stringify(photoSizeLB), auth);
+		GetLeaderboardScores(UTF8ToString(nameLB), maxPlayers, quantityTop, quantityAround, UTF8ToString(photoSizeLB), auth);
 	},
 
 	FullAdShow: function ()
@@ -123,60 +123,60 @@ mergeInto(LibraryManager.library,
 	RecalculateRTB1: function(_width, _height, _left, _top)
 	{
 		RecalculateRTB1(
-			Pointer_stringify(_width),
-			Pointer_stringify(_height),
-			Pointer_stringify(_left),
-			Pointer_stringify(_top));
+			UTF8ToString(_width),
+			UTF8ToString(_height),
+			UTF8ToString(_left),
+			UTF8ToString(_top));
 	},
 	
 	RecalculateRTB2: function(_width, _height, _left, _top)
 	{
 		RecalculateRTB2(
-			Pointer_stringify(_width),
-			Pointer_stringify(_height),
-			Pointer_stringify(_left),
-			Pointer_stringify(_top));
+			UTF8ToString(_width),
+			UTF8ToString(_height),
+			UTF8ToString(_left),
+			UTF8ToString(_top));
 	},
 	
 	RecalculateRTB3: function(_width, _height, _left, _top)
 	{
 		RecalculateRTB3(
-			Pointer_stringify(_width),
-			Pointer_stringify(_height),
-			Pointer_stringify(_left),
-			Pointer_stringify(_top));
+			UTF8ToString(_width),
+			UTF8ToString(_height),
+			UTF8ToString(_left),
+			UTF8ToString(_top));
 	},
 	
 	RecalculateRTB4: function(_width, _height, _left, _top)
 	{
 		RecalculateRTB4(
-			Pointer_stringify(_width),
-			Pointer_stringify(_height),
-			Pointer_stringify(_left),
-			Pointer_stringify(_top));
+			UTF8ToString(_width),
+			UTF8ToString(_height),
+			UTF8ToString(_left),
+			UTF8ToString(_top));
 	},
 	
 	RecalculateRTB5: function(_width, _height, _left, _top)
 	{
 		RecalculateRTB5(
-			Pointer_stringify(_width),
-			Pointer_stringify(_height),
-			Pointer_stringify(_left),
-			Pointer_stringify(_top));
+			UTF8ToString(_width),
+			UTF8ToString(_height),
+			UTF8ToString(_left),
+			UTF8ToString(_top));
 	},
 	
 	RecalculateRTB6: function(_width, _height, _left, _top)
 	{
 		RecalculateRTB6(
-			Pointer_stringify(_width),
-			Pointer_stringify(_height),
-			Pointer_stringify(_left),
-			Pointer_stringify(_top));
+			UTF8ToString(_width),
+			UTF8ToString(_height),
+			UTF8ToString(_left),
+			UTF8ToString(_top));
 	},
 	
 	PaintRBTInternal: function(rbt)
 	{
-		PaintRBT(Pointer_stringify(rbt));
+		PaintRBT(UTF8ToString(rbt));
 	},
 	
 	StaticRBTDeactivate: function()
@@ -186,7 +186,7 @@ mergeInto(LibraryManager.library,
 	
 	BuyPaymentsInternal: function(id)
 	{
-		BuyPayments(Pointer_stringify(id));
+		BuyPayments(UTF8ToString(id));
 	},
 	
 	GetPaymentsInternal: function()
@@ -196,7 +196,7 @@ mergeInto(LibraryManager.library,
 	
 	DeletePurchaseInternal: function(id)
 	{
-		DeletePurchase(Pointer_stringify(id));
+		DeletePurchase(UTF8ToString(id));
 	},
 	
 	DeleteAllPurchasesInternal: function()
