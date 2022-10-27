@@ -29,7 +29,6 @@ public class GetPlayerData : MonoBehaviour
             "\nplayerId - " + playerId +
             "\nauth - " + YandexGame.auth +
             "\nSDKEnabled - " + YandexGame.SDKEnabled +
-            "\nadBlock - " + YandexGame.adBlock +
             "\ninitializedLB - " + YandexGame.initializedLB +
             "\nphotoSize - " + YandexGame.photoSize;
 
@@ -46,6 +45,7 @@ public class GetPlayerData : MonoBehaviour
             "\nappID - " + YandexGame.EnvironmentData.appID +
             "\nbrowserLang - " + YandexGame.EnvironmentData.browserLang +
             "\npayload - " + YandexGame.EnvironmentData.payload +
-            "\npromptCanShow - " + YandexGame.EnvironmentData.promptCanShow;
+            "\npromptCanShow - " + YandexGame.EnvironmentData.promptCanShow +
+            "\nreviewCanShow - " + YandexGame.EnvironmentData.reviewCanShow;
     }
 }

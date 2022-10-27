@@ -11,8 +11,8 @@ public class RewardedAd : MonoBehaviour
 
     void Start() => AdMoney(0);
 
-    private void OnEnable() => YandexGame.CloseVideoEvent += Rewarded;
-    private void OnDisable() => YandexGame.CloseVideoEvent -= Rewarded;
+    private void OnEnable() => YandexGame.RewardVideoEvent += Rewarded;
+    private void OnDisable() => YandexGame.RewardVideoEvent -= Rewarded;
 
     void Rewarded(int id)
     {

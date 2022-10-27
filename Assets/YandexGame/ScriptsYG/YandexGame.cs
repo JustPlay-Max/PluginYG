@@ -21,12 +21,14 @@ namespace YG
         [Space(30)]
         public UnityEvent OpenVideoAd;
         public UnityEvent CloseVideoAd;
-        public UnityEvent CheaterVideoAd;
+        public UnityEvent RewardVideoAd;
+        public UnityEvent ErrorVideoAd;
         [Space(30)]
         public UnityEvent PurchaseSuccess;
         public UnityEvent PurchaseFailed;
         [Space(30)]
         public UnityEvent PromptDo;
+        public UnityEvent ReviewDo;
 
         #region Data Fields
         public static bool SDKEnabled { get => _SDKEnabled; }
@@ -42,11 +44,6 @@ namespace YG
         {
             get => _playerPhoto;
             set => _playerPhoto = value;
-        }
-        public static bool adBlock
-        {
-            get => _adBlock;
-            set => _adBlock = value;
         }
         public static string photoSize
         {
@@ -125,7 +122,7 @@ namespace YG
                 _RequestingEnvironmentData();
 
 #if !UNITY_EDITOR
-                if (infoYG.siteLock)
+                if (infoYG.sitelock)
                     Invoke("SiteLock", 1);
 #endif
             }
@@ -349,7 +346,8 @@ namespace YG
 
         public void _FullscreenShow()
         {
-            if (timerShowAd >= 31)
+            if (!nowFullAd && !nowVideoAd &&
+                timerShowAd >= infoYG.fullscreenAdInterval + 1)
             {
                 timerShowAd = 0;
 #if !UNITY_EDITOR
@@ -357,7 +355,7 @@ namespace YG
 #else
                 Message("Fullscren Ad");
                 OpenFullscreen();
-                StartCoroutine(TestCloseFullAd());
+                StartCoroutine(CloseFullAdInEditor());
 #endif
             }
             else Message("(ru) Отображение полноэкранной рекламы заблокировано! Еще рано.  (en) The display of full-screen ads is blocked! It's still early.");
@@ -370,16 +368,16 @@ namespace YG
         }
 
 #if UNITY_EDITOR
-        IEnumerator TestCloseFullAd()
+        IEnumerator CloseFullAdInEditor()
         {
             GameObject errMessage = new GameObject { name = "TestFullAd" };
             Canvas canvas = errMessage.AddComponent<Canvas>();
-            canvas.sortingOrder = 9995;
+            canvas.sortingOrder = 32767;
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             errMessage.AddComponent<GraphicRaycaster>();
             errMessage.AddComponent<RawImage>().color = new Color(0, 1, 0, 0.5f);
 
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
 
             Destroy(errMessage);
             CloseFullscreen();
@@ -393,32 +391,17 @@ namespace YG
 
         public void _RewardedShow(int id)
         {
-            Message("Rewarded Ad");
-#if !UNITY_EDITOR
-            if (infoYG.checkAdblock)
-            {
-                if (!adBlock)
-                {
-                    adBlock = true;
-                    StartCoroutine(MissAdBlock(3));
-                    RewardedShow(id);
-                }
-            }
-            else RewardedShow(id);
-#else
-            if (!infoYG.checkAdblock)
-            {
-                Message("Cheater!");
+            Message("Rewarded Ad Show");
 
-                CheaterVideoAd.Invoke();
-                CheaterVideoEvent?.Invoke();
-            }
-            else
+            if (!nowFullAd && !nowVideoAd)
             {
-                OpenVideo(id);
-                StartCoroutine(TestCloseVideo(id));
-            }
+#if !UNITY_EDITOR
+                RewardedShow(id);
+#else
+                OpenVideo();
+                StartCoroutine(CloseVideoInEditor(id));
 #endif
+            }
         }
 
         static Action<int> onRewAdShow;
@@ -427,26 +410,21 @@ namespace YG
             onRewAdShow?.Invoke(id);
         }
 
-        IEnumerator MissAdBlock(float timer)
-        {
-            yield return new WaitForSecondsRealtime(timer);
-            _adBlock = false;
-        }
-
 #if UNITY_EDITOR
-        IEnumerator TestCloseVideo(int id)
+        IEnumerator CloseVideoInEditor(int id)
         {
             GameObject errMessage = new GameObject { name = "TestVideoAd" };
             Canvas canvas = errMessage.AddComponent<Canvas>();
-            canvas.sortingOrder = 9995;
+            canvas.sortingOrder = 32767;
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             errMessage.AddComponent<GraphicRaycaster>();
             errMessage.AddComponent<RawImage>().color = new Color(0, 0, 1, 0.5f);
 
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
 
             Destroy(errMessage);
-            CloseVideo(id);
+            CloseVideo();
+            RewardVideo(id);
         }
 #endif
         #endregion Rewarded Video Show
@@ -498,21 +476,21 @@ namespace YG
         #endregion Requesting Environment Data
 
         #region URL
-        public void _OnURL(string url)
+        public void _OnURL_Yandex_DefineDomain(string url)
         {
+            Message("URL yandex.DefineDomain");
 #if !UNITY_EDITOR
             Application.OpenURL("https://yandex." + EnvironmentData.domain + "/games/" + url);
 #endif
 #if UNITY_EDITOR
             Application.OpenURL("https://yandex." + "ru/games/" + url);
 #endif
-            Message("URL");
         }
 
-        public void _OnURL_ru(string url)
+        public void _OnAnyURL(string url)
         {
-            Application.OpenURL("https://yandex.ru/games/" + url);
-            Message("URL.ru");
+            Message("Any URL");
+            Application.OpenURL(url);
         }
         #endregion URL
 
@@ -679,21 +657,30 @@ namespace YG
 
         #endregion Payments
 
-        #region Review
+        #region Review Show
         [DllImport("__Internal")]
-        private static extern void Review();
+        private static extern void ReviewInternal();
 
-        public void _Review()
+        public void _ReviewShow(bool authDialog)
         {
-#if !UNITY_EDITOR
-                    if (_auth)
-                      Review();
-                  else
-                      _OpenAuthDialog();
-#endif
             Message("Review");
+#if !UNITY_EDITOR
+            if (authDialog)
+            {
+                if (_auth) ReviewInternal();
+                else _OpenAuthDialog();
+            }
+            else ReviewInternal();
+#else
+            ReviewSent("true");
+#endif
         }
-#endregion Review
+
+        public static void ReviewShow(bool authDialog)
+        {
+            GameObject.Find("YandexGame").GetComponent<YandexGame>()._ReviewShow(authDialog);
+        }
+        #endregion Review Show
 
         #region Prompt
         [DllImport("__Internal")]
@@ -714,6 +701,22 @@ namespace YG
         }
         public void _PromptShow() => PromptShow();
         #endregion Prompt
+
+        #region Sticky Ad
+        [DllImport("__Internal")]
+        private static extern void StickyAdActivityInternal(bool activity);
+
+        public static void StickyAdActivity(bool activity)
+        {
+            if (activity) Message("Sticky Ad Show");
+            else Message("Sticky Ad Hide");
+#if !UNITY_EDITOR
+            StickyAdActivityInternal(activity);
+#endif
+        }
+
+        public void _StickyAdActivity(bool activity) => StickyAdActivity(activity);
+        #endregion Sticky Ad
 
 
         // Receiving messages
@@ -737,34 +740,35 @@ namespace YG
         #endregion Fullscren Ad
 
         #region Rewarded Video
-        public static Action<int> OpenVideoEvent;
-
-        public void OpenVideo(int id)
+        public static Action OpenVideoEvent;
+        public void OpenVideo()
         {
-            OpenVideoEvent?.Invoke(id);
+            OpenVideoEvent?.Invoke();
             OpenVideoAd.Invoke();
             nowVideoAd = true;
         }
 
-        public static Action<int> CloseVideoEvent;
-        public static Action CheaterVideoEvent;
-
-        public void CloseVideo(int id)
+        public static Action CloseVideoEvent;
+        public void CloseVideo()
         {
             nowVideoAd = false;
-            if (infoYG.checkAdblock && _adBlock)
-            {
-                CheaterVideoAd.Invoke();
-                CheaterVideoEvent?.Invoke();
+            
+            CloseVideoAd.Invoke();
+            CloseVideoEvent?.Invoke();
+        }
 
-                StopAllCoroutines();
-                _adBlock = false;
-            }
-            else
-            {
-                CloseVideoAd.Invoke();
-                CloseVideoEvent?.Invoke(id);
-            }
+        public static Action<int> RewardVideoEvent;
+        public void RewardVideo(int id)
+        {
+            RewardVideoAd.Invoke();
+            RewardVideoEvent?.Invoke(id);
+        }
+
+        public static Action ErrorVideoEvent;
+        public void ErrorVideo()
+        {
+            ErrorVideoAd.Invoke();
+            ErrorVideoEvent?.Invoke();
         }
         #endregion Rewarded Video
 
@@ -1071,7 +1075,19 @@ namespace YG
             PurchaseFailed?.Invoke();
             PurchaseFailedEvent?.Invoke(id);
         }
-#endregion Payments
+        #endregion Payments
+
+        #region Review
+        public static Action<bool> ReviewSentEvent;
+        public void ReviewSent(string feedbackSent)
+        {
+            EnvironmentData.reviewCanShow = false;
+
+            bool sent = feedbackSent == "true" ? true : false;
+            ReviewSentEvent?.Invoke(sent);
+            if (sent) ReviewDo?.Invoke();
+        }
+        #endregion Review
 
         #region Prompt
         public static Action PromptSuccessEvent;
@@ -1082,6 +1098,7 @@ namespace YG
 
             PromptDo?.Invoke();
             PromptSuccessEvent?.Invoke();
+            EnvironmentData.promptCanShow = false;
         }
         #endregion Prompt
 
@@ -1139,6 +1156,7 @@ namespace YG
             public string browserLang;
             public string payload;
             public bool promptCanShow;
+            public bool reviewCanShow;
         }
 
         public class JsonPayments

@@ -60,7 +60,6 @@ namespace YG
                     "\nplayerId - " + playerId +
                     "\nauth - " + YandexGame.auth +
                     "\nSDKEnabled - " + YandexGame.SDKEnabled +
-                    "\nadBlock - " + YandexGame.adBlock +
                     "\ninitializedLB - " + YandexGame.initializedLB +
                     "\nphotoSize - " + YandexGame.photoSize +
                     "\ndomain - " + YandexGame.EnvironmentData.domain +
@@ -73,7 +72,8 @@ namespace YG
                     "\nappID - " + YandexGame.EnvironmentData.appID +
                     "\nbrowserLang - " + YandexGame.EnvironmentData.browserLang +
                     "\npayload - " + YandexGame.EnvironmentData.payload +
-                    "\npromptCanShow - " + YandexGame.EnvironmentData.promptCanShow;
+                    "\npromptCanShow - " + YandexGame.EnvironmentData.promptCanShow +
+                    "\nreviewCanShow - " + YandexGame.EnvironmentData.reviewCanShow;
             }
         }
 
@@ -104,16 +104,20 @@ namespace YG
             YandexGame.RewVideoShow(id);
         }
 
+        public void StickyAdShowButton() => YandexGame.StickyAdActivity(true);
+        public void StickyAdHideButton() => YandexGame.StickyAdActivity(false);
+
+
         public static Action onRBTRecalculate;
         public void RBTRecalculateButton()
         {
             onRBTRecalculate?.Invoke();
         }
 
-        public static Action onRBTRender;
-        public void RBTRenderButton()
+        public static Action onRBTExecuteCode;
+        public void RBTExecuteCodeButton()
         {
-            onRBTRender?.Invoke();
+            onRBTExecuteCode?.Invoke();
         }
 
         public static Action<bool> onRBTActivity;
@@ -134,7 +138,7 @@ namespace YG
 
         public void ReviewButton()
         {
-            GameObject.FindObjectOfType<YandexGame>()._Review();
+            YandexGame.ReviewShow(false);
         }
 
         public void BuyPurchaseButton()

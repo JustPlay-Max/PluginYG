@@ -16,16 +16,17 @@ namespace YG
         [Tooltip("Кол-во получаемых записей возле пользователя")]
         [Range(0, 20)]
         public int quantityAround = 3;
+        public enum UpdateLBMethod { Start, OnEnable, DoNotUpdate };
+        [Tooltip(@"Когда следует обновлять лидерборд?\nStart - Обновлять в методе Start.\nOnEnable - Обновлять при каждой активации объекта (в методе OnEnable)\nDoNotUpdate - Не обновлять лидерборд с помощью данного скрипта (подразоумивается, что метод обновления ""UpdateLB"" вы будете запускать сами, когда вам потребуется.")]
+        public UpdateLBMethod updateLBMethod = UpdateLBMethod.OnEnable;
         [Tooltip("Перетащите компонент Text для записи описания таблицы, если вы не выбрали продвинутую таблицу (advanced)")]
         public Text entriesText;
-        [Tooltip("Продвинутая таблица. Поддерживает подгрузку авата и конвертацию рекордов в тип Time")]
+        [Tooltip("Продвинутая таблица. Поддерживает подгрузку авата и конвертацию рекордов в тип Time. Подгружает все данные в отдельные элементы интерфейса.")]
         public bool advanced;
-        public enum PlayerPhotoSize { nonePhoto, small, medium, large };
-        [Tooltip("Размер подгружаемых изображений игроков. nonePhoto = не подгружать изображение")]
+        public enum PlayerPhoto { NonePhoto, Small, Medium, Large };
+        [Tooltip("Размер подгружаемых изображений игроков. NonePhoto = не подгружать изображение")]
         [ConditionallyVisible(nameof(advanced))]
-        public bool loadAvatars = true;
-        [ConditionallyVisible(nameof(advanced))]
-        public PlayerPhotoSize playerPhotoSize;
+        public PlayerPhoto playerPhoto = PlayerPhoto.Small;
         [Tooltip("Конвертация полученных рекордов в Time тип")]
         [ConditionallyVisible(nameof(advanced))]
         public bool timeTypeConvert;
@@ -34,20 +35,29 @@ namespace YG
 
         void Start()
         {
-            if (playerPhotoSize == PlayerPhotoSize.nonePhoto)
+            if (playerPhoto == PlayerPhoto.NonePhoto)
                 photoSize = "nonePhoto";
-            if (playerPhotoSize == PlayerPhotoSize.small)
+            if (playerPhoto == PlayerPhoto.Small)
                 photoSize = "small";
-            else if (playerPhotoSize == PlayerPhotoSize.medium)
+            else if (playerPhoto == PlayerPhoto.Medium)
                 photoSize = "medium";
-            else if (playerPhotoSize == PlayerPhotoSize.large)
+            else if (playerPhoto == PlayerPhoto.Large)
                 photoSize = "large";
 
-            if(YandexGame.initializedLB) 
+            if (updateLBMethod == UpdateLBMethod.Start
+                && YandexGame.initializedLB)
                 UpdateLB();
         }
 
-        private void OnEnable() => YandexGame.UpdateLbEvent += OnUpdateLB;
+        private void OnEnable()
+        {
+            YandexGame.UpdateLbEvent += OnUpdateLB;
+
+            if (updateLBMethod == UpdateLBMethod.OnEnable
+                && YandexGame.initializedLB)
+                UpdateLB();
+        }
+
         private void OnDisable() => YandexGame.UpdateLbEvent -= OnUpdateLB;
 
         void OnUpdateLB(string _name, string entriesLB, int[] rank, string[] photo, string[] playersName, int[] scorePlayers, bool auth)
@@ -110,7 +120,7 @@ namespace YG
                             else 
                                 sampleContainer.transform.Find("Score").GetComponentInChildren<Text>().text = scorePlayers[i].ToString("D4").Insert(2, ":");
 
-                            if (loadAvatars && photo[i] != "nonePhoto")
+                            if (playerPhoto != PlayerPhoto.NonePhoto && photo[i] != "nonePhoto")
                                 sampleContainer.transform.Find("Photo").GetComponentInChildren<ImageLoadYG>().Load(photo[i]);
                         }
                     }

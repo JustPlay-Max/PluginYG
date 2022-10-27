@@ -55,7 +55,7 @@ mergeInto(LibraryManager.library,
 		RequestingEnvironmentData();
 	},	
 
-	Review: function()
+	ReviewInternal: function()
 	{
 		Review();
 	},
@@ -70,54 +70,14 @@ mergeInto(LibraryManager.library,
 		ActivityRTB2(state);
 	},
 	
-	ActivityRTB3: function(state)
+	ExecuteCodeRTB1: function()
 	{
-		ActivityRTB3(state);
+		ExecuteCodeRTB1();
 	},
 	
-	ActivityRTB4: function(state)
+	ExecuteCodeRTB2: function()
 	{
-		ActivityRTB4(state);
-	},
-	
-	ActivityRTB5: function(state)
-	{
-		ActivityRTB5(state);
-	},
-	
-	ActivityRTB6: function(state)
-	{
-		ActivityRTB6(state);
-	},
-	
-	RenderRTB1: function()
-	{
-		RenderRTB1();
-	},
-	
-	RenderRTB2: function()
-	{
-		RenderRTB2();
-	},
-	
-	RenderRTB3: function()
-	{
-		RenderRTB3();
-	},
-	
-	RenderRTB4: function()
-	{
-		RenderRTB4();
-	},
-	
-	RenderRTB5: function()
-	{
-		RenderRTB5();
-	},
-	
-	RenderRTB6: function()
-	{
-		RenderRTB6();
+		ExecuteCodeRTB2();
 	},
 	
 	RecalculateRTB1: function(_width, _height, _left, _top)
@@ -132,42 +92,6 @@ mergeInto(LibraryManager.library,
 	RecalculateRTB2: function(_width, _height, _left, _top)
 	{
 		RecalculateRTB2(
-			UTF8ToString(_width),
-			UTF8ToString(_height),
-			UTF8ToString(_left),
-			UTF8ToString(_top));
-	},
-	
-	RecalculateRTB3: function(_width, _height, _left, _top)
-	{
-		RecalculateRTB3(
-			UTF8ToString(_width),
-			UTF8ToString(_height),
-			UTF8ToString(_left),
-			UTF8ToString(_top));
-	},
-	
-	RecalculateRTB4: function(_width, _height, _left, _top)
-	{
-		RecalculateRTB4(
-			UTF8ToString(_width),
-			UTF8ToString(_height),
-			UTF8ToString(_left),
-			UTF8ToString(_top));
-	},
-	
-	RecalculateRTB5: function(_width, _height, _left, _top)
-	{
-		RecalculateRTB5(
-			UTF8ToString(_width),
-			UTF8ToString(_height),
-			UTF8ToString(_left),
-			UTF8ToString(_top));
-	},
-	
-	RecalculateRTB6: function(_width, _height, _left, _top)
-	{
-		RecalculateRTB6(
 			UTF8ToString(_width),
 			UTF8ToString(_height),
 			UTF8ToString(_left),
@@ -207,6 +131,11 @@ mergeInto(LibraryManager.library,
 	PromptShowInternal: function()
 	{
 		PromptShow();
+	},
+	
+	StickyAdActivityInternal: function(show)
+	{
+		StickyAdActivity(show);
 	},
 	
 	GetURLFromPage: function () {

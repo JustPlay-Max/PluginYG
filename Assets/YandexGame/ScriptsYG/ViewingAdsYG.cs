@@ -38,7 +38,6 @@ namespace YG
             YandexGame.CloseFullAdEvent += CloseFullAd;
             YandexGame.OpenVideoEvent += OpenRewAd;
             YandexGame.CloseVideoEvent += CloseRewAd;
-            YandexGame.CheaterVideoEvent += CloseRewAdError;
         }
         private void OnDisable()
         {
@@ -46,7 +45,6 @@ namespace YG
             YandexGame.CloseFullAdEvent -= CloseFullAd;
             YandexGame.OpenVideoEvent -= OpenRewAd;
             YandexGame.CloseVideoEvent -= CloseRewAd;
-            YandexGame.CheaterVideoEvent -= CloseRewAdError;
         }
 
         void OpenFullAd()
@@ -59,17 +57,12 @@ namespace YG
             Pause(false);
         }
 
-        void OpenRewAd(int ID)
+        void OpenRewAd()
         {
             Pause(true);
         }
 
-        void CloseRewAd(int ID)
-        {
-            Pause(false);
-        }
-
-        void CloseRewAdError()
+        void CloseRewAd()
         {
             Pause(false);
         }

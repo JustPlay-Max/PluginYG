@@ -7,14 +7,16 @@ namespace YG
 {
     public class BannerYG : MonoBehaviour
     {
-        public enum RTBNumber { One, Two, Three, Four, Five, Six };
-        [Tooltip("Всего доступно шесть баннеров. Выберите номер данного баннера.")]
+        public enum RTBNumber { One, Two };
+        [Tooltip("Всего доступно два баннера. Выберите номер данного баннера.")]
         public RTBNumber RTB_Number;
         public enum Device { desktopAndMobile, onlyDesktop, onlyMobile };
         [Tooltip(" Desktop And Mobile - Отображение баннера на всех устройствах.\n Only Desktop - Отображение баннера только на компьютере.\n Only Mobile - Отображение баннера только на мобильных устройствах (телефонах и планшетах).")]
         public Device device;
         [Tooltip(" Минимальный размер блока. RBT-блок не будет меньше установленного значения.\n X - минимальная ширина.\n Y - минимальная высота.")]
         public Vector2 minSize = new(20, 20);
+        [Tooltip("Выполнять код каждые 31сек.")]
+        public bool codeExecutionTimer31Sec;
 
         [HideInInspector]
         public RectTransform rt;
@@ -33,10 +35,6 @@ namespace YG
 #else
         static float timerRBT1 = 31;
         static float timerRBT2 = 31;
-        static float timerRBT3 = 31;
-        static float timerRBT4 = 31;
-        static float timerRBT5 = 31;
-        static float timerRBT6 = 31;
         bool focus = true;
 
         void OnApplicationFocus(bool hasFocus)
@@ -64,11 +62,10 @@ namespace YG
             YandexGame.CloseFullAdEvent += ActivateRTB;
             YandexGame.OpenVideoEvent += DeactivateRTB;
             YandexGame.CloseVideoEvent += ActivateRTB;
-            YandexGame.CheaterVideoEvent += ActivateRTB;
 
             DebuggingModeYG.onRBTActivity += ActivityRTB;
             DebuggingModeYG.onRBTRecalculate += RecalculateRect;
-            DebuggingModeYG.onRBTRender += RenderRBT;
+            DebuggingModeYG.onRBTExecuteCode += ExecuteCodeRBT;
 
             focus = true;
 
@@ -83,11 +80,10 @@ namespace YG
             YandexGame.CloseFullAdEvent -= ActivateRTB;
             YandexGame.OpenVideoEvent -= DeactivateRTB;
             YandexGame.CloseVideoEvent -= ActivateRTB;
-            YandexGame.CheaterVideoEvent -= ActivateRTB;
 
             DebuggingModeYG.onRBTActivity -= ActivityRTB;
             DebuggingModeYG.onRBTRecalculate -= RecalculateRect;
-            DebuggingModeYG.onRBTRender -= RenderRBT;
+            DebuggingModeYG.onRBTExecuteCode -= ExecuteCodeRBT;
 
             DeactivateRTB();
         }
@@ -107,7 +103,7 @@ namespace YG
             if (CheckDevice())
             {
                 // Обновление RTB-блоков
-                if (YandexGame.SDKEnabled && focus && NoAds())
+                if (codeExecutionTimer31Sec && YandexGame.SDKEnabled && focus && NoAds())
                 {
                     if (RTB_Number == RTBNumber.One)
                     {
@@ -117,7 +113,7 @@ namespace YG
                         {
                             timerRBT1 = 0;
                             RecalculateRect();
-                            RenderRTB1();
+                            ExecuteCodeRTB1();
                         }
                     }
                     else if (RTB_Number == RTBNumber.Two)
@@ -128,51 +124,7 @@ namespace YG
                         {
                             timerRBT2 = 0;
                             RecalculateRect();
-                            RenderRTB2();
-                        }
-                    }
-                    else if (RTB_Number == RTBNumber.Three)
-                    {
-                        timerRBT3 += Time.unscaledDeltaTime;
-
-                        if (timerRBT3 >= 31)
-                        {
-                            timerRBT3 = 0;
-                            RecalculateRect();
-                            RenderRTB3();
-                        }
-                    }
-                    else if (RTB_Number == RTBNumber.Four)
-                    {
-                        timerRBT4 += Time.unscaledDeltaTime;
-
-                        if (timerRBT4 >= 31)
-                        {
-                            timerRBT4 = 0;
-                            RecalculateRect();
-                            RenderRTB4();
-                        }
-                    }
-                    else if (RTB_Number == RTBNumber.Five)
-                    {
-                        timerRBT5 += Time.unscaledDeltaTime;
-
-                        if (timerRBT5 >= 31)
-                        {
-                            timerRBT5 = 0;
-                            RecalculateRect();
-                            RenderRTB5();
-                        }
-                    }
-                    else if (RTB_Number == RTBNumber.Six)
-                    {
-                        timerRBT6 += Time.unscaledDeltaTime;
-
-                        if (timerRBT6 >= 31)
-                        {
-                            timerRBT6 = 0;
-                            RecalculateRect();
-                            RenderRTB6();
+                            ExecuteCodeRTB2();
                         }
                     }
                 }
@@ -233,10 +185,6 @@ namespace YG
 
                 if (RTB_Number == RTBNumber.One) RecalculateRTB1(_width, _height, _left, _top);
                 else if (RTB_Number == RTBNumber.Two) RecalculateRTB2(_width, _height, _left, _top);
-                else if (RTB_Number == RTBNumber.Three) RecalculateRTB3(_width, _height, _left, _top);
-                else if (RTB_Number == RTBNumber.Four) RecalculateRTB4(_width, _height, _left, _top);
-                else if (RTB_Number == RTBNumber.Five) RecalculateRTB5(_width, _height, _left, _top);
-                else if (RTB_Number == RTBNumber.Six) RecalculateRTB6(_width, _height, _left, _top);
             }
         }
 
@@ -258,30 +206,6 @@ namespace YG
                     ActivityRTB2(state);
                     if (PaintBlock())
                         PaintRBT("RTB2");
-                }
-                else if (RTB_Number == RTBNumber.Three)
-                {
-                    ActivityRTB3(state);
-                    if (PaintBlock())
-                        PaintRBT("RTB3");
-                }
-                else if (RTB_Number == RTBNumber.Four)
-                {
-                    ActivityRTB4(state);
-                    if (PaintBlock())
-                        PaintRBT("RTB4");
-                }
-                else if (RTB_Number == RTBNumber.Five)
-                {
-                    ActivityRTB5(state);
-                    if (PaintBlock())
-                        PaintRBT("RTB5");
-                }
-                else if (RTB_Number == RTBNumber.Six)
-                {
-                    ActivityRTB6(state);
-                    if (PaintBlock())
-                        PaintRBT("RTB6");
                 }
             }
         }
@@ -311,14 +235,10 @@ namespace YG
         void DeactivateRTB() => ActivityRTB(false);
         void DeactivateRTB(int id) => DeactivateRTB();
 
-        void RenderRBT()
+        public void ExecuteCodeRBT()
         {
-            if (RTB_Number == RTBNumber.One) RenderRTB1();
-            else if (RTB_Number == RTBNumber.Two) RenderRTB2();
-            else if (RTB_Number == RTBNumber.Three) RenderRTB3();
-            else if (RTB_Number == RTBNumber.Four) RenderRTB4();
-            else if (RTB_Number == RTBNumber.Five) RenderRTB5();
-            else if (RTB_Number == RTBNumber.Six) RenderRTB6();
+            if (RTB_Number == RTBNumber.One) ExecuteCodeRTB1();
+            else if (RTB_Number == RTBNumber.Two) ExecuteCodeRTB2();
         }
 
         [DllImport("__Internal")]
@@ -335,32 +255,6 @@ namespace YG
             string left,
             string top);
 
-        [DllImport("__Internal")]
-        private static extern void RecalculateRTB3(
-            string width,
-            string height,
-            string left,
-            string top);
-
-        [DllImport("__Internal")]
-        private static extern void RecalculateRTB4(
-            string width,
-            string height,
-            string left,
-            string top);
-        [DllImport("__Internal")]
-        private static extern void RecalculateRTB5(
-            string width,
-            string height,
-            string left,
-            string top);
-        [DllImport("__Internal")]
-        private static extern void RecalculateRTB6(
-            string width,
-            string height,
-            string left,
-            string top);
-
 
         [DllImport("__Internal")]
         private static extern void ActivityRTB1(bool state);
@@ -368,36 +262,12 @@ namespace YG
         [DllImport("__Internal")]
         private static extern void ActivityRTB2(bool state);
 
-        [DllImport("__Internal")]
-        private static extern void ActivityRTB3(bool state);
 
         [DllImport("__Internal")]
-        private static extern void ActivityRTB4(bool state);
+        private static extern void ExecuteCodeRTB1();
 
         [DllImport("__Internal")]
-        private static extern void ActivityRTB5(bool state);
-
-        [DllImport("__Internal")]
-        private static extern void ActivityRTB6(bool state);
-
-
-        [DllImport("__Internal")]
-        private static extern void RenderRTB1();
-
-        [DllImport("__Internal")]
-        private static extern void RenderRTB2();
-
-        [DllImport("__Internal")]
-        private static extern void RenderRTB3();
-
-        [DllImport("__Internal")]
-        private static extern void RenderRTB4();
-
-        [DllImport("__Internal")]
-        private static extern void RenderRTB5();
-
-        [DllImport("__Internal")]
-        private static extern void RenderRTB6();
+        private static extern void ExecuteCodeRTB2();
 
 
         [DllImport("__Internal")]

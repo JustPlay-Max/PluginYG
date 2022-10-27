@@ -14,14 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopes: 1
   playerPhotoSize: 0
-  leaderboardEnable: 1
-  siteLock: 1
-  checkAdblock: 1
   fullscreenAdChallenge: 0
-  staticRBTInGame: 0
+  leaderboardEnable: 1
+  sitelock: 0
   LocalizationEnable: 1
   callingLanguageCheck: 0
   translateMethod: 0
+  domainAutoLocalization: com
   CSVFileTranslate:
     format: 0
     name: TranslateCSV
@@ -83,7 +82,7 @@ MonoBehaviour:
     de: []
     hi: []
   fontsSizeCorrect:
-    ru: 
+    ru: 00000000
     en: 
     tr: 
     az: 
@@ -111,4 +110,7 @@ MonoBehaviour:
     de: 
     hi: 
   SDKStartDelay: 0
+  fullscreenAdInterval: 60
+  durationOfAdSimulation: 0.5
+  staticRBTInGame: 0
   debug: 1
