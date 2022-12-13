@@ -2858,8 +2858,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 1411112422836444059}
+        m_TargetAssemblyTypeName: YG.LeaderboardYG, Assembly-CSharp
         m_MethodName: UpdateLB
         m_Mode: 1
         m_Arguments:
@@ -3446,8 +3446,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 6787629642464328774}
+        m_TargetAssemblyTypeName: NewResultLeaderboard, Assembly-CSharp
         m_MethodName: NewName
         m_Mode: 1
         m_Arguments:
@@ -8113,6 +8113,7 @@ GameObject:
   - component: {fileID: 4457900677149001222}
   - component: {fileID: 3885390606968718545}
   - component: {fileID: 1411112422836444059}
+  - component: {fileID: 6787629642464328774}
   m_Layer: 5
   m_Name: LeaderboardEntriesText
   m_TagString: Untagged
@@ -8200,6 +8201,21 @@ MonoBehaviour:
   advanced: 0
   playerPhoto: 1
   timeTypeConvert: 0
+--- !u!114 &6787629642464328774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6387430479938295044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77da4e298b787504f9a35fe14840b10a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardYG: {fileID: 1411112422836444059}
+  nameLbInputField: {fileID: 5407574778346013687}
+  scoreLbInputField: {fileID: 3340745602212635622}
 --- !u!1 &6887729088680649376
 GameObject:
   m_ObjectHideFlags: 0
@@ -8616,8 +8632,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 6787629642464328774}
+        m_TargetAssemblyTypeName: NewResultLeaderboard, Assembly-CSharp
         m_MethodName: NewScore
         m_Mode: 1
         m_Arguments:

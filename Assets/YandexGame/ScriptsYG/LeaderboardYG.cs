@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityToolbag;
 
@@ -30,6 +31,8 @@ namespace YG
         [Tooltip("Конвертация полученных рекордов в Time тип")]
         [ConditionallyVisible(nameof(advanced))]
         public bool timeTypeConvert;
+        [ConditionallyVisible("timeTypeConvert"), Range(0, 3), Tooltip("Сколько показывать сотых (цифр после запятой)? (при использовании Time type)\n  Например:\n  0 = 00:00\n  1 = 00:00.0\n  2 = 00:00.00\n  3 = 00:00.000\nВы можете проверить это в Unity не прибегая к тестированию в WebGL!")]
+        public int decimalSize = 1;
 
         string photoSize;
 
@@ -117,8 +120,27 @@ namespace YG
                             if (!timeTypeConvert)
                                 sampleContainer.transform.Find("Score").GetComponentInChildren<Text>().text = scorePlayers[i].ToString();
 
-                            else 
-                                sampleContainer.transform.Find("Score").GetComponentInChildren<Text>().text = scorePlayers[i].ToString("D4").Insert(2, ":");
+                            else
+                            {
+                                string res = scorePlayers[i].ToString();
+                                string milSec = decimalSize == 0 ? "" : "." + res.Remove(0, res.Length - decimalSize);
+
+                                int secReal = int.Parse(res.Remove(res.Length - 3));
+                                int min = (int)(secReal / 60.0f);
+                                int sec = (int)secReal - min * 60;
+
+                                string minStr;
+                                if (min.ToString().Length == 1) minStr = "0" + min.ToString();
+                                else minStr = min.ToString();
+
+                                string secStr;
+                                if (sec.ToString().Length == 1) secStr = "0" + sec.ToString();
+                                else secStr = sec.ToString();
+
+                                res = minStr + ":" + secStr + milSec;
+
+                                sampleContainer.transform.Find("Score").GetComponentInChildren<Text>().text = res;
+                            }
 
                             if (playerPhoto != PlayerPhoto.NonePhoto && photo[i] != "nonePhoto")
                                 sampleContainer.transform.Find("Photo").GetComponentInChildren<ImageLoadYG>().Load(photo[i]);
@@ -133,10 +155,9 @@ namespace YG
             YandexGame.GetLeaderboard(nameLB, maxQuantityPlayers, quantityTop, quantityAround, photoSize);
         }
 
-        public void NewScore(int score)
-        {
-            YandexGame.NewLeaderboardScores(nameLB, score);
-        }
+        public void NewScore(int score) => YandexGame.NewLeaderboardScores(nameLB, score);
+
+        public void NewScoreTimeConvert(float score) => YandexGame.NewLBScoreTimeConvert(nameLB, score);
     }
 }
 

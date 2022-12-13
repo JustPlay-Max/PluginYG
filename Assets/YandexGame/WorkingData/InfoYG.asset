@@ -14,9 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopes: 1
   playerPhotoSize: 0
-  fullscreenAdChallenge: 0
   leaderboardEnable: 1
-  sitelock: 0
+  saveCloud: 1
+  flush: 0
+  saveCloudInterval: 5
+  fullscreenAdChallenge: 0
+  fullscreenAdInterval: 60
+  durationOfAdSimulation: 0.5
   LocalizationEnable: 1
   callingLanguageCheck: 0
   translateMethod: 0
@@ -109,8 +113,7 @@ MonoBehaviour:
     it: 
     de: 
     hi: 
-  SDKStartDelay: 0
-  fullscreenAdInterval: 60
-  durationOfAdSimulation: 0.5
-  staticRBTInGame: 0
   debug: 1
+  staticRBTInGame: 0
+  sitelock: 0
+  SDKStartDelay: 0

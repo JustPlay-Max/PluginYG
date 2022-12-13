@@ -1,0 +1,7 @@
+
+The PluginYG template is based on the A Better Unity WebGL template hosted on Github.
+The license of the A Better Unity WebGL template package is attached in the same folder as this file: WebGLTemplates/PluginYG
+
+A Better Unity WebGL template - https://github.com/greggman/better-unity-webgl-template
+
+Autor - greggman

@@ -1,0 +1,7 @@
+
+The Plugin uses the Conditionally Visible PropertyDrawer tool from the Unity Toolbag package hosted on Github.
+The license of the Unity Toolbag package is attached in the same folder as this file: YandexGame/Addons/UnityToolbag-main
+
+UnityToolbag - https://github.com/kellygravelyn/UnityToolbag
+
+Autor - kellygravelyn

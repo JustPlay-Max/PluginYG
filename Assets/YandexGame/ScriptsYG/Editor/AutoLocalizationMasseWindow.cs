@@ -7,7 +7,7 @@ namespace YG
 {
     public class AutoLocalizationMasse : EditorWindow
     {
-        [MenuItem("YG/Localization/Auto Localization Masse")]
+        [MenuItem("Tools/PluginYG/Localization/Auto Localization Masse")]
         public static void ShowWindow()
         {
             GetWindow<AutoLocalizationMasse>("Auto Localization Masse");

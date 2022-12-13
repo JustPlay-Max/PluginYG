@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   infoYG: {fileID: 11400000, guid: 162644796a8b0d044bce3d6fda0641e3, type: 2}
+  singleton: 0
   ResolvedAuthorization:
     m_PersistentCalls:
       m_Calls: []
@@ -64,7 +65,22 @@ MonoBehaviour:
   CloseVideoAd:
     m_PersistentCalls:
       m_Calls: []
-  CheaterVideoAd:
+  RewardVideoAd:
+    m_PersistentCalls:
+      m_Calls: []
+  ErrorVideoAd:
+    m_PersistentCalls:
+      m_Calls: []
+  PurchaseSuccess:
+    m_PersistentCalls:
+      m_Calls: []
+  PurchaseFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  PromptDo:
+    m_PersistentCalls:
+      m_Calls: []
+  ReviewDo:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &3157483472541429372
@@ -79,9 +95,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5b227a20855044e9f75626696e0719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseType: 0
-  pauseMethod: 1
+  pauseType: 3
+  pauseMethod: 0
   openAudioPause: 1
-  closeAudioPause: 0
   openTimeScale: 0
+  closeAudioPause: 0
   closeTimeScale: 1
+  cursorVisible: 0
+  cursorLockMode: 0

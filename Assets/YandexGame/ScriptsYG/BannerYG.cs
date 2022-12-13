@@ -14,7 +14,7 @@ namespace YG
         [Tooltip(" Desktop And Mobile - Отображение баннера на всех устройствах.\n Only Desktop - Отображение баннера только на компьютере.\n Only Mobile - Отображение баннера только на мобильных устройствах (телефонах и планшетах).")]
         public Device device;
         [Tooltip(" Минимальный размер блока. RBT-блок не будет меньше установленного значения.\n X - минимальная ширина.\n Y - минимальная высота.")]
-        public Vector2 minSize = new(20, 20);
+        public Vector2 minSize = new Vector2(20, 20);
         [Tooltip("Выполнять код каждые 31сек.")]
         public bool codeExecutionTimer31Sec;
 
@@ -28,7 +28,7 @@ namespace YG
         public ScaleMode UIScaleMode;
 
         [ConditionallyVisible(nameof(UIScaleMode))]
-        public Vector2 referenceResolution = new(1920, 1080);
+        public Vector2 referenceResolution = new Vector2(1920, 1080);
         public enum MatchMode { Width, Height };
         [ConditionallyVisible(nameof(UIScaleMode))]
         public MatchMode Match;

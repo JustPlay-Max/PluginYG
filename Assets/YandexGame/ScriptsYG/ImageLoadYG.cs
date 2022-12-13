@@ -9,12 +9,15 @@ namespace YG
     {
         [SerializeField] bool startLoad = true;
         [SerializeField] RawImage rawImage;
+        [SerializeField] Image spriteImage;
         [SerializeField] string urlImage;
         [SerializeField] GameObject loadAnimObj;
 
         private void Awake()
         {
-            rawImage.enabled = false;
+            if (rawImage) rawImage.enabled = false;
+            if (spriteImage) spriteImage.enabled = false;
+
             if (startLoad) Load();
             else if (loadAnimObj) loadAnimObj.SetActive(false);
         }
@@ -47,10 +50,23 @@ namespace YG
                 else
                 {
                     DownloadHandlerTexture handlerTexture = webRequest.downloadHandler as DownloadHandlerTexture;
-                    if (handlerTexture.isDone)
-                        rawImage.texture = handlerTexture.texture;
 
-                    rawImage.enabled = true;
+                    if (rawImage)
+                    {
+                        if (handlerTexture.isDone)
+                            rawImage.texture = handlerTexture.texture;
+                        rawImage.enabled = true;
+                    }
+
+                    if (spriteImage)
+                    {
+                        if (handlerTexture.isDone)
+                            spriteImage.sprite = Sprite.Create((Texture2D)handlerTexture.texture,
+                                new Rect(0, 0, handlerTexture.texture.width, handlerTexture.texture.height), Vector2.zero);
+
+                        spriteImage.enabled = true;
+                    }
+
                     if (loadAnimObj)
                         loadAnimObj.SetActive(false);
                 }

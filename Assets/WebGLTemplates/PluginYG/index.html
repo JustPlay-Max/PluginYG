@@ -546,9 +546,7 @@
         try {
             player.setData({
                 saves: [jsonData],
-            }, flush).then(() => {
-                console.log('Cloud saves are installed');
-            });
+            }, flush);
         } catch (e) {
             console.error('CRASH Save Cloud: ', e.message);
         }
@@ -560,7 +558,7 @@
                 if (data.saves) {
                     myGameInstance.SendMessage('YandexGame', 'SetLoadSaves', JSON.stringify(data.saves));
                 } else {
-                    ResetProgress();
+                    myGameInstance.SendMessage('YandexGame', 'SetLoadSaves', "noData");
                 }
             }).catch(() => {
                 console.error('getData Error!');
@@ -571,10 +569,6 @@
                 LoadCloud();
             }, 1000);
         }
-    }
-
-    function ResetProgress() {
-        myGameInstance.SendMessage('YandexGame', 'ResetSaveCloud');
     }
 
     function InitLeaderboard() {

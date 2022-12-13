@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System;
 
 namespace YG
 {
@@ -58,13 +59,12 @@ namespace YG
         private void OnEnable() => YandexGame.SwitchLangEvent += SwitchLanguage;
         private void OnDisable() => YandexGame.SwitchLangEvent -= SwitchLanguage;
 
-        public delegate void QualitySwitchDelegate(int qualityLevel);
-        public event QualitySwitchDelegate QualitySwitchEvent;
+        public static Action<int> onQualityChange;
 
         public void SetQuality()
         {
             QualitySettings.SetQualityLevel(dropdown.value);
-            QualitySwitchEvent?.Invoke(dropdown.value);
+            onQualityChange?.Invoke(dropdown.value);
         }
 
         void SwitchLanguage(string lang)

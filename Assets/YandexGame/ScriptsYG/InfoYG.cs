@@ -19,6 +19,18 @@ namespace YG
         [Tooltip("Вкл/Выкл лидерборды")]
         public bool leaderboardEnable;
 
+        [Tooltip("Вкл/Выкл облачные сохранения (сохранения Яндекса)")]
+        public bool saveCloud = true;
+
+        [ConditionallyVisible(nameof(saveCloud))]
+        [Tooltip("Flush — определяет очередность отправки данных. При значении «true» данные будут отправлены на сервер немедленно; «false» (значение по умолчанию) — запрос на отправку данных будет поставлен в очередь.")]
+        public bool flush;
+
+        [ConditionallyVisible(nameof(saveCloud))]
+        [Tooltip("Интервал облачных сохранений.\nПри использовании метода сохранения (SaveProgress), сохранения будут происходить локально, если таймер не достиг значения (Save Cloud Interval. По умолчанию = 5). Если же таймер достиг интервала, то сохранения запишутся в облако.\nПри загрузке сохранений, будут загружены более актуальные данные (из локальных или облачных сохранений).")]
+        [Min(0)]
+        public int saveCloudInterval = 5;
+
         public enum FullscreenAdChallenge { atStartupEndSwitchScene, onlyAtStartup };
         [Header("Ads")]
 
