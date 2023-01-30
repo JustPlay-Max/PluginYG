@@ -39,7 +39,7 @@ namespace YG
 
         [Tooltip("Интервал запросов на вызов полноэкранной рекламы.")]
         [Min(0)]
-        public int fullscreenAdInterval = 60;
+        public int fullscreenAdInterval = 10;
 
         [Tooltip("Длительность симуляции показа рекламы.")]
         [Min(0)]
@@ -83,7 +83,7 @@ namespace YG
         #region LanguagesEnumeration
         [System.Serializable]
         public class Languages
-        { 
+        {
             [Tooltip("RUSSIAN")] public bool ru;
             [Tooltip("ENGLISH")] public bool en;
             [Tooltip("TURKISH")] public bool tr;

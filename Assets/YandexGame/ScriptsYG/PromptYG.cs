@@ -15,6 +15,7 @@ namespace YG
         [Header("Events")]
         [Space(5)]
         public UnityEvent onPromptSuccess;
+        public UnityEvent onPromptFail;
 
         private void Awake()
         {
@@ -27,6 +28,7 @@ namespace YG
         {
             YandexGame.GetDataEvent += UpdateData;
             YandexGame.PromptSuccessEvent += OnPromptSuccess;
+            YandexGame.PromptFailEvent += OnPromptFail;
 
             if (YandexGame.SDKEnabled) UpdateData();
         }
@@ -34,6 +36,7 @@ namespace YG
         {
             YandexGame.GetDataEvent -= UpdateData;
             YandexGame.PromptSuccessEvent -= OnPromptSuccess;
+            YandexGame.PromptFailEvent -= OnPromptFail;
         }
 
         public void UpdateData()
@@ -47,7 +50,7 @@ namespace YG
                 if (done) done.SetActive(true);
                 showDialog.SetActive(false);
             }
-            else if(!YandexGame.EnvironmentData.promptCanShow)
+            else if (!YandexGame.EnvironmentData.promptCanShow)
             {
                 if (notSupported) notSupported.SetActive(true);
                 if (done) done.SetActive(false);
@@ -66,6 +69,12 @@ namespace YG
         void OnPromptSuccess()
         {
             onPromptSuccess?.Invoke();
+            UpdateData();
+        }
+        void OnPromptFail()
+        {
+            YandexGame.EnvironmentData.promptCanShow = false;
+            onPromptFail?.Invoke();
             UpdateData();
         }
     }

@@ -11,6 +11,10 @@
     <!-- Yandex Games SDK -->
     <script src="https://yandex.ru/games/sdk/v2"></script>
 
+    #if METRIC
+        {{{ METRIC }}}
+    #endif
+
     #if BANNER_DYNAMIC_1
     <style>
         #RTB1 {
@@ -18,9 +22,9 @@
             display: none;
         }
 
-        #RTB1.show {
-            display: block;
-        }
+            #RTB1.show {
+                display: block;
+            }
     </style>
     #endif
 
@@ -31,9 +35,9 @@
             display: none;
         }
 
-        #RTB2.show {
-            display: block;
-        }
+            #RTB2.show {
+                display: block;
+            }
     </style>
     #endif
 
@@ -48,9 +52,9 @@
             display: none;
         }
 
-        #RTBStatic1.show {
-            display: block;
-        }
+            #RTBStatic1.show {
+                display: block;
+            }
 
         @media screen and (max-width: 800px) {
             #RTBStatic1 {
@@ -74,9 +78,9 @@
             display: none;
         }
 
-        #RTBStatic2.show {
-            display: block;
-        }
+            #RTBStatic2.show {
+                display: block;
+            }
 
         @media screen and (max-width: 800px) {
             #RTBStatic2 {
@@ -388,6 +392,7 @@
                         "playerPhoto": playerPhoto
                     };
                     myGameInstance.SendMessage('YandexGame', 'SetAuthorization', JSON.stringify(authJson));
+                    window.focus();
                 }
             }).catch(e => {
                 console.log('Authorized err', e.message);
@@ -448,9 +453,11 @@
                 payments.purchase(id).then(purchase => {
                     console.log('Purchase Success');
                     myGameInstance.SendMessage('YandexGame', 'OnPurchaseSuccess', id);
+                    window.focus();
                 }).catch(e => {
                     console.error('Purchase Failed', e.message);
                     myGameInstance.SendMessage('YandexGame', 'OnPurchaseFailed', id);
+                    window.focus();
                 })
             } else {
                 console.log('Payments == null');
@@ -687,6 +694,7 @@
                         },
                         onClose: () => {
                             myGameInstance.SendMessage('YandexGame', 'CloseFullscreen');
+                            window.focus();
                         }
                     }
                 });
@@ -708,6 +716,7 @@
                             onClose: () => {
                                 myGameInstance.SendMessage('YandexGame', 'CloseVideo');
                                 console.log('Closed Video Ad. Id: ' + id);
+                                window.focus();
                             },
                             onRewarded: () => {
                                 myGameInstance.SendMessage('YandexGame', 'RewardVideo', id);
@@ -756,10 +765,12 @@
 
     function Review() {
         try {
-            ysdk.feedback.canReview().then(({value, reason}) => {
+            ysdk.feedback.canReview()
+                .then(({ value, reason }) => {
                     if (value) {
                         ysdk.feedback.requestReview().then(({feedbackSent}) => {
                             console.log('feedbackSent ', feedbackSent);
+                            window.focus();
                             if (feedbackSent)
                                 myGameInstance.SendMessage('YandexGame', 'ReviewSent', 'true');
                             else myGameInstance.SendMessage('YandexGame', 'ReviewSent', 'false');
@@ -767,6 +778,7 @@
                     }
                     else {
                         console.log('reviewCanShow = false', reason)
+                        window.focus();
                     }
                 })
         } catch (e) {
@@ -779,9 +791,13 @@
             ysdk.shortcut.showPrompt()
                 .then(result => {
                     console.log('Shortcut created?:', result);
+                    window.focus();
                     if (result.outcome === 'accepted') {
                         console.log('Prompt Success');
                         myGameInstance.SendMessage('YandexGame', 'OnPromptSuccess');
+                    }
+                    else {
+                        myGameInstance.SendMessage('YandexGame', 'OnPromptFail');
                     }
                 });
         } catch (e) {
