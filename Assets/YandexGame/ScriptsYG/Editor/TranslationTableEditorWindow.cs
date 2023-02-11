@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace YG
+namespace YG.Insides
 {
     public class TranslationTableEditorWindow : EditorWindow
     {
@@ -71,7 +71,7 @@ namespace YG
             {
                 if (i == 0)
                 {
-                    
+
                     if (GUILayout.Button(keys[i].Replace("*", ",").Replace(@"\n", "\n"), GUILayout.Width(120), GUILayout.Height(26)))
                     {
                         langYG.text = keys[i];

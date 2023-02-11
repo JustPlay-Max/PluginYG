@@ -97,7 +97,7 @@ namespace YG
 
         private void Start()
         {
-            if (infoYG.fullscreenAdChallenge == InfoYG.FullscreenAdChallenge.atStartupEndSwitchScene)
+            if (infoYG.AdWhenLoadingScene)
                 _FullscreenShow();
 
 #if !UNITY_EDITOR
@@ -136,6 +136,55 @@ namespace YG
 #endif
             }
         }
+
+        #region For ECS
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void ResetStatic()
+        {
+            //YandexGame yg = (YandexGame)GameObject.FindObjectOfType<YandexGame>();
+            //if (yg.infoYG.forECS)
+            //{
+            _SDKEnabled = false;
+            _startGame = false;
+            _auth = false;
+            _initializedLB = false;
+            _playerName = "unauthorized";
+            _playerId = null;
+            _playerPhoto = null;
+            _photoSize = "medium";
+            _leaderboardEnable = false;
+            _debug = false;
+            _scopes = false;
+            nowFullAd = false;
+            nowVideoAd = false;
+            savesData = new SavesYG();
+            EnvironmentData = new JsonEnvironmentData();
+            PaymentsData = new JsonPayments();
+            Instance = null;
+            pathSaves = null;
+            timerShowAd = 0;
+            GetDataEvent = null;
+            onResetProgress = null;
+            SwitchLangEvent = null;
+            OpenFullAdEvent = null;
+            CloseFullAdEvent = null;
+            OpenVideoEvent = null;
+            CloseVideoEvent = null;
+            RewardVideoEvent = null;
+            ErrorVideoEvent = null;
+            UpdateLbEvent = null;
+            GetPaymentsEvent = null;
+            PurchaseSuccessEvent = null;
+            PurchaseFailedEvent = null;
+            ReviewSentEvent = null;
+            PromptSuccessEvent = null;
+            PromptFailEvent = null;
+            //}
+        }
+#endif
+        #endregion For ECS
+
         #endregion Methods
 
         #region Player Data
@@ -203,7 +252,16 @@ namespace YG
         private static extern int HasKeyInLocalStorage(string key);
         public static bool HasKey(string key)
         {
-            return HasKeyInLocalStorage(key) == 1;
+            try
+            {
+                return HasKeyInLocalStorage(key) == 1;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+                return false;
+            }
+
         }
 
         [DllImport("__Internal")]
@@ -404,7 +462,7 @@ namespace YG
         public void _FullscreenShow()
         {
             if (!nowFullAd && !nowVideoAd &&
-                timerShowAd >= infoYG.fullscreenAdInterval + 1)
+                timerShowAd >= infoYG.fullscreenAdInterval)
             {
                 timerShowAd = 0;
 #if !UNITY_EDITOR
@@ -415,7 +473,7 @@ namespace YG
                 StartCoroutine(CloseFullAdInEditor());
 #endif
             }
-            else Message($"До показа Fullscreen рекламы {infoYG.fullscreenAdInterval + 1 - timerShowAd} сек.");
+            else Message($"До запроса к показу Fullscreen рекламы {(infoYG.fullscreenAdInterval - timerShowAd).ToString("00.0")} сек.");
         }
 
         public static void FullscreenShow() => Instance._FullscreenShow();
@@ -927,7 +985,6 @@ namespace YG
             }
             else localDataState = DataState.NotExist;
 
-
             if (cloudDataState == DataState.Exist && localDataState == DataState.Exist)
             {
                 if (cloudData.idSave >= localData.idSave)
@@ -1286,7 +1343,9 @@ namespace YG
         #region Update
         int delayFirstCalls = -1;
         static float timerShowAd;
+#if !UNITY_EDITOR
         static float timerSaveCloud = 62;
+#endif
 
         private void Update()
         {

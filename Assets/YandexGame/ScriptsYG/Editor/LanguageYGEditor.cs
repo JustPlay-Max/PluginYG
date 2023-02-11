@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine.UI;
 using UnityEditor.SceneManagement;
 
-namespace YG
+namespace YG.Insides
 {
     [CustomEditor(typeof(LanguageYG))]
     public class LanguageYGEditor : Editor
@@ -52,7 +52,7 @@ namespace YG
             {
                 if (GUILayout.Button("Identify infoYG", GUILayout.Height(35)))
                 {
-                    scr.infoYG = GameObject.Find("YandexGame").GetComponent<YandexGame>().infoYG;
+                    scr.infoYG = scr.GetInfoYG();
                     if (scr.infoYG == null)
                         Debug.LogError("InfoYG not found!  (ru) InfoYG не найден!");
                 }
@@ -65,7 +65,7 @@ namespace YG
                     GUILayout.BeginVertical("HelpBox");
 
                     scr.componentTextField = EditorGUILayout.ToggleLeft("Component Text/TextMesh Translate", scr.componentTextField);
-                   
+
                     GUILayout.BeginHorizontal();
 
                     if (GUILayout.Button(">", GUILayout.Width(20)))
@@ -99,7 +99,7 @@ namespace YG
 
                         scr.text = EditorGUILayout.TextField(scr.text, GUILayout.Height(20));
                     }
-                    
+
                     if (availableStr)
                     {
                         GUILayout.Label("ID Translate");
@@ -132,7 +132,7 @@ namespace YG
                 }
                 else
                 {
-                    scr.textHeight = EditorGUILayout.Slider("Text Height", scr.textHeight, 20f, 400f);
+                    //scr.textHeight = EditorGUILayout.Slider("Text Height", scr.textHeight, 20f, 400f);
 
                     if (scr.infoYG.translateMethod == InfoYG.TranslateMethod.AutoLocalization)
                     {

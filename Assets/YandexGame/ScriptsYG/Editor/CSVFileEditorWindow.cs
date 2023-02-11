@@ -2,7 +2,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace YG
+namespace YG.Insides
 {
     public class CSVFileEditorWindow : EditorWindow
     {
@@ -84,7 +84,7 @@ namespace YG
                             Debug.LogError("(en) The text field is not filled in in the Text/TextMesh component, fill it in. (ru) На данном объекте не указан ID! В компоненте Text/TextMesh не заполнено поле text, заполните его.", scr);
                             continue;
                         }
-                        
+
                         string[] translfers = CSVManager.ImportTransfersByKey(scr);
 
                         if (translfers != null)
@@ -132,7 +132,7 @@ namespace YG
                                 Debug.LogError("The data object is not specified Apostille! In the component parts of the undeclared Field, The Undeclared egos. (ru) На данном объекте не указан ID! В компоненте LanguageYG не заполнено поле ID, заполните его.", scr);
                                 continue;
                             }
-                            else 
+                            else
                                 textScr = scr.text;
                         }
 
@@ -193,7 +193,7 @@ namespace YG
 
             for (int i = 0; i < objectsTranlate.Count; i++)
             {
-                objectsTranlate[i] = (GameObject)EditorGUILayout.ObjectField($"{i + 1}. { objectsTranlate[i].name}", objectsTranlate[i], typeof(GameObject), false);
+                objectsTranlate[i] = (GameObject)EditorGUILayout.ObjectField($"{i + 1}. {objectsTranlate[i].name}", objectsTranlate[i], typeof(GameObject), false);
             }
 
             if (objectsTranlate.Count > 10 && position.height < objectsTranlate.Count * 20.6f + 150)

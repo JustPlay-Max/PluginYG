@@ -12,7 +12,7 @@
     <script src="https://yandex.ru/games/sdk/v2"></script>
 
     #if METRIC
-        {{{ METRIC }}}
+    {{{ METRIC }}}
     #endif
 
     #if BANNER_DYNAMIC_1
@@ -304,7 +304,11 @@
 
     YaGames.init()
         .then(ysdk => {
-            ysdk.adv.showFullscreenAdv();
+            #if !OFF_ADS_BEFORE_LOADING_GAME
+            if (ysdk.deviceInfo.type == "desktop")
+                ysdk.adv.showFullscreenAdv();
+            #endif
+
             window.ysdk = ysdk;
 
             InitPayments();
@@ -400,6 +404,7 @@
             });
         } catch (e) {
             console.error('CRASH init Player: ', e.message);
+            window.focus();
         }
     }
 
@@ -420,6 +425,11 @@
 
     function AuthorizationCheck(photoSize, scopes) {
         InitPlayer(photoSize, scopes);
+
+        #if !OFF_ADS_BEFORE_LOADING_GAME
+        if (ysdk.deviceInfo.type != "desktop")
+            FullscreenShow();
+        #endif
     }
 
     function OpenAuthDialog(photoSize, scopes) {
@@ -464,6 +474,7 @@
             }
         } catch (e) {
             console.error('CRASH Buy Payments: ', e.message);
+            window.focus();
         }
     }
     
@@ -569,6 +580,7 @@
                 }
             }).catch(() => {
                 console.error('getData Error!');
+                myGameInstance.SendMessage('YandexGame', 'SetLoadSaves', "noData");
             });
         } catch (e) {
             console.error('CRASH Load Saves Cloud: ', e.message);
@@ -770,10 +782,10 @@
                     if (value) {
                         ysdk.feedback.requestReview().then(({feedbackSent}) => {
                             console.log('feedbackSent ', feedbackSent);
-                            window.focus();
                             if (feedbackSent)
                                 myGameInstance.SendMessage('YandexGame', 'ReviewSent', 'true');
                             else myGameInstance.SendMessage('YandexGame', 'ReviewSent', 'false');
+                            window.focus();
                         })
                     }
                     else {
@@ -783,6 +795,7 @@
                 })
         } catch (e) {
             console.error('CRASH Review: ', e.message);
+            window.focus();
         }
     }
 
@@ -791,7 +804,6 @@
             ysdk.shortcut.showPrompt()
                 .then(result => {
                     console.log('Shortcut created?:', result);
-                    window.focus();
                     if (result.outcome === 'accepted') {
                         console.log('Prompt Success');
                         myGameInstance.SendMessage('YandexGame', 'OnPromptSuccess');
@@ -799,9 +811,11 @@
                     else {
                         myGameInstance.SendMessage('YandexGame', 'OnPromptFail');
                     }
+                    window.focus();
                 });
         } catch (e) {
             console.error('CRASH Prompt Show: ', e.message);
+            window.focus();
         }
     }
 

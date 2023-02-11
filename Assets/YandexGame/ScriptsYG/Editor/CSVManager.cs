@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Collections;
-using UnityEngine.Networking;
 
-namespace YG 
+namespace YG.Insides
 {
     public class CSVManager
     {
@@ -126,8 +124,8 @@ namespace YG
             {
                 // Создаём CSV файл и первую строчку
                 using (FileStream file = new FileStream(Patch(infoYG), FileMode.Create))
-                    using (StreamWriter stream = new StreamWriter(file))
-                        stream.Write(CreateFirstLine(infoYG), Patch(infoYG));
+                using (StreamWriter stream = new StreamWriter(file))
+                    stream.Write(CreateFirstLine(infoYG), Patch(infoYG));
             }
 
             // Сздаём массив новых ключ-значений
@@ -217,8 +215,8 @@ namespace YG
             data = AsteriskFormat(data);
 
             using (FileStream file = new FileStream(Patch(infoYG), FileMode.Create))
-                using (StreamWriter stream = new StreamWriter(file))
-                    stream.Write(data, Patch(infoYG));
+            using (StreamWriter stream = new StreamWriter(file))
+                stream.Write(data, Patch(infoYG));
         }
 
         public static string GetKeyForLangYG(LanguageYG langYG)
@@ -248,7 +246,7 @@ namespace YG
 
         static string[] CommaFormat(string[] lines)
         {
-            for(int i = 0; i < lines.Length; i++)
+            for (int i = 0; i < lines.Length; i++)
             {
                 lines[i] = CommaFormat(lines[i]);
             }

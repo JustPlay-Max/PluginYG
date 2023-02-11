@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 #if UNITY_EDITOR
 using System.Collections;
@@ -41,7 +42,29 @@ namespace YG
         {
             textUIComponent = GetComponent<Text>();
             textMeshComponent = GetComponent<TextMesh>();
-            infoYG = GameObject.Find("YandexGame").GetComponent<YandexGame>().infoYG;
+
+            infoYG = GetInfoYG();
+        }
+
+        public InfoYG GetInfoYG()
+        {
+            YandexGame yg = (YandexGame)GameObject.FindObjectOfType<YandexGame>();
+
+            if (yg)
+            {
+                return yg.infoYG;
+            }
+            else
+            {
+#if UNITY_EDITOR
+                GameObject ygPrefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/YandexGame/Prefabs/YandexGame.prefab", typeof(GameObject));
+                yg = ygPrefab.GetComponent<YandexGame>();
+                return yg.infoYG;
+#else
+                return null;
+#endif
+            }
+
         }
 
         private void OnEnable()

@@ -80,6 +80,9 @@ MonoBehaviour:
   PromptDo:
     m_PersistentCalls:
       m_Calls: []
+  PromptFail:
+    m_PersistentCalls:
+      m_Calls: []
   ReviewDo:
     m_PersistentCalls:
       m_Calls: []
@@ -95,11 +98,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5b227a20855044e9f75626696e0719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseType: 3
-  pauseMethod: 0
-  openAudioPause: 1
-  openTimeScale: 0
-  closeAudioPause: 0
-  closeTimeScale: 1
-  cursorVisible: 0
-  cursorLockMode: 0
+  pauseType: 0
+  pauseMethod: 1
+  openingADValues:
+    timeScale: 0
+  closingADValues:
+    timeScale: 1
+    audioPause: 0
+    cursorVisible: 0
+    cursorLockMode: 0
+  customEvents:
+    OpenAd:
+      m_PersistentCalls:
+        m_Calls: []
+    CloseAd:
+      m_PersistentCalls:
+        m_Calls: []

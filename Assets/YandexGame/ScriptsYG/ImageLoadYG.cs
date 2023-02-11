@@ -7,11 +7,13 @@ namespace YG
 {
     public class ImageLoadYG : MonoBehaviour
     {
-        [SerializeField] bool startLoad = true;
-        [SerializeField] RawImage rawImage;
-        [SerializeField] Image spriteImage;
-        [SerializeField] string urlImage;
-        [SerializeField] GameObject loadAnimObj;
+        public bool startLoad = true;
+        public RawImage rawImage;
+        public Image spriteImage;
+        public string urlImage;
+        public GameObject loadAnimObj;
+        [Tooltip("Вы можете выключить запись лога в консоль.")]
+        [SerializeField] bool debug;
 
         private void Awake()
         {
@@ -46,7 +48,10 @@ namespace YG
 
                 if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
                     webRequest.result == UnityWebRequest.Result.DataProcessingError)
-                    Debug.LogError("Error: " + webRequest.error);
+                {
+                    if (debug)
+                        Debug.LogError("Error: " + webRequest.error);
+                }
                 else
                 {
                     DownloadHandlerTexture handlerTexture = webRequest.downloadHandler as DownloadHandlerTexture;

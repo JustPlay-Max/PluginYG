@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 
-namespace YG
+namespace YG.Insides
 {
     [CustomEditor(typeof(BannerYG))]
     public class BannerYGEditor : Editor
