@@ -114,6 +114,7 @@ MonoBehaviour:
     de: 
     hi: 
   debug: 1
+  AutoBuildArchiving: 1
   staticRBTInGame: 0
   sitelock: 0
   SDKStartDelay: 0

@@ -4,8 +4,9 @@ using UnityEngine.Events;
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections;
 using UnityEngine.UI;
+//using System.Collections;
+//using System.ComponentModel;
 
 namespace YG
 {
@@ -470,7 +471,8 @@ namespace YG
 #else
                 Message("Fullscren Ad");
                 OpenFullscreen();
-                StartCoroutine(CloseFullAdInEditor());
+                //StartCoroutine(CloseFullAdInEditor());
+                CloseFullAdInEditor();
 #endif
             }
             else Message($"До запроса к показу Fullscreen рекламы {(infoYG.fullscreenAdInterval - timerShowAd).ToString("00.0")} сек.");
@@ -479,7 +481,7 @@ namespace YG
         public static void FullscreenShow() => Instance._FullscreenShow();
 
 #if UNITY_EDITOR
-        IEnumerator CloseFullAdInEditor()
+        void CloseFullAdInEditor()
         {
             GameObject errMessage = new GameObject { name = "TestFullAd" };
             Canvas canvas = errMessage.AddComponent<Canvas>();
@@ -488,10 +490,15 @@ namespace YG
             errMessage.AddComponent<GraphicRaycaster>();
             errMessage.AddComponent<RawImage>().color = new Color(0, 1, 0, 0.5f);
 
-            yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
+            Insides.CallingAnEvent callingAnEvent = errMessage.AddComponent(typeof(Insides.CallingAnEvent)) as Insides.CallingAnEvent;
+            callingAnEvent.closeFull = true;
 
-            Destroy(errMessage);
-            CloseFullscreen();
+            DontDestroyOnLoad(errMessage);
+            Destroy(errMessage, infoYG.durationOfAdSimulation);
+
+            //yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
+            //Destroy(errMessage);
+            //CloseFullscreen();
         }
 #endif
         #endregion Fullscren Ad Show
@@ -510,7 +517,8 @@ namespace YG
                 RewardedShow(id);
 #else
                 OpenVideo();
-                StartCoroutine(CloseVideoInEditor(id));
+                //StartCoroutine(CloseVideoInEditor(id));
+                CloseVideoInEditor(id);
 #endif
             }
         }
@@ -518,7 +526,7 @@ namespace YG
         public static void RewVideoShow(int id) => Instance._RewardedShow(id);
 
 #if UNITY_EDITOR
-        IEnumerator CloseVideoInEditor(int id)
+        void CloseVideoInEditor(int id)
         {
             GameObject errMessage = new GameObject { name = "TestVideoAd" };
             Canvas canvas = errMessage.AddComponent<Canvas>();
@@ -526,12 +534,20 @@ namespace YG
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             errMessage.AddComponent<GraphicRaycaster>();
             errMessage.AddComponent<RawImage>().color = new Color(0, 0, 1, 0.5f);
+            DontDestroyOnLoad(errMessage);
 
-            yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
+            Insides.CallingAnEvent callingAnEvent = errMessage.AddComponent(typeof(Insides.CallingAnEvent)) as Insides.CallingAnEvent;
+            callingAnEvent.closeVideo = true;
+            callingAnEvent.rewardVideo = true;
+            callingAnEvent.idRewarded = id;
 
-            Destroy(errMessage);
-            CloseVideo();
-            RewardVideo(id);
+            DontDestroyOnLoad(errMessage);
+            Destroy(errMessage, infoYG.durationOfAdSimulation);
+
+            //yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
+            //Destroy(errMessage);
+            //CloseVideo();
+            //RewardVideo(id);
         }
 #endif
         #endregion Rewarded Video Show

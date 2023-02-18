@@ -1,7 +1,7 @@
+using System.IO;
+using System.IO.Compression;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using System.IO.Compression;
-using System.IO;
 
 namespace YG.Insides
 {
@@ -11,29 +11,34 @@ namespace YG.Insides
 
         public void OnPostprocessBuild(BuildReport report)
         {
-            string patch = report.summary.outputPath;
-            string number = "";
+            InfoYG infoYG = ConfigYG.GetInfoYG();
 
-            if (!File.Exists(patch + ".zip"))
+            if (infoYG.autoBuildArchiving)
             {
-                Archiving();
-            }
-            else
-            {
-                for (int i = 1; i < 100; i++)
+                string patch = report.summary.outputPath;
+                string number = "";
+
+                if (!File.Exists(patch + ".zip"))
                 {
-                    if (!File.Exists(patch + "_" + i + ".zip"))
+                    Archiving();
+                }
+                else
+                {
+                    for (int i = 1; i < 100; i++)
                     {
-                        number = "_" + i;
-                        Archiving();
-                        break;
+                        if (!File.Exists(patch + "_" + i + ".zip"))
+                        {
+                            number = "_" + i;
+                            Archiving();
+                            break;
+                        }
                     }
                 }
-            }
 
-            void Archiving()
-            {
-                ZipFile.CreateFromDirectory(patch, patch + number + ".zip");
+                void Archiving()
+                {
+                    ZipFile.CreateFromDirectory(patch, patch + number + ".zip");
+                }
             }
         }
     }
