@@ -13,6 +13,7 @@ namespace YG
     public class YandexGame : MonoBehaviour
     {
         public InfoYG infoYG;
+        [Tooltip("Объект YandexGame не будет удаляться при смене сцены. При выборе опции singleton, объект YandexGame необходимо поместить только на одну сцену, которая первая загружается при запуске игры.\n\n •  При выборе опции singleton, полноэкранная реклама не будет автоматически показываться при загрузке новой сцены, даже при выборе параметра Ad When Loading Scene = true в InfoYG.")]
         public bool singleton;
         [Space(10)]
         public UnityEvent ResolvedAuthorization;
@@ -471,7 +472,6 @@ namespace YG
 #else
                 Message("Fullscren Ad");
                 OpenFullscreen();
-                //StartCoroutine(CloseFullAdInEditor());
                 CloseFullAdInEditor();
 #endif
             }
@@ -484,21 +484,16 @@ namespace YG
         void CloseFullAdInEditor()
         {
             GameObject errMessage = new GameObject { name = "TestFullAd" };
+            DontDestroyOnLoad(errMessage);
+
             Canvas canvas = errMessage.AddComponent<Canvas>();
             canvas.sortingOrder = 32767;
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             errMessage.AddComponent<GraphicRaycaster>();
             errMessage.AddComponent<RawImage>().color = new Color(0, 1, 0, 0.5f);
 
-            Insides.CallingAnEvent callingAnEvent = errMessage.AddComponent(typeof(Insides.CallingAnEvent)) as Insides.CallingAnEvent;
-            callingAnEvent.closeFull = true;
-
-            DontDestroyOnLoad(errMessage);
-            Destroy(errMessage, infoYG.durationOfAdSimulation);
-
-            //yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
-            //Destroy(errMessage);
-            //CloseFullscreen();
+            Insides.CallingAnEvent call = errMessage.AddComponent(typeof(Insides.CallingAnEvent)) as Insides.CallingAnEvent;
+            call.StartCoroutine(call.CallingAd(infoYG.durationOfAdSimulation));
         }
 #endif
         #endregion Fullscren Ad Show
@@ -517,7 +512,6 @@ namespace YG
                 RewardedShow(id);
 #else
                 OpenVideo();
-                //StartCoroutine(CloseVideoInEditor(id));
                 CloseVideoInEditor(id);
 #endif
             }
@@ -529,6 +523,8 @@ namespace YG
         void CloseVideoInEditor(int id)
         {
             GameObject errMessage = new GameObject { name = "TestVideoAd" };
+            DontDestroyOnLoad(errMessage);
+
             Canvas canvas = errMessage.AddComponent<Canvas>();
             canvas.sortingOrder = 32767;
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -536,18 +532,8 @@ namespace YG
             errMessage.AddComponent<RawImage>().color = new Color(0, 0, 1, 0.5f);
             DontDestroyOnLoad(errMessage);
 
-            Insides.CallingAnEvent callingAnEvent = errMessage.AddComponent(typeof(Insides.CallingAnEvent)) as Insides.CallingAnEvent;
-            callingAnEvent.closeVideo = true;
-            callingAnEvent.rewardVideo = true;
-            callingAnEvent.idRewarded = id;
-
-            DontDestroyOnLoad(errMessage);
-            Destroy(errMessage, infoYG.durationOfAdSimulation);
-
-            //yield return new WaitForSecondsRealtime(infoYG.durationOfAdSimulation);
-            //Destroy(errMessage);
-            //CloseVideo();
-            //RewardVideo(id);
+            Insides.CallingAnEvent call = errMessage.AddComponent(typeof(Insides.CallingAnEvent)) as Insides.CallingAnEvent;
+            call.StartCoroutine(call.CallingAd(infoYG.durationOfAdSimulation, id));
         }
 #endif
         #endregion Rewarded Video Show

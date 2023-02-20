@@ -1,18 +1,24 @@
 #if UNITY_EDITOR
 using UnityEngine;
+using System.Collections;
 
 namespace YG.Insides
 {
     public class CallingAnEvent : MonoBehaviour
     {
-        public int idRewarded;
-        public bool closeFull, closeVideo, rewardVideo;
-
-        private void OnDestroy()
+        public IEnumerator CallingAd(float duration)
         {
-            if (closeFull) YandexGame.Instance.CloseFullscreen();
-            if (closeVideo) YandexGame.Instance.CloseVideo();
-            if (rewardVideo) YandexGame.Instance.RewardVideo(idRewarded);
+            yield return new WaitForSecondsRealtime(duration);
+            YandexGame.Instance.CloseFullscreen();
+            Destroy(gameObject);
+        }
+
+        public IEnumerator CallingAd(float duration, int id)
+        {
+            yield return new WaitForSecondsRealtime(duration);
+            YandexGame.Instance.CloseVideo();
+            YandexGame.Instance.RewardVideo(id);
+            Destroy(gameObject);
         }
     }
 }
