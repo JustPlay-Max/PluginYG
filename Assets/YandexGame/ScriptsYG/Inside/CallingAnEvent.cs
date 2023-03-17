@@ -9,7 +9,7 @@ namespace YG.Insides
         public IEnumerator CallingAd(float duration)
         {
             yield return new WaitForSecondsRealtime(duration);
-            YandexGame.Instance.CloseFullscreen();
+            YandexGame.Instance.CloseFullAd();
             Destroy(gameObject);
         }
 

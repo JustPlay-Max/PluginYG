@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using UnityEngine.Events;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityToolbag;
@@ -28,11 +29,24 @@ namespace YG
         [Tooltip("Размер подгружаемых изображений игроков. NonePhoto = не подгружать изображение")]
         [ConditionallyVisible(nameof(advanced))]
         public PlayerPhoto playerPhoto = PlayerPhoto.Small;
+        [Tooltip("Использовать кастомный спрайт для отображения аваторок скрытых пользователей")]
+        [ConditionallyVisible(nameof(advanced))]
+        public Sprite isHiddenPlayerPhoto;
         [Tooltip("Конвертация полученных рекордов в Time тип")]
         [ConditionallyVisible(nameof(advanced))]
         public bool timeTypeConvert;
         [ConditionallyVisible("timeTypeConvert"), Range(0, 3), Tooltip("Сколько показывать сотых (цифр после запятой)? (при использовании Time type)\n  Например:\n  0 = 00:00\n  1 = 00:00.0\n  2 = 00:00.00\n  3 = 00:00.000\nВы можете проверить это в Unity не прибегая к тестированию в WebGL!")]
         public int decimalSize = 1;
+        public UnityEvent onUpdateData;
+
+        public class PlayersData
+        {
+            public string name;
+            public int rank;
+            public int score;
+            public string photo;
+        }
+        [HideInInspector] public PlayersData[] playersData;
 
         string photoSize;
 
@@ -65,7 +79,8 @@ namespace YG
 
         void OnUpdateLB(string _name, string entriesLB, int[] rank, string[] photo, string[] playersName, int[] scorePlayers, bool auth)
         {
-            if (_name == "initialized"){
+            if (_name == "initialized")
+            {
                 UpdateLB();
             }
 
@@ -87,14 +102,14 @@ namespace YG
                             error = "No data";
                             break;
                     }
-                }                
+                }
 
                 if (!advanced)
                 {
-                    if (entriesLB == "No data") entriesText.text = error;
-                    else entriesText.text = entriesLB;
+                    entriesLB = entriesLB.Replace("anonymous", YandexGame.Instance.infoYG.IsHiddenTextTranslate());
+                    entriesText.text = entriesLB;
                 }
-                    
+
                 else
                 {
                     GameObject sampleContainer = transform.GetComponentInChildren<GridLayoutGroup>().transform.GetChild(0).gameObject;
@@ -110,43 +125,57 @@ namespace YG
                     }
                     else
                     {
+                        playersData = new PlayersData[rank.Length];
+
                         for (int i = 0; i < rank.Length; i++)
                         {
                             if (i != 0) sampleContainer = Instantiate(sampleContainer, sampleContainer.transform.parent);
 
                             sampleContainer.transform.Find("Rank").GetComponentInChildren<Text>().text = rank[i].ToString();
-                            sampleContainer.transform.Find("Name").GetComponentInChildren<Text>().text = playersName[i];
+                            sampleContainer.transform.Find("Name").GetComponentInChildren<Text>().text = CheckName(playersName[i]);
 
                             if (!timeTypeConvert)
                                 sampleContainer.transform.Find("Score").GetComponentInChildren<Text>().text = scorePlayers[i].ToString();
-
                             else
                             {
-                                string res = scorePlayers[i].ToString();
-                                string milSec = decimalSize == 0 ? "" : "." + res.Remove(0, res.Length - decimalSize);
-
-                                int secReal = int.Parse(res.Remove(res.Length - 3));
-                                int min = (int)(secReal / 60.0f);
-                                int sec = (int)secReal - min * 60;
-
-                                string minStr;
-                                if (min.ToString().Length == 1) minStr = "0" + min.ToString();
-                                else minStr = min.ToString();
-
-                                string secStr;
-                                if (sec.ToString().Length == 1) secStr = "0" + sec.ToString();
-                                else secStr = sec.ToString();
-
-                                res = minStr + ":" + secStr + milSec;
-
-                                sampleContainer.transform.Find("Score").GetComponentInChildren<Text>().text = res;
+                                string timeScore = TimeTypeConvert(scorePlayers[i]);
+                                sampleContainer.transform.Find("Score").GetComponentInChildren<Text>().text = timeScore;
                             }
 
-                            if (playerPhoto != PlayerPhoto.NonePhoto && photo[i] != "nonePhoto")
-                                sampleContainer.transform.Find("Photo").GetComponentInChildren<ImageLoadYG>().Load(photo[i]);
+                            if (playerPhoto != PlayerPhoto.NonePhoto)
+                            {
+                                ImageLoadYG imageLoad = sampleContainer.transform.Find("Photo").GetComponentInChildren<ImageLoadYG>();
+                                if (photo[i] == "nonePhoto")
+                                {
+                                    if (isHiddenPlayerPhoto)
+                                    {
+                                        if (imageLoad.rawImage)
+                                        {
+                                            imageLoad.rawImage.texture = isHiddenPlayerPhoto.texture;
+                                            imageLoad.rawImage.enabled = true;
+                                        }
+                                        if (imageLoad.spriteImage)
+                                        {
+                                            imageLoad.spriteImage.sprite = isHiddenPlayerPhoto;
+                                            imageLoad.spriteImage.enabled = true;
+                                        }
+                                    }
+                                }
+                                else imageLoad.Load(photo[i]);
+                            }
+
+                            playersData[i] = new PlayersData()
+                            {
+                                name = playersName[i],
+                                rank = rank[i],
+                                score = scorePlayers[i],
+                                photo = photo[i]
+                            };
                         }
                     }
                 }
+
+                onUpdateData.Invoke();
             }
         }
 
@@ -158,6 +187,33 @@ namespace YG
         public void NewScore(int score) => YandexGame.NewLeaderboardScores(nameLB, score);
 
         public void NewScoreTimeConvert(float score) => YandexGame.NewLBScoreTimeConvert(nameLB, score);
+
+        string CheckName(string origName)
+        {
+            if (origName != "anonymous") return origName;
+            else return YandexGame.Instance.infoYG.IsHiddenTextTranslate();
+        }
+
+        public string TimeTypeConvert(int score)
+        {
+            string result = score.ToString();
+            string milSec = decimalSize == 0 ? "" : "." + result.Remove(0, result.Length - decimalSize);
+
+            int secReal = int.Parse(result.Remove(result.Length - 3));
+            int min = (int)(secReal / 60.0f);
+            int sec = secReal - min * 60;
+
+            string minStr;
+            if (min.ToString().Length == 1) minStr = "0" + min.ToString();
+            else minStr = min.ToString();
+
+            string secStr;
+            if (sec.ToString().Length == 1) secStr = "0" + sec.ToString();
+            else secStr = sec.ToString();
+
+            result = minStr + ":" + secStr + milSec;
+            return result;
+        }
     }
 }
 

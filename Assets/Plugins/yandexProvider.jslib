@@ -37,7 +37,7 @@ mergeInto(LibraryManager.library,
 
 	FullAdShow: function ()
 	{
-		FullscreenShow();
+		FullAdShow();
 	},
 
     RewardedShow: function (id)

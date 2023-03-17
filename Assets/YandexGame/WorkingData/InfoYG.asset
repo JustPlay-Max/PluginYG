@@ -19,7 +19,7 @@ MonoBehaviour:
   flush: 0
   saveCloudInterval: 5
   AdWhenLoadingScene: 1
-  fullscreenAdInterval: 5
+  fullscreenAdInterval: 60
   durationOfAdSimulation: 0.5
   LocalizationEnable: 1
   callingLanguageCheck: 0
@@ -114,7 +114,6 @@ MonoBehaviour:
     de: 
     hi: 
   debug: 1
-  AutoBuildArchiving: 1
+  autoBuildArchiving: 1
   staticRBTInGame: 0
-  sitelock: 0
   SDKStartDelay: 0

@@ -39,6 +39,12 @@ namespace YG
             if (!showOnMobileDevice && (YandexGame.EnvironmentData.isMobile || YandexGame.EnvironmentData.isTablet))
                 YandexGame.EnvironmentData.reviewCanShow = false;
 
+            if (!authDialog && !YandexGame.auth)
+            {
+                ReviewNotAvailable.Invoke();
+                return;
+            }
+
             if (YandexGame.EnvironmentData.reviewCanShow)
                 ReviewAvailable.Invoke();
             else ReviewNotAvailable.Invoke();

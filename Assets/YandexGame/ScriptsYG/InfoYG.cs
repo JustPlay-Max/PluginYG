@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityToolbag;
 
 namespace YG
@@ -29,7 +28,7 @@ namespace YG
 
         [ConditionallyVisible(nameof(saveCloud))]
         [Tooltip("Интервал облачных сохранений.\nПри использовании метода сохранения (SaveProgress), сохранения будут происходить локально, если таймер не достиг значения (Save Cloud Interval. По умолчанию = 5). Если же таймер достиг интервала, то сохранения запишутся в облако.\nПри загрузке сохранений, будут загружены более актуальные данные (из локальных или облачных сохранений).")]
-        [Min(5)]
+        [Min(0)]
         public int saveCloudInterval = 5;
 
         [Header("Ads")]
@@ -37,12 +36,10 @@ namespace YG
         [Tooltip(" •  Автоматически показывать рекламу после загрузки сцен?\nПо умолчанию = true — это значит, что показ рекламы будет вызываться при загрузке любой сцены в игре. Значение false — реклама не будет показываться при загрузке сцен.\n\n •  Независимо от выбора данного параметра, по умолчанию первая реклама показывается еще до загрузки игры, это можно отключить:\n1. Перейдите в настройки проекта Project Settings → Player → Resolution and Presentation → WebGL Template\n2. Выберите шаблон PluginYG\n3. Найдите поле Off ads before loading game\n4. Заполните данное поле любым словом, например, запишите туда true")]
         public bool AdWhenLoadingScene = true;
 
-        [Tooltip("Интервал запросов на вызов полноэкранной рекламы.")]
-        [Min(5)]
+        [Tooltip("Интервал запросов на вызов полноэкранной рекламы."), Min(5)]
         public int fullscreenAdInterval = 10;
 
-        [Tooltip("Длительность симуляции показа рекламы.")]
-        [Min(0)]
+        [Tooltip("Длительность симуляции показа рекламы."), Min(0)]
         public float durationOfAdSimulation = 0.5f;
 
         [Header("Language Translation")]
@@ -51,9 +48,9 @@ namespace YG
         public bool LocalizationEnable;
 
         public enum CallingLanguageCheck { FirstLaunchOnly, EveryGameLaunch, DoNotChangeLanguageStartup };
-        [Tooltip("Менять язык игры в соответствии с языком браузера:\nFirstLaunchOnly - Только при первом запуске игры\nEveryGameLaunch - Каждый раз при запуске игры\nDoNotChangeLanguageStartup - Не менять язык при запуске игры.")]
+        [Tooltip("Менять язык игры в соответствии с языком установленным Я.Играми:\nFirstLaunchOnly - Только при первом запуске игры\nEveryGameLaunch - Каждый раз при запуске игры\nDoNotChangeLanguageStartup - Не менять язык при запуске игры.")]
         [ConditionallyVisible(nameof(LocalizationEnable))]
-        public CallingLanguageCheck callingLanguageCheck;
+        public CallingLanguageCheck callingLanguageCheck = CallingLanguageCheck.EveryGameLaunch;
 
         public enum TranslateMethod { AutoLocalization, Manual, CSVFile };
         [Tooltip("Метод перевода. \nAutoLocalization - Автоматический перевод через интернет с помощью Google Translate \nManual - Ручной режим. Вы сами записываете перевод в компоненте LanguageYG \nCSVFile - Перевод с плмлщью Excel файла.")]
@@ -205,10 +202,7 @@ namespace YG
         [Tooltip("Если данный параметр выключен, то статические баннеры будут отображаться только во время загрузки игры. Если данный параметр включен, то статические баннеры будут отображаться и во время загрузки игры и в самой игре они тоже будут присутствовать!")]
         public bool staticRBTInGame;
 
-        [Tooltip("Защита от кражи игры для дальнейшей публикации на пиратских сайтах.\nНа данный момент известно, что SiteLock может блокировать игру в браузерах Firefox (при определенных настройках), Brave и других браузерах, в которых есть повышенная конфеденциальность. По этому игра может не работать у небольшого процента игроков! SiteLock запрашивает адрес игры. В случае, если игра запущена вне сайта Яндекс.Игры, неверный домен, не верный id игры, то будет произведен краш игры.")]
-        public bool sitelock;
-
-        [Tooltip("Для более старых версий Unity требуется задержка старта SDK (задержка в кардах в секунду).\nСтавить задержку сдедует, если при запуске игры на Web сервере, после загрузки игры происходит краш или функции SDK не работают. В таком случае, обновите Unity до актуальной версии, либо поставьте задержку (рекомедруется: 20).\nЕсли SDK умпешно загружается, задержку ставить не требуется.")]
+        [Tooltip("Для более старых версий Unity требуется задержка старта SDK (задержка в кардах в секунду).\nСтавить задержку сдедует, если при запуске игры на Web сервере, после загрузки игры происходит краш или функции SDK не работают. В таком случае, обновите Unity до актуальной версии, либо поставьте задержку (рекомедруется: 20).\nЕсли SDK успешно загружается, задержку ставить не требуется.")]
         [Min(0)]
         public int SDKStartDelay;
 
@@ -343,6 +337,213 @@ namespace YG
             else if (i == 25) return fontsSizeCorrect.de;
             else if (i == 26) return fontsSizeCorrect.hi;
             else return null;
+        }
+
+        public string UnauthorizedTextTranslate()
+        {
+            string lang = YandexGame.EnvironmentData.language;
+            if (LocalizationEnable)
+                lang = YandexGame.savesData.language;
+
+            return UnauthorizedTextTranslate(lang);
+        }
+
+        public string UnauthorizedTextTranslate(string languageTranslate)
+        {
+            string name;
+
+            switch (languageTranslate)
+            {
+                case "ru":
+                    name = "неавторизованный";
+                    break;
+                case "en":
+                    name = "unauthorized";
+                    break;
+                case "tr":
+                    name = "yetkisiz";
+                    break;
+                case "az":
+                    name = "icazəsiz";
+                    break;
+                case "be":
+                    name = "неаўтарызаваны";
+                    break;
+                case "he":
+                    name = "לא מורשה";
+                    break;
+                case "hy":
+                    name = "չարտոնված";
+                    break;
+                case "ka":
+                    name = "არასანქცირებული";
+                    break;
+                case "et":
+                    name = "loata";
+                    break;
+                case "fr":
+                    name = "non autorisé";
+                    break;
+                case "kk":
+                    name = "рұқсат етілмеген";
+                    break;
+                case "ky":
+                    name = "уруксатсыз";
+                    break;
+                case "lt":
+                    name = "neleistinas";
+                    break;
+                case "lv":
+                    name = "neleistinas";
+                    break;
+                case "ro":
+                    name = "neautorizat";
+                    break;
+                case "tg":
+                    name = "беиҷозат";
+                    break;
+                case "tk":
+                    name = "yetkisiz";
+                    break;
+                case "uk":
+                    name = "несанкціонований";
+                    break;
+                case "uz":
+                    name = "ruxsatsiz";
+                    break;
+                case "es":
+                    name = "autorizado";
+                    break;
+                case "pt":
+                    name = "autorizado";
+                    break;
+                case "ar":
+                    name = "غير مصرح به";
+                    break;
+                case "id":
+                    name = "tidak sah";
+                    break;
+                case "ja":
+                    name = "無許可";
+                    break;
+                case "it":
+                    name = "autorizzato";
+                    break;
+                case "de":
+                    name = "unerlaubter";
+                    break;
+                case "hi":
+                    name = "अनधिकृत";
+                    break;
+                default:
+                    name = "unauthorized";
+                    break;
+
+            }
+            return name;
+        }
+
+        public string IsHiddenTextTranslate()
+        {
+            string lang = YandexGame.EnvironmentData.language;
+            if (LocalizationEnable)
+                lang = YandexGame.savesData.language;
+
+            return IsHiddenTextTranslate(lang);
+        }
+
+        public string IsHiddenTextTranslate(string languageTranslate)
+        {
+            string name;
+
+            switch (languageTranslate)
+            {
+                case "ru":
+                    name = "скрыт";
+                    break;
+                case "en":
+                    name = "is hidden";
+                    break;
+                case "tr":
+                    name = "gizli";
+                    break;
+                case "az":
+                    name = "gizlidir";
+                    break;
+                case "be":
+                    name = "скрыты";
+                    break;
+                case "he":
+                    name = "מוחבא";
+                    break;
+                case "hy":
+                    name = "թաքնված է";
+                    break;
+                case "ka":
+                    name = "იმალება";
+                    break;
+                case "et":
+                    name = "on peidetud";
+                    break;
+                case "fr":
+                    name = "est caché";
+                    break;
+                case "kk":
+                    name = "жасырылған";
+                    break;
+                case "ky":
+                    name = "жашыруун";
+                    break;
+                case "lt":
+                    name = "yra paslėpta";
+                    break;
+                case "lv":
+                    name = "ir paslēpts";
+                    break;
+                case "ro":
+                    name = "este ascuns";
+                    break;
+                case "tg":
+                    name = "пинҳон аст";
+                    break;
+                case "tk":
+                    name = "gizlenendir";
+                    break;
+                case "uk":
+                    name = "прихований";
+                    break;
+                case "uz":
+                    name = "yashiringan";
+                    break;
+                case "es":
+                    name = "Está oculto";
+                    break;
+                case "pt":
+                    name = "está escondido";
+                    break;
+                case "ar":
+                    name = "مخفيا";
+                    break;
+                case "id":
+                    name = "tersembunyi";
+                    break;
+                case "ja":
+                    name = "隠されています";
+                    break;
+                case "it":
+                    name = "è nascosto";
+                    break;
+                case "de":
+                    name = "ist versteckt";
+                    break;
+                case "hi":
+                    name = "छिपा है";
+                    break;
+                default:
+                    name = "is hidden";
+                    break;
+            }
+            return name;
         }
     }
 }
