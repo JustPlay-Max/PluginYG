@@ -32,7 +32,7 @@ namespace YG
         [HideInInspector] public string languageSaves;
         [HideInInspector] public bool promptDone;
 
-        private void Start()
+        private void Awake()
         {
             if (YandexGame.SDKEnabled)
                 GetData();

@@ -10,7 +10,10 @@ namespace YG.Example
 
         int moneyCount = 0;
 
-        void Start() => AdMoney(0);
+        void Awake()
+        {
+            AdMoney(0);
+        }
 
         private void OnEnable() => YandexGame.RewardVideoEvent += Rewarded;
         private void OnDisable() => YandexGame.RewardVideoEvent -= Rewarded;

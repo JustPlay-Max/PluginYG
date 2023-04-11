@@ -62,11 +62,11 @@ namespace YG
         [Tooltip("Ивенты для кастомных методов")]
         public CustomEvents customEvents;
 
-        static bool audioPauseOnAd;
-        static float timeScaleOnAd;
-        static bool cursorVisibleOnAd;
-        static CursorLockMode cursorLockModeOnAd;
-        static bool start;
+        private static bool audioPauseOnAd;
+        private static float timeScaleOnAd;
+        private static bool cursorVisibleOnAd;
+        private static CursorLockMode cursorLockModeOnAd;
+        private static bool start;
 
         private void Start()
         {
@@ -82,116 +82,96 @@ namespace YG
 
         private void OnEnable()
         {
-            YandexGame.OpenFullAdEvent += OpenFullAd;
-            YandexGame.CloseFullAdEvent += CloseFullAd;
-            YandexGame.OpenVideoEvent += OpenRewAd;
-            YandexGame.CloseVideoEvent += CloseRewAd;
+            YandexGame.OpenFullAdEvent += OpenFullscreenAd;
+            YandexGame.CloseFullAdEvent += CloseFullscreenAd;
+            YandexGame.OpenVideoEvent += OpenRewardedAd;
+            YandexGame.CloseVideoEvent += CloseRewardedAd;
         }
+
         private void OnDisable()
         {
-            YandexGame.OpenFullAdEvent -= OpenFullAd;
-            YandexGame.CloseFullAdEvent -= CloseFullAd;
-            YandexGame.OpenVideoEvent -= OpenRewAd;
-            YandexGame.CloseVideoEvent -= CloseRewAd;
+            YandexGame.OpenFullAdEvent -= OpenFullscreenAd;
+            YandexGame.CloseFullAdEvent -= CloseFullscreenAd;
+            YandexGame.OpenVideoEvent -= OpenRewardedAd;
+            YandexGame.CloseVideoEvent -= CloseRewardedAd;
         }
 
-        void OpenFullAd()
+        private void OpenFullscreenAd() => Pause(true);
+        private void CloseFullscreenAd() => Pause(false);
+        private void OpenRewardedAd() => Pause(true);
+        private void CloseRewardedAd() => Pause(false);
+
+        private void Pause(bool pause)
         {
             if (pauseType != PauseType.NothingToControl)
-                Pause(true);
-
-            customEvents.OpenAd.Invoke();
-        }
-
-        void CloseFullAd()
-        {
-            if (pauseType != PauseType.NothingToControl)
-                Pause(false);
-
-            customEvents.CloseAd.Invoke();
-        }
-
-        void OpenRewAd()
-        {
-            if (pauseType != PauseType.NothingToControl)
-                Pause(true);
-
-            customEvents.OpenAd.Invoke();
-        }
-
-        void CloseRewAd()
-        {
-            if (pauseType != PauseType.NothingToControl)
-                Pause(false);
-
-            customEvents.CloseAd.Invoke();
-        }
-
-        void Pause(bool pause)
-        {
-            if (pauseType == PauseType.AudioPause || pauseType == PauseType.All)
             {
-                if (pauseMethod == PauseMethod.CustomState)
-                {
-                    if (pause) AudioListener.pause = true;
-                    else AudioListener.pause = closingADValues.audioPause;
-                }
-                else
-                {
-                    if (pause)
-                    {
-                        audioPauseOnAd = AudioListener.pause;
-                        AudioListener.pause = true;
-                    }
-                    else AudioListener.pause = audioPauseOnAd;
-                }
-            }
-
-            if (pauseType == PauseType.TimeScalePause || pauseType == PauseType.All)
-            {
-                if (pauseMethod == PauseMethod.CustomState)
-                {
-                    if (pause) Time.timeScale = openingADValues.timeScale;
-                    else Time.timeScale = closingADValues.timeScale;
-                }
-                else
-                {
-                    if (pause)
-                    {
-                        timeScaleOnAd = Time.timeScale;
-                        Time.timeScale = 0;
-                    }
-                    else Time.timeScale = timeScaleOnAd;
-                }
-            }
-
-            if (pauseType == PauseType.CursorActivity || pauseType == PauseType.All)
-            {
-                if (pause)
-                {
-                    cursorVisibleOnAd = Cursor.visible;
-                    cursorLockModeOnAd = Cursor.lockState;
-
-                    Cursor.visible = true;
-                    Cursor.lockState = CursorLockMode.None;
-                }
-                else
+                if (pauseType == PauseType.AudioPause || pauseType == PauseType.All)
                 {
                     if (pauseMethod == PauseMethod.CustomState)
                     {
-                        if (closingADValues.cursorVisible == CursorVisible.Hide)
-                            Cursor.visible = false;
-                        else Cursor.visible = true;
-
-                        Cursor.lockState = closingADValues.cursorLockMode;
+                        if (pause) AudioListener.pause = true;
+                        else AudioListener.pause = closingADValues.audioPause;
                     }
                     else
                     {
-                        Cursor.visible = cursorVisibleOnAd;
-                        Cursor.lockState = cursorLockModeOnAd;
+                        if (pause)
+                        {
+                            audioPauseOnAd = AudioListener.pause;
+                            AudioListener.pause = true;
+                        }
+                        else AudioListener.pause = audioPauseOnAd;
+                    }
+                }
+
+                if (pauseType == PauseType.TimeScalePause || pauseType == PauseType.All)
+                {
+                    if (pauseMethod == PauseMethod.CustomState)
+                    {
+                        if (pause) Time.timeScale = openingADValues.timeScale;
+                        else Time.timeScale = closingADValues.timeScale;
+                    }
+                    else
+                    {
+                        if (pause)
+                        {
+                            timeScaleOnAd = Time.timeScale;
+                            Time.timeScale = 0;
+                        }
+                        else Time.timeScale = timeScaleOnAd;
+                    }
+                }
+
+                if (pauseType == PauseType.CursorActivity || pauseType == PauseType.All)
+                {
+                    if (pause)
+                    {
+                        cursorVisibleOnAd = Cursor.visible;
+                        cursorLockModeOnAd = Cursor.lockState;
+
+                        Cursor.visible = true;
+                        Cursor.lockState = CursorLockMode.None;
+                    }
+                    else
+                    {
+                        if (pauseMethod == PauseMethod.CustomState)
+                        {
+                            if (closingADValues.cursorVisible == CursorVisible.Hide)
+                                Cursor.visible = false;
+                            else Cursor.visible = true;
+
+                            Cursor.lockState = closingADValues.cursorLockMode;
+                        }
+                        else
+                        {
+                            Cursor.visible = cursorVisibleOnAd;
+                            Cursor.lockState = cursorLockModeOnAd;
+                        }
                     }
                 }
             }
+
+            if (pause) customEvents.OpenAd.Invoke();
+            else customEvents.CloseAd.Invoke();
         }
     }
 }

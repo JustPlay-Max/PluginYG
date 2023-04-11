@@ -13,7 +13,7 @@ namespace YG.Example
         private void OnEnable() => YandexGame.GetDataEvent += GetLoad;
         private void OnDisable() => YandexGame.GetDataEvent -= GetLoad;
 
-        private void Start()
+        private void Awake()
         {
             if (YandexGame.SDKEnabled)
                 GetLoad();

@@ -50,7 +50,7 @@ namespace YG
 
         string photoSize;
 
-        void Start()
+        void Awake()
         {
             if (playerPhoto == PlayerPhoto.NonePhoto)
                 photoSize = "nonePhoto";
@@ -194,7 +194,8 @@ namespace YG
             else return YandexGame.Instance.infoYG.IsHiddenTextTranslate();
         }
 
-        public string TimeTypeConvert(int score)
+
+        public static string TimeTypeConvertStatic(int score, int decimalSize)
         {
             string result = score.ToString();
             string milSec = decimalSize == 0 ? "" : "." + result.Remove(0, result.Length - decimalSize);
@@ -213,6 +214,16 @@ namespace YG
 
             result = minStr + ":" + secStr + milSec;
             return result;
+        }
+
+        public static string TimeTypeConvertStatic(int score)
+        {
+            return TimeTypeConvertStatic(score, 0);
+        }
+
+        public string TimeTypeConvert(int score)
+        {
+            return TimeTypeConvertStatic(score, decimalSize);
         }
     }
 }

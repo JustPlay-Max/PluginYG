@@ -44,7 +44,7 @@ namespace YG
 
         int labelBaseFontSize, itemBaseFontSize;
 
-        void Start()
+        void Awake()
         {
             labelBaseFontSize = labelText.fontSize;
             itemBaseFontSize = itemText.fontSize;

@@ -1,3 +1,4 @@
+
 Asset is governed by the Asset Store EULA; however, the following components are governed by the licenses indicated below:
 
 Roboto-Regular.ttf
@@ -11,5 +12,3 @@ Copyright 2020 A Better Unity WebGL template Project Authors (https://github.com
 YandexGame/ScriptsYG/UnityToolbag-main
 [CC0](https://creativecommons.org/publicdomain/zero/1.0/) November 7, 2017
 Copyright 2021 UnityToolbag Project Authors (https://github.com/kellygravelyn/UnityToolbag)
-
-The permission to use the intellectual property of Yandex is located in the file IP_consent_20230126.pdf

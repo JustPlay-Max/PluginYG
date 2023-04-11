@@ -17,12 +17,17 @@ MonoBehaviour:
   leaderboardEnable: 1
   saveCloud: 1
   flush: 0
+  localSaveSync: 1
   saveCloudInterval: 5
+  metricaEnable: 0
+  metricaCounterID: 0
   AdWhenLoadingScene: 1
+  showFirstAd: 1
+  adDisplayCalls: 0
   fullscreenAdInterval: 60
   durationOfAdSimulation: 0.5
   LocalizationEnable: 1
-  callingLanguageCheck: 0
+  callingLanguageCheck: 1
   translateMethod: 0
   domainAutoLocalization: com
   CSVFileTranslate:
@@ -86,7 +91,7 @@ MonoBehaviour:
     de: []
     hi: []
   fontsSizeCorrect:
-    ru: 00000000
+    ru: 
     en: 
     tr: 
     az: 
@@ -114,6 +119,9 @@ MonoBehaviour:
     de: 
     hi: 
   debug: 1
-  autoBuildArchiving: 1
-  staticRBTInGame: 0
+  archivingBuild: 1
+  bakcgroundImage: 2
+  pixelRatioEnable: 0
+  pixelRatioValue: 1
   SDKStartDelay: 0
+  staticRBTInGame: 0

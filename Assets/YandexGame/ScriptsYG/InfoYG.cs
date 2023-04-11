@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 using UnityToolbag;
 
 namespace YG
@@ -27,17 +28,37 @@ namespace YG
         public bool flush;
 
         [ConditionallyVisible(nameof(saveCloud))]
+        [Tooltip("Синхронизировать облачные сохранения с локальными? Если localSaveSync = false при включенных облачных сохранениях, то локальные просто не будут использоваться.")]
+        public bool localSaveSync = true;
+
+        [ConditionallyVisible(nameof(saveCloud))]
         [Tooltip("Интервал облачных сохранений.\nПри использовании метода сохранения (SaveProgress), сохранения будут происходить локально, если таймер не достиг значения (Save Cloud Interval. По умолчанию = 5). Если же таймер достиг интервала, то сохранения запишутся в облако.\nПри загрузке сохранений, будут загружены более актуальные данные (из локальных или облачных сохранений).")]
         [Min(0)]
         public int saveCloudInterval = 5;
 
-        [Header("Ads")]
+        public bool metricaEnable;
+        [ConditionallyVisible(nameof(metricaEnable))]
+        [Min(0)]
+        public int metricaCounterID;
 
-        [Tooltip(" •  Автоматически показывать рекламу после загрузки сцен?\nПо умолчанию = true — это значит, что показ рекламы будет вызываться при загрузке любой сцены в игре. Значение false — реклама не будет показываться при загрузке сцен.\n\n •  Независимо от выбора данного параметра, по умолчанию первая реклама показывается еще до загрузки игры, это можно отключить:\n1. Перейдите в настройки проекта Project Settings → Player → Resolution and Presentation → WebGL Template\n2. Выберите шаблон PluginYG\n3. Найдите поле Off ads before loading game\n4. Заполните данное поле любым словом, например, запишите туда true")]
+        [Header("Advertisement")]
+
+        [Tooltip("Показывать рекламу при переключении сцены? (после загрузки сцен)\n\nПо умолчанию = true — это значит, что показ рекламы будет вызываться при загрузке любой сцены в игре. Значение false — реклама не будет показываться при загрузке сцен.")]
         public bool AdWhenLoadingScene = true;
 
+        [Tooltip("Показывать рекламу при загрузке игры? (Первая реклама при открытии страницы игры)")]
+        public bool showFirstAd = true;
+
+        public enum AdCallsMode
+        {
+            [InspectorName("Until Ad Is Shown")] until,
+            [InspectorName("Resetting Timer After Any Ad Display")] reset
+        }
+        [Tooltip("Обработка вызовов показа рекламы\n\n •  Until Ad Is Shown - Не включать ограничительный таймер плагина, пока реклама не будет успешно показана. Если запрос на показ рекламы был отклонён по различным причинам, то вызовы к показу рекламы будут выполняться пока она не покажется.\n\n •  Resetting Timer After Any Ad Display - Включать ограничительный таймер плагина после любого вызова рекламы. Даже если реклама не была показана, запросы на рекламу смогут вновь выполняться только через указанный вами временной промежуток (Fullscreen Ad Interval).")]
+        public AdCallsMode adDisplayCalls = AdCallsMode.until;
+
         [Tooltip("Интервал запросов на вызов полноэкранной рекламы."), Min(5)]
-        public int fullscreenAdInterval = 10;
+        public int fullscreenAdInterval = 60;
 
         [Tooltip("Длительность симуляции показа рекламы."), Min(0)]
         public float durationOfAdSimulation = 0.5f;
@@ -193,18 +214,30 @@ namespace YG
         [Tooltip("Вы можете выключить запись лога в консоль.")]
         public bool debug = true;
 
-        [Tooltip("Включить автоматическую архивацию билда?\n\n •  После успешного создания билда игры, папка с содержанием билда пакуется в zip архив. При повторной сборке игры, архив не перезапишется, но создастся новый пакет с приписанным номером в названии файла.")]
-        public bool autoBuildArchiving = true;
+        [FormerlySerializedAs("autoBuildArchiving"), Tooltip("Включить автоматическую архивацию билда?\n\n •  После успешного создания билда игры, папка с содержанием билда пакуется в zip архив. При повторной сборке игры, архив не перезапишется, но создастся новый пакет с приписанным номером в названии файла.")]
+        public bool archivingBuild = true;
 
-        //[Tooltip(@"Выполнять перезагрузку статическх полей? (Полезно для ECS). Рекомендуется включать параметр ""For ECS"" при ""выключение перезагрузки домена"" в настройках проекта. Это часто используют при работе с ECS-фреймворками (DOTS, LeoECS, Morpeh, etc).")]
-        //public bool forECS;
+        public enum BakcgroundImage
+        {
+            [InspectorName("Player Settings")] unity,
+            [InspectorName("No Background")] no,
+            [InspectorName("PNG")] png,
+            [InspectorName("JPG")] jpg,
+            [InspectorName("GIF")] gif
+        }
+        [Tooltip("")]
+        public BakcgroundImage bakcgroundImage = BakcgroundImage.png;
+
+        public bool pixelRatioEnable;
+        [ConditionallyVisible(nameof(pixelRatioEnable))]
+        [Min(0)]
+        public float pixelRatioValue = 1;
+
+        [Min(0), Tooltip("Для более старых версий Unity требуется задержка старта SDK (задержка в кардах в секунду).\nСтавить задержку сдедует, если при запуске игры на Web сервере, после загрузки игры происходит краш или функции SDK не работают. В таком случае, обновите Unity до актуальной версии, либо поставьте задержку (рекомедруется: 20).\nЕсли SDK успешно загружается, задержку ставить не требуется.")]
+        public int SDKStartDelay;
 
         [Tooltip("Если данный параметр выключен, то статические баннеры будут отображаться только во время загрузки игры. Если данный параметр включен, то статические баннеры будут отображаться и во время загрузки игры и в самой игре они тоже будут присутствовать!")]
         public bool staticRBTInGame;
-
-        [Tooltip("Для более старых версий Unity требуется задержка старта SDK (задержка в кардах в секунду).\nСтавить задержку сдедует, если при запуске игры на Web сервере, после загрузки игры происходит краш или функции SDK не работают. В таком случае, обновите Unity до актуальной версии, либо поставьте задержку (рекомедруется: 20).\nЕсли SDK успешно загружается, задержку ставить не требуется.")]
-        [Min(0)]
-        public int SDKStartDelay;
 
 
 

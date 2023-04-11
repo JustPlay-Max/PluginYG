@@ -1,8 +1,8 @@
 mergeInto(LibraryManager.library,
 {
-	AuthorizationCheck: function (playerPhotoSize, scopes)
+	InitSDK_Internal: function (playerPhotoSize, scopes)
 	{
-		AuthorizationCheck(UTF8ToString(playerPhotoSize), scopes);
+		InitSDK(UTF8ToString(playerPhotoSize), scopes);
 	},
 	
 	OpenAuthDialog: function (playerPhotoSize, scopes)
@@ -145,7 +145,14 @@ mergeInto(LibraryManager.library,
         stringToUTF8(returnStr, buffer, bufferSize);
 		
         return buffer;
-    }
+    },
+	
+	OpenURL: function (url) {
+		var a = document.createElement("a");
+		a.setAttribute("href", UTF8ToString(url));
+		a.setAttribute("target", "_blank");
+		a.click();
+	}
 });
 
 var FileIO = {

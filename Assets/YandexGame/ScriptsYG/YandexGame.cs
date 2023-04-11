@@ -132,7 +132,7 @@ namespace YG
                 else if (infoYG.playerPhotoSize == InfoYG.PlayerPhotoSize.large)
                     _photoSize = "large";
 
-                _AuthorizationCheck();
+                InitializationSDK();
             }
         }
 
@@ -245,9 +245,9 @@ namespace YG
             else
             {
 #if JSON_NET_ENABLED
-                savesData = JsonConvert.DeserializeObject<SavesYG>("savesData");
+                savesData = JsonConvert.DeserializeObject<SavesYG>(LoadFromLocalStorage("savesData"));
 #else
-                savesData = JsonUtility.FromJson<SavesYG>("savesData");
+                savesData = JsonUtility.FromJson<SavesYG>(LoadFromLocalStorage("savesData"));
 #endif
             }
 
@@ -310,7 +310,11 @@ namespace YG
             {
                 savesData.idSave++;
 #if !UNITY_EDITOR
-                SaveLocal();
+                if (!infoYG.saveCloud || (infoYG.saveCloud && infoYG.localSaveSync))
+                {
+                    SaveLocal();
+                }
+
                 if (infoYG.saveCloud && timerSaveCloud >= infoYG.saveCloudInterval + 1)
                 {
                     timerSaveCloud = 0;
@@ -343,19 +347,19 @@ namespace YG
 
         // Sending messages
 
-        #region Authorization Check
+        #region Initialization SDK
         [DllImport("__Internal")]
-        private static extern void AuthorizationCheck(string playerPhotoSize, bool scopes);
+        private static extern void InitSDK_Internal(string playerPhotoSize, bool scopes);
 
-        public void _AuthorizationCheck()
+        public void InitializationSDK()
         {
 #if !UNITY_EDITOR
-            AuthorizationCheck( _photoSize, infoYG.scopes);
+            InitSDK_Internal( _photoSize, infoYG.scopes);
 #else
-            SetAuthorization(@"{""playerAuth""" + ": " + @"""resolved""," + @"""playerName""" + ": " + @"""Ivan"", " + @"""playerId""" + ": " + @"""tOpLpSh7i8QG8Voh/SuPbeS4NKTj1OxATCTKQF92H4c="", " + @"""playerPhoto""" + ": " + @"""https://s381vla.storage.yandex.net/rdisk/6abebb2a2211159542df567e57bfd89c1a255305976455254fa0868910ffee57/6411b0ef/MemHQzsnZ2QE1ElANeLrWFkY7msmjkjvvw3wr5Q3giJMw53O6EAdzMrOYQICwbZg-LoS5wxafS5y5wTAMD_Fvg==?uid=325055514&filename=Player1.png&disposition=attachment&hash=&limit=0&content_type=image%2Fpng&owner_uid=325055514&fsize=13889&hid=3e22053d8e718b72893d54dd40d4a9a4&media_type=image&tknv=v2&etag=580b6bd8bc6fece28dc421e843492530&rtoken=FpFeHH6hXRuP&force_default=yes&ycrid=na-9b1d66ffc5d1eb5916adefb0f09568f7-downloader6e&ts=5f6eef20ad9c0&s=18045c1538c3df7e6a7ed187a974d6187e60b38016c6954192293e28d75f6137&pb=U2FsdGVkX1_6u1ORoSa9iHDfKDutmhz2XF4JKGHGS0cFuGWQRGb1QHcsjQ5iIU5jatOlaEy_94BwSLyElTEu-mmPLqkq2KONLzj9yGv2Yes""}");
+            SetInitializationSDK(@"{""playerAuth""" + ": " + @"""resolved""," + @"""playerName""" + ": " + @"""Ivan"", " + @"""playerId""" + ": " + @"""tOpLpSh7i8QG8Voh/SuPbeS4NKTj1OxATCTKQF92H4c="", " + @"""playerPhoto""" + ": " + @"""https://s381vla.storage.yandex.net/rdisk/6abebb2a2211159542df567e57bfd89c1a255305976455254fa0868910ffee57/6411b0ef/MemHQzsnZ2QE1ElANeLrWFkY7msmjkjvvw3wr5Q3giJMw53O6EAdzMrOYQICwbZg-LoS5wxafS5y5wTAMD_Fvg==?uid=325055514&filename=Player1.png&disposition=attachment&hash=&limit=0&content_type=image%2Fpng&owner_uid=325055514&fsize=13889&hid=3e22053d8e718b72893d54dd40d4a9a4&media_type=image&tknv=v2&etag=580b6bd8bc6fece28dc421e843492530&rtoken=FpFeHH6hXRuP&force_default=yes&ycrid=na-9b1d66ffc5d1eb5916adefb0f09568f7-downloader6e&ts=5f6eef20ad9c0&s=18045c1538c3df7e6a7ed187a974d6187e60b38016c6954192293e28d75f6137&pb=U2FsdGVkX1_6u1ORoSa9iHDfKDutmhz2XF4JKGHGS0cFuGWQRGb1QHcsjQ5iIU5jatOlaEy_94BwSLyElTEu-mmPLqkq2KONLzj9yGv2Yes""}");
 #endif
         }
-        #endregion Authorization Check
+        #endregion Initialization SDK
 
         #region Init Leaderboard
         [DllImport("__Internal")]
@@ -379,7 +383,7 @@ namespace YG
         public void _OpenAuthDialog()
         {
 #if !UNITY_EDITOR
-                    OpenAuthDialog(_photoSize, _scopes);
+            OpenAuthDialog(_photoSize, _scopes);
 #endif
 #if UNITY_EDITOR
             Message("Open Auth Dialog");
@@ -544,23 +548,45 @@ namespace YG
         #endregion Requesting Environment Data
 
         #region URL
+        [DllImport("__Internal")]
+        private static extern void OpenURL(string url);
+
+        public static void OnURL(string url)
+        {
+            try
+            {
+                OpenURL(url);
+            }
+            catch (Exception error)
+            {
+                Debug.LogError("The first method of following the link failed! Error:\n" + error + "\nInstead of the first method, let's try to call the second method 'Application.OpenURL'");
+                Application.OpenURL(url);
+            }
+        }
+
         public void _OnURL_Yandex_DefineDomain(string url)
         {
-            Message("URL yandex.DefineDomain");
+            url = "https://yandex." + EnvironmentData.domain + "/games/" + url;
+            Message("URL Transition (yandexGames.DefineDomain) url: " + url);
 #if !UNITY_EDITOR
             if (EnvironmentData.domain != null && EnvironmentData.domain != "")
-                Application.OpenURL("https://yandex." + EnvironmentData.domain + "/games/" + url);
+            {
+                OnURL(url);
+            }
             else Debug.LogError("OnURL_Yandex_DefineDomain: Domain not defined!");
-#endif
-#if UNITY_EDITOR
-            Application.OpenURL("https://yandex." + "ru/games/" + url);
+#else
+            Application.OpenURL(url);
 #endif
         }
 
         public void _OnAnyURL(string url)
         {
-            Message("Any URL");
+            Message("Any URL Transition. url: " + url);
+#if !UNITY_EDITOR
+            OnURL(url);
+#else
             Application.OpenURL(url);
+#endif
         }
         #endregion URL
 
@@ -827,12 +853,28 @@ namespace YG
         }
 
         public static Action CloseFullAdEvent;
-        public void CloseFullAd()
+        public void CloseFullAd(string wasShown)
         {
             nowFullAd = false;
             CloseFullscreenAd.Invoke();
             CloseFullAdEvent?.Invoke();
+#if !UNITY_EDITOR
+            if (wasShown == "true")
+            {
+                Message("Closed Fullscreen Ad");
+            }
+            else
+            {
+                if (infoYG.adDisplayCalls == InfoYG.AdCallsMode.until)
+                {
+                    Message("The fullscreen ad was not shown! The next time the method is executed to display an ad, the ad will be called because you have selected the method (Until Ad Is Shown)");
+                    ResetTimerFullAd();
+                }
+                else Message("The fullscreen ad was not shown! The next time the method is executed to display an ad, the ad will not be called, since you have selected the method (Resetting Time After Any Ad Display).");
+            }
+#endif
         }
+        public void CloseFullAd() => CloseFullAd("true");
 
         public void ResetTimerFullAd()
         {
@@ -883,7 +925,7 @@ namespace YG
         #region Authorization
         JsonAuth jsonAuth = new JsonAuth();
 
-        public void SetAuthorization(string data)
+        public void SetInitializationSDK(string data)
         {
 #if JSON_NET_ENABLED
             jsonAuth = JsonConvert.DeserializeObject<JsonAuth>(data);
@@ -959,6 +1001,25 @@ namespace YG
                 }
             }
             else cloudDataState = DataState.NotExist;
+
+            if (infoYG.localSaveSync == false)
+            {
+                if (cloudDataState == DataState.NotExist)
+                {
+                    Message("No cloud saves. Local saves are disabled.");
+                    ResetSaveProgress();
+                }
+                else
+                {
+                    if (cloudDataState == DataState.Broken)
+                        Message("Load Cloud Broken! But we tried to restore and load cloud saves. Local saves are disabled.");
+                    else Message("Load Cloud Complete! Local saves are disabled.");
+
+                    savesData = cloudData;
+                    AfterLoading();
+                }
+                return;
+            }
 
             if (HasKey("savesData"))
             {
@@ -1402,8 +1463,8 @@ namespace YG
 
         public class JsonEnvironmentData
         {
-            public string language;
-            public string domain;
+            public string language = "ru";
+            public string domain = "ru";
             public string deviceType = "desktop";
             public bool isMobile;
             public bool isDesktop = true;

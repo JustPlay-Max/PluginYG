@@ -11,9 +11,7 @@
     <!-- Yandex Games SDK -->
     <script src="https://yandex.ru/games/sdk/v2"></script>
 
-    #if METRIC
-    {{{ METRIC }}}
-    #endif
+    <!-- Yandex.Metrika counter -->
 
     #if BANNER_DYNAMIC_1
     <style>
@@ -270,16 +268,12 @@
 
     if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
-        #if PIXEL_RATIO_MOBILE
-        config.devicePixelRatio = {{{ PIXEL_RATIO_MOBILE }}};
-        #endif
+        config.devicePixelRatio = 1;
     }
 
-    //#if BACKGROUND_FILENAME
-    //canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
-    //#endif
-
+    var backgroundUnity = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
     canvas.style.background = "url('background.png') center / cover";
+
     loadingCover.style.display = "";
 
     canvas.addEventListener("touchstart", () => { window.focus() });
@@ -295,6 +289,7 @@
     let initGame = false;
     let photoSizeForInit;
     let scopesForInit;
+    let firstAd = true;
 
     const script = document.createElement("script");
     script.src = loaderUrl;
@@ -347,23 +342,22 @@
             }
 
             if (initGame == true) {
-                AuthorizationCheck(photoSizeForInit, scopesForInit)
-                #if !OFF_ADS_BEFORE_LOADING_GAME
-                FullscreenShow();
-                #endif
+                InitSDK(photoSizeForInit, scopesForInit)
+                if (firstAd)
+                    FullscreenShow();
             }
             else {
-                #if !OFF_ADS_BEFORE_LOADING_GAME
-                ysdk.adv.showFullscreenAdv();
-                #endif
+                if (firstAd)
+                    ysdk.adv.showFullscreenAdv();
             }
         });
 
-    function AuthorizationCheck(photoSize, scopes) {
+    function InitSDK(photoSize, scopes) {
         console.log('Init GAME');
         initGame = true;
         photoSizeForInit = photoSize;
         scopesForInit = scopes;
+
         if (initSDK == true) {
             ysdk.features.LoadingAPI?.ready();
             InitPlayer(photoSize, scopes);
@@ -379,7 +373,7 @@
                 "playerId": "unauthorized",
                 "playerPhoto": "null"
             };
-            myGameInstance.SendMessage('YandexGame', 'SetAuthorization', JSON.stringify(authJson));
+            myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', JSON.stringify(authJson));
         } catch (e) {
             console.error('CRASH Not Authorized: ', e.message);
         }
@@ -410,7 +404,7 @@
                         "playerId": player.getUniqueID(),
                         "playerPhoto": playerPhoto
                     };
-                    myGameInstance.SendMessage('YandexGame', 'SetAuthorization', JSON.stringify(authJson));
+                    myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', JSON.stringify(authJson));
                     window.focus();
                 }
             }).catch(e => {
@@ -428,10 +422,10 @@
             ysdk.auth.openAuthDialog().then(() => {
                 InitPlayer(photoSize, scopes);
             }).catch(() => {
-                AuthorizationCheck(photoSize, scopes);
+                InitSDK(photoSize, scopes);
             });
-        } catch {
-            console.log('CRASH Open Auth Dialog: ');
+        } catch (e) {
+            console.log('CRASH Open Auth Dialog: ', e.message);
         }
     }
 
@@ -441,23 +435,17 @@
                 {
                     callbacks: {
                         onOpen: () => {
+                            console.log('Open Fullscreen Ad');
                             myGameInstance.SendMessage('YandexGame', 'OpenFullAd');
                         },
                         onClose: (wasShown) => {
-                            if (wasShown) {
-                                myGameInstance.SendMessage('YandexGame', 'CloseFullAd');
-                                console.log('Closed Fullscreen Ad.');
-                            }
-                            else {
-                                myGameInstance.SendMessage('YandexGame', 'CloseFullAd');
-                                myGameInstance.SendMessage('YandexGame', 'ResetTimerFullAd');
-                                console.log('Closed Fullscreen Ad Failure! Performance reset timer fullscreen ad');
-                            }
+                            if (wasShown) myGameInstance.SendMessage('YandexGame', 'CloseFullAd', 'true');
+                            else myGameInstance.SendMessage('YandexGame', 'CloseFullAd', 'false');
                             window.focus();
                         },
                         onError: (error) => {
+                            console.error('Error Fullscreen Ad', error);
                             myGameInstance.SendMessage('YandexGame', 'ErrorFullAd');
-                            console.error('Error Fullscreen Ad.', error);
                             window.focus();
                         }
                     }
@@ -474,21 +462,21 @@
                     callbacks:
                     {
                         onOpen: () => {
-                            myGameInstance.SendMessage('YandexGame', 'OpenVideo');
                             console.log('Opened Video Ad. Id: ' + id);
+                            myGameInstance.SendMessage('YandexGame', 'OpenVideo');
                         },
                         onClose: () => {
-                            myGameInstance.SendMessage('YandexGame', 'CloseVideo');
                             console.log('Closed Video Ad. Id: ' + id);
+                            myGameInstance.SendMessage('YandexGame', 'CloseVideo');
                             window.focus();
                         },
                         onRewarded: () => {
-                            myGameInstance.SendMessage('YandexGame', 'RewardVideo', id);
                             console.log('Reward Video Ad. Id: ' + id);
+                            myGameInstance.SendMessage('YandexGame', 'RewardVideo', id);
                         },
                         onError: (e) => {
+                            console.error('Error Video Ad. Id: ' + id, e);
                             myGameInstance.SendMessage('YandexGame', 'ErrorVideo');
-                            console.log('Error Video Ad. Id: ' + id, e);
                         }
                     }
                 });
