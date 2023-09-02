@@ -1,15 +1,13 @@
 
-namespace YG.Insides.BuildModify
+namespace YG.EditorScr.BuildModify
 {
-    public static partial class ModifyIndexFile
+    public partial class ModifyBuildManager
     {
-        static void SetAdWhenLoadGameValue(ref string fileText)
+        public static void SetAdWhenLoadGameValue()
         {
-            InfoYG infoYG = ConfigYG.GetInfoYG();
-
             if (infoYG.showFirstAd == false)
             {
-                fileText = fileText.Replace("let firstAd = true;", "let firstAd = false;");
+                indexFile = indexFile.Replace("let firstAd = true;", "let firstAd = false;");
             }
         }
     }

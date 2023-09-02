@@ -16,8 +16,8 @@ namespace YG.Insides
         public IEnumerator CallingAd(float duration, int id)
         {
             yield return new WaitForSecondsRealtime(duration);
-            YandexGame.Instance.CloseVideo();
             YandexGame.Instance.RewardVideo(id);
+            YandexGame.Instance.CloseVideo();
             Destroy(gameObject);
         }
     }

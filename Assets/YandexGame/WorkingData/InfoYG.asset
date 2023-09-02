@@ -14,18 +14,165 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopes: 1
   playerPhotoSize: 0
-  leaderboardEnable: 1
-  saveCloud: 1
-  flush: 0
-  localSaveSync: 1
-  saveCloudInterval: 5
-  metricaEnable: 0
-  metricaCounterID: 0
+  playerInfoSimulation:
+    authorized: 1
+    isMobile: 0
+    language: ru
+    name: Player this
+    uniqueID: 000
+    photo: https://justplaygames.ru/public/icon_player.png
   AdWhenLoadingScene: 1
   showFirstAd: 1
   adDisplayCalls: 0
   fullscreenAdInterval: 60
   durationOfAdSimulation: 0.5
+  testErrorOfRewardedAdsInEditor: 0
+  saveCloud: 1
+  flush: 0
+  localSaveSync: 1
+  saveCloudInterval: 5
+  saveOnQuitGame: 0
+  leaderboardEnable: 1
+  leaderboardSimulation:
+  - technoName: advanced
+    entries: 'Test LeaderBoard
+
+      Name: advanced
+
+      1. anonymous: 10
+
+      2.
+      Ivan: 15
+
+      3. Tanya: 23'
+    isDefault: 0
+    isInvertSortOrder: 0
+    decimalOffset: 0
+    type: numeric
+    players:
+    - rank: 1
+      name: anonymous
+      score: 10
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 123
+    - rank: 2
+      name: Ivan
+      score: 15
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    - rank: 3
+      name: Tanya
+      score: 23
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 456
+    - rank: 4
+      name: Player4
+      score: 30
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    - rank: 5
+      name: Player this
+      score: 40
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 000
+    - rank: 6
+      name: Player6
+      score: 50
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    thisPlayer:
+      rank: 2
+      score: 10
+  - technoName: simple
+    entries: "Test LeaderBoard\nName: simple\n1. \u0441\u043A\u0440\u044B\u0442:
+      10\n2. Max: 15\n3. Maria: 23"
+    isDefault: 0
+    isInvertSortOrder: 0
+    decimalOffset: 0
+    type: numeric
+    players:
+    - rank: 1
+      name: anonymous
+      score: 10
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 123
+    - rank: 2
+      name: Ivan
+      score: 15
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    - rank: 3
+      name: Tanya
+      score: 23
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 456
+    - rank: 4
+      name: player4
+      score: 30
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    - rank: 5
+      name: playerThis
+      score: 40
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 000
+    - rank: 6
+      name: player6
+      score: 50
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    thisPlayer:
+      rank: 0
+      score: 0
+  - technoName: time
+    entries: 'Test LeaderBoard
+
+      Name: time
+
+      1. anonymous: 10
+
+      2.
+      Max: 15
+
+      3. Maria: 23'
+    isDefault: 0
+    isInvertSortOrder: 0
+    decimalOffset: 0
+    type: numeric
+    players:
+    - rank: 1
+      name: anonymous
+      score: 7123
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 789
+    - rank: 2
+      name: Max
+      score: 15321
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 987
+    - rank: 3
+      name: Maria
+      score: 62000
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 891
+    - rank: 4
+      name: Player4
+      score: 122000
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    - rank: 5
+      name: Player this
+      score: 127000
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 000
+    - rank: 6
+      name: Player6
+      score: 340000
+      photo: https://justplaygames.ru/public/icon_player.png
+      uniqueID: 321
+    thisPlayer:
+      rank: 2
+      score: 10
   LocalizationEnable: 1
   callingLanguageCheck: 1
   translateMethod: 0
@@ -90,6 +237,35 @@ MonoBehaviour:
     it: []
     de: []
     hi: []
+  fontsTMP:
+    defaultFont: []
+    ru: []
+    en: []
+    tr: []
+    az: []
+    be: []
+    he: []
+    hy: []
+    ka: []
+    et: []
+    fr: []
+    kk: []
+    ky: []
+    lt: []
+    lv: []
+    ro: []
+    tg: []
+    tk: []
+    uk: []
+    uz: []
+    es: []
+    pt: []
+    ar: []
+    id: []
+    ja: []
+    it: []
+    de: []
+    hi: []
   fontsSizeCorrect:
     ru: 
     en: 
@@ -118,9 +294,31 @@ MonoBehaviour:
     it: 
     de: 
     hi: 
+  purshasesSimulation:
+  - id: gun
+    title: Gun
+    description: Product - Gun
+    imageURI: https://justplaygames.ru/public/Paymant1.png
+    priceValue: 5
+    consumed: 1
+  - id: armor
+    title: Armor
+    description: Product - Armor
+    imageURI: https://justplaygames.ru/public/Paymant2.png
+    priceValue: 10
+    consumed: 1
+  - id: grenade
+    title: Grenade
+    description: Product - Grenade
+    imageURI: https://justplaygames.ru/public/Paymant3.png
+    priceValue: 30
+    consumed: 1
+  metricaEnable: 0
+  metricaCounterID: 0
   debug: 1
   archivingBuild: 1
-  bakcgroundImage: 2
+  logoImageFormat: 1
+  backgroundImageFormat: 3
   pixelRatioEnable: 0
   pixelRatioValue: 1
   SDKStartDelay: 0

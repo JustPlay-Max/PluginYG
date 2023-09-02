@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 namespace YG
 {
+    [HelpURL("https://www.notion.so/PluginYG-d457b23eee604b7aa6076116aab647ed#28b70d48d9be436088f60200c99807cd")]
     public class PromptYG : MonoBehaviour
     {
         [Header("Buttons serialize")]

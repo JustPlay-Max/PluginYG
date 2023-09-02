@@ -3,12 +3,18 @@ using UnityEngine.Events;
 
 namespace YG
 {
+    [HelpURL("https://www.notion.so/PluginYG-d457b23eee604b7aa6076116aab647ed#178130fecabe4b3f81118dfe0fd88ccf")]
     public class ReviewYG : MonoBehaviour
     {
         [Tooltip("Открывать окно авторизации, если пользователь не авторизован.")]
-        public bool authDialog;
-        [Tooltip("Активировать оценку игры на мобильных устройствах? На мобильных устройствах открытие окна для оценки может вызывать зависание игры!")]
+        public enum ForUnauthorized { OpenAuthDialog, ReviewNotAvailable, Ignore };
+        public ForUnauthorized forUnauthorized;
+
+        [Tooltip("Активировать оценку игры на мобильных устройствах?")]
         public bool showOnMobileDevice;
+
+        [Tooltip("Обновлять информацию при каждой активации объекта (в OnEnable)?")]
+        public bool updateDataOnEnable;
         [Space(15)]
         public UnityEvent ReviewAvailable;
         public UnityEvent ReviewNotAvailable;
@@ -23,6 +29,7 @@ namespace YG
             YandexGame.ReviewSentEvent += ReviewSent;
 
             if (YandexGame.SDKEnabled) UpdateData();
+            if (updateDataOnEnable) UpdateData();
         }
         private void OnDisable()
         {
@@ -39,7 +46,8 @@ namespace YG
             if (!showOnMobileDevice && (YandexGame.EnvironmentData.isMobile || YandexGame.EnvironmentData.isTablet))
                 YandexGame.EnvironmentData.reviewCanShow = false;
 
-            if (!authDialog && !YandexGame.auth)
+            if (forUnauthorized == ForUnauthorized.ReviewNotAvailable
+                 && !YandexGame.auth)
             {
                 ReviewNotAvailable.Invoke();
                 return;
@@ -58,6 +66,19 @@ namespace YG
             ReviewNotAvailable.Invoke();
         }
 
-        public void ReviewShow() => YandexGame.ReviewShow(authDialog);
+        public void ReviewShow()
+        {
+            ReviewNotAvailable.Invoke(); // ?
+            YandexGame.EnvironmentData.reviewCanShow = false; // ?
+
+            bool authDialog = true;
+
+            if (forUnauthorized == ForUnauthorized.Ignore && !YandexGame.auth)
+            {
+                return;
+            }
+
+            YandexGame.ReviewShow(authDialog);
+        }
     }
 }

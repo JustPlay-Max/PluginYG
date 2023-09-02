@@ -1,11 +1,11 @@
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.Build.Reporting;
 using UnityEditor.Build;
 using System.IO;
 
-namespace YG.Insides.BuildModify
+namespace YG.EditorScr.BuildModify
 {
     public class PostProcessBuild : IPreprocessBuildWithReport
     {
@@ -21,10 +21,22 @@ namespace YG.Insides.BuildModify
         }
 
         [PostProcessBuild]
-        public static void ModifyIndex(BuildTarget target, string pathToBuiltProject)
+        public static void ModifyBuildDo(BuildTarget target, string pathToBuiltProject)
         {
-            ModifyIndexFile.ModifyIndex(pathToBuiltProject);
+            ModifyBuildManager.ModifyIndex(pathToBuiltProject);
             ArchivingBuild.Archiving(pathToBuiltProject);
+            BuildLog.WritingLog(pathToBuiltProject);
+        }
+
+        [MenuItem("Tools/PluginYG/Run Modify Build", false)]
+        public static void ModifyBuildMenuItem()
+        {
+            string buildPatch = BuildLog.ReadProperty("Build path");
+
+            if (buildPatch != null)
+                ModifyBuildManager.ModifyIndex(buildPatch);
+            else
+                Debug.LogError("Log is missing build patch");
         }
     }
 }
