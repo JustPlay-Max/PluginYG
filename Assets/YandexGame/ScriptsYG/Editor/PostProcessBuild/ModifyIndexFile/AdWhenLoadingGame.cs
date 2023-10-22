@@ -7,7 +7,7 @@ namespace YG.EditorScr.BuildModify
         {
             if (infoYG.showFirstAd == false)
             {
-                indexFile = indexFile.Replace("let firstAd = true;", "let firstAd = false;");
+                indexFile = indexFile.Replace("FullAdShow(); // First ad true", "// First ad false");
             }
         }
     }

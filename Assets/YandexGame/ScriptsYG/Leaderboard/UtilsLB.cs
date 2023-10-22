@@ -66,25 +66,17 @@ namespace YG.Utils.LB
     {
         public static string TimeTypeConvertStatic(int score, int decimalSize)
         {
-            if (score < 1000) return "00:00";
+            if (score < 1000) 
+                return "00:00";
 
-            string result = score.ToString();
-            string milSec = decimalSize == 0 ? "" : "." + result.Remove(0, result.Length - decimalSize);
-
-            int secReal = int.Parse(result.Remove(result.Length - 3));
-            int min = (int)(secReal / 60.0f);
-            int sec = secReal - min * 60;
-
-            string minStr;
-            if (min.ToString().Length == 1) minStr = "0" + min.ToString();
-            else minStr = min.ToString();
-
-            string secStr;
-            if (sec.ToString().Length == 1) secStr = "0" + sec.ToString();
-            else secStr = sec.ToString();
-
-            result = minStr + ":" + secStr + milSec;
-            return result;
+            if (decimalSize == 1)
+                return TimeSpan.FromMilliseconds(score).ToString("mm':'ss'.'f");
+            else if (decimalSize == 2)
+                return TimeSpan.FromMilliseconds(score).ToString("mm':'ss'.'ff");
+            else if (decimalSize == 3)
+                return TimeSpan.FromMilliseconds(score).ToString("mm':'ss'.'fff");
+            else
+                return TimeSpan.FromMilliseconds(score).ToString("mm':'ss");
         }
 
         public static string TimeTypeConvertStatic(int score)

@@ -63,11 +63,22 @@ namespace YG
         [Tooltip("Ивенты для кастомных методов")]
         public CustomEvents customEvents;
 
+        [SerializeField, Tooltip("Выполнить метод закрытия рекламы (Closing AD Values в Viewing Ads YG) в методе Awake (то есть при старте сцены).\nЭто позволит не прописывать события вроде аудио пауза = false или timeScale = 1 в ваших скриптах в методах Start.")] 
+        private bool doClosingVoidOnAwake;
+
         private static bool audioPauseOnAd;
         private static float timeScaleOnAd;
         private static bool cursorVisibleOnAd;
         private static CursorLockMode cursorLockModeOnAd;
         private static bool start;
+
+        private void Awake()
+        {
+            if (doClosingVoidOnAwake)
+            {
+                Pause(false);
+            }
+        }
 
         private void Start()
         {

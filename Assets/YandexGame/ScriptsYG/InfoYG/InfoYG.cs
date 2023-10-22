@@ -38,6 +38,8 @@ namespace YG
         public PlayerInfoSimulation playerInfoSimulation;
 #endif
 
+        public bool autoGameReadyAPI = true;
+
         [Header("———————  Advertisement  ———————")]
 
         [Tooltip("Показывать рекламу при переключении сцены? (после загрузки сцен)\n\nПо умолчанию = true — это значит, что показ рекламы будет вызываться при загрузке любой сцены в игре. Значение false — реклама не будет показываться при загрузке сцен.")]
@@ -45,6 +47,9 @@ namespace YG
 
         [Tooltip("Показывать рекламу при загрузке игры? (Первая реклама при открытии страницы игры)")]
         public bool showFirstAd = true;
+
+        [Tooltip("Выдавать вознаграждение за просмотр рекламы только после закрытия рекламы?\n(true = после закрытия, false = сразу после того как таймер закончит свой отчёт)")]
+        public bool rewardedAfterClosing = true;
 
         public enum AdCallsMode
         {

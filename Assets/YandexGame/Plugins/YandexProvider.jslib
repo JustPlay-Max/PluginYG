@@ -1,8 +1,13 @@
 mergeInto(LibraryManager.library,
 {
-	InitSDK_Internal: function (playerPhotoSize, scopes)
+	InitGame_Internal: function (playerPhotoSize, scopes, gameReadyApi)
 	{
-		InitSDK(UTF8ToString(playerPhotoSize), scopes);
+		InitGame(UTF8ToString(playerPhotoSize), scopes, gameReadyApi);
+	},
+	
+	GameReadyAPI_Internal: function ()
+	{
+		GameReadyAPI();
 	},
 	
 	OpenAuthDialog: function (playerPhotoSize, scopes)

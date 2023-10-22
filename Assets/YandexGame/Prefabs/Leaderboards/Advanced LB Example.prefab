@@ -72,7 +72,7 @@ MonoBehaviour:
   playerPhoto: 1
   isHiddenPlayerPhoto: {fileID: 0}
   timeTypeConvert: 1
-  decimalSize: 0
+  decimalSize: 2
   onUpdateData:
     m_PersistentCalls:
       m_Calls: []

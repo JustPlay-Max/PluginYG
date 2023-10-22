@@ -48,14 +48,14 @@ namespace YG
         [ContextMenu(nameof(UpdateEntries))]
         public void UpdateEntries()
         {
-            if (textLegasy.rank) textLegasy.rank.text = data.rank.ToString();
-            if (textLegasy.name) textLegasy.name.text = data.name;
-            if (textLegasy.score) textLegasy.score.text = data.score.ToString();
+            if (textLegasy.rank && data.rank != null) textLegasy.rank.text = data.rank.ToString();
+            if (textLegasy.name && data.name != null) textLegasy.name.text = data.name;
+            if (textLegasy.score && data.score != null) textLegasy.score.text = data.score.ToString();
 
 #if YG_TEXT_MESH_PRO
-            if (textMP.rank) textMP.rank.text = data.rank.ToString();
-            if (textMP.name) textMP.name.text = data.name;
-            if (textMP.score) textMP.score.text = data.score.ToString();
+            if (textMP.rank && data.rank != null) textMP.rank.text = data.rank.ToString();
+            if (textMP.name && data.name != null) textMP.name.text = data.name;
+            if (textMP.score && data.score != null) textMP.score.text = data.score.ToString();
 #endif
             if (imageLoad)
             {
