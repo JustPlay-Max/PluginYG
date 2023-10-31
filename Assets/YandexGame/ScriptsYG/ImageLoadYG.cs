@@ -39,6 +39,42 @@ namespace YG
             }
         }
 
+        public void ClearImage()
+        {
+            if (rawImage)
+            {
+                rawImage.texture = null;
+                rawImage.enabled = false;
+            }
+
+            if (spriteImage)
+            {
+                spriteImage.sprite = null;
+                spriteImage.enabled = false;
+            }
+
+            if (loadAnimObj)
+                loadAnimObj.SetActive(false);
+        }
+
+        public void PutSprite(Sprite sprite)
+        {
+            if (rawImage)
+            {
+                rawImage.texture = sprite.texture;
+                rawImage.enabled = true;
+            }
+
+            if (spriteImage)
+            {
+                spriteImage.sprite = sprite;
+                spriteImage.enabled = true;
+            }
+
+            if (loadAnimObj)
+                loadAnimObj.SetActive(false);
+        }
+
         IEnumerator SwapPlayerPhoto(string url)
         {
 #if UNITY_2020_1_OR_NEWER
@@ -78,9 +114,9 @@ namespace YG
             }
 #endif
 #if !UNITY_2020_1_OR_NEWER
-#pragma warning disable CS0618 // Тип или член устарел
+#pragma warning disable CS0618
             using (WWW www = new WWW(url))
-#pragma warning restore CS0618 // Тип или член устарел
+#pragma warning restore CS0618
             {
                 yield return www;
                 Texture2D texture = www.texture;

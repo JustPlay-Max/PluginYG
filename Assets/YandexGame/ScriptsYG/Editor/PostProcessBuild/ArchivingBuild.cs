@@ -1,7 +1,8 @@
 using System.IO;
 using System.IO.Compression;
+using YG.Insides;
 
-namespace YG.Insides.BuildModify
+namespace YG.EditorScr.BuildModify
 {
     public static class ArchivingBuild
     {

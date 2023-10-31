@@ -417,6 +417,7 @@ MonoBehaviour:
   hi: 
   fontNumber: 0
   uniqueFont: {fileID: 0}
+  additionalText: {fileID: 0}
   textHeight: 20
   processTranslateLabel: 3/3 completed
   componentTextField: 1
@@ -521,7 +522,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 262135
 --- !u!1 &5283231032966540589
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +649,7 @@ MonoBehaviour:
   hi: 
   fontNumber: 0
   uniqueFont: {fileID: 0}
+  additionalText: {fileID: 0}
   textHeight: 20
   processTranslateLabel: 3/3 completed
   componentTextField: 1
@@ -860,6 +862,7 @@ MonoBehaviour:
   hi: 
   fontNumber: 0
   uniqueFont: {fileID: 0}
+  additionalText: {fileID: 0}
   textHeight: 20
   processTranslateLabel: 1/3
   componentTextField: 1

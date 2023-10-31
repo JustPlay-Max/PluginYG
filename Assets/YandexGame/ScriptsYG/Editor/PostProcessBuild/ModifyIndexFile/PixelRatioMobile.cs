@@ -1,22 +1,20 @@
 
-namespace YG.Insides.BuildModify
+namespace YG.EditorScr.BuildModify
 {
-    public static partial class ModifyIndexFile
+    public partial class ModifyBuildManager
     {
-        static void SetPixelRatioMobile(ref string fileText)
+        public static void SetPixelRatioMobile()
         {
-            InfoYG infoYG = ConfigYG.GetInfoYG();
-
             if (infoYG.pixelRatioEnable)
             {
                 string value = infoYG.pixelRatioValue.ToString();
                 value = value.Replace(",", ".");
 
-                fileText = fileText.Replace("config.devicePixelRatio = 1", "config.devicePixelRatio = " + value);
+                indexFile = indexFile.Replace("config.devicePixelRatio = 1", "config.devicePixelRatio = " + value);
             }
             else
             {
-                fileText = fileText.Replace("config.devicePixelRatio = 1;", string.Empty);
+                indexFile = indexFile.Replace("config.devicePixelRatio = 1;", string.Empty);
             }
         }
     }

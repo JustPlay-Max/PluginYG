@@ -5,6 +5,7 @@ using UnityToolbag;
 
 namespace YG
 {
+    [HelpURL("https://www.notion.so/PluginYG-d457b23eee604b7aa6076116aab647ed#facf33554b8f478d9b03656f789cc38a")]
     public class ViewingAdsYG : MonoBehaviour
     {
         public enum CursorVisible
@@ -62,11 +63,22 @@ namespace YG
         [Tooltip("Ивенты для кастомных методов")]
         public CustomEvents customEvents;
 
+        [SerializeField, Tooltip("Выполнить метод закрытия рекламы (Closing AD Values в Viewing Ads YG) в методе Awake (то есть при старте сцены).\nЭто позволит не прописывать события вроде аудио пауза = false или timeScale = 1 в ваших скриптах в методах Start.")] 
+        private bool doClosingVoidOnAwake;
+
         private static bool audioPauseOnAd;
         private static float timeScaleOnAd;
         private static bool cursorVisibleOnAd;
         private static CursorLockMode cursorLockModeOnAd;
         private static bool start;
+
+        private void Awake()
+        {
+            if (doClosingVoidOnAwake)
+            {
+                Pause(false);
+            }
+        }
 
         private void Start()
         {

@@ -59,6 +59,9 @@ MonoBehaviour:
   CloseFullscreenAd:
     m_PersistentCalls:
       m_Calls: []
+  ErrorFullscreenAd:
+    m_PersistentCalls:
+      m_Calls: []
   OpenVideoAd:
     m_PersistentCalls:
       m_Calls: []
@@ -98,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5b227a20855044e9f75626696e0719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pauseType: 0
+  pauseType: 3
   pauseMethod: 1
   openingADValues:
     timeScale: 0
