@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.IO;
 
 namespace YG.EditorScr.BuildModify
@@ -11,6 +11,9 @@ namespace YG.EditorScr.BuildModify
             {
                 string donorPatch = Application.dataPath + "/YandexGame/ScriptsYG/Editor/PostProcessBuild/ModifyIndexFile/SaveQuitGame.js";
                 string donorText = File.ReadAllText(donorPatch);
+
+                donorText = donorText.Replace("{{{ObjectName}}}", infoYG.quitGameParameters.objectName);
+                donorText = donorText.Replace("{{{MethodName}}}", infoYG.quitGameParameters.methodName);
 
                 AddIndexCode(donorText, CodeType.js);
             }

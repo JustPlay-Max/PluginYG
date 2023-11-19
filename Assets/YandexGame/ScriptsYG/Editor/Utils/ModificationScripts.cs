@@ -1,4 +1,4 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEditor;
 using System.IO;
 
@@ -57,11 +57,11 @@ namespace YG.Insides.Utils
 
                 if (lines.Length > 0 && lines[0].StartsWith("//"))
                 {
-                    return false; // Комментарий найден в начале файла
+                    return false; // РљРѕРјРјРµРЅС‚Р°СЂРёР№ РЅР°Р№РґРµРЅ РІ РЅР°С‡Р°Р»Рµ С„Р°Р№Р»Р°
                 }
             }
 
-            return true; // Комментарий отсутствует в начале файла
+            return true; // РљРѕРјРјРµРЅС‚Р°СЂРёР№ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РІ РЅР°С‡Р°Р»Рµ С„Р°Р№Р»Р°
         }
     }
 }

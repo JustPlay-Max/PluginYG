@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using YG.Utils.Lang;
 
 namespace YG.Utils.LB

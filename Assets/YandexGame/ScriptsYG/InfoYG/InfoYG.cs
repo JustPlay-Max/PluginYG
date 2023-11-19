@@ -10,18 +10,33 @@ using TMPro;
 
 namespace YG
 {
-    [CreateAssetMenu(fileName = "YandexGameData", menuName = "InfoYG"), HelpURL("https://ash-message-bf4.notion.site/PluginYG-d457b23eee604b7aa6076116aab647ed")]
+    [/*CreateAssetMenu(fileName = "YandexGameData", menuName = "InfoYG"),*/
+        HelpURL("https://ash-message-bf4.notion.site/PluginYG-d457b23eee604b7aa6076116aab647ed")]
     public partial class InfoYG : ScriptableObject
     {
         [Header("———————  Basic settings  ———————")]
 
         [Tooltip("При инициализации объекта Player авторизованному игроку будет показано диалоговое окно с запросом на предоставление доступа к персональным данным. Запрашивается доступ только к аватару и имени, идентификатор пользователя всегда передается автоматически. Примерное содержание: Игра запрашивает доступ к вашему аватару и имени пользователя на сервисах Яндекса.\nЕсли вам достаточно знать идентификатор, а имя и аватар пользователя не нужны, используйте опциональный параметр scopes: false. В этом случае диалоговое окно не будет показано.")]
         public bool scopes = true;
-
         public enum PlayerPhotoSize { small, medium, large };
         [ConditionallyVisible(nameof(scopes))]
         [Tooltip("Размер подкачанного изображения пользователя.")]
         public PlayerPhotoSize playerPhotoSize;
+
+        public string GetPlayerPhotoSize()
+        {
+            if (playerPhotoSize == PlayerPhotoSize.small)
+                return "small";
+            else if (playerPhotoSize == PlayerPhotoSize.medium)
+                return "medium";
+            else if (playerPhotoSize == PlayerPhotoSize.large)
+                return "large";
+
+            return null;
+        }
+
+        [Tooltip("Метод из SDK Яндекс при выполнении которого отражается момент, когда игра загрузила все ресурсы и готова к взаимодействию с пользователем.\r\n\r\nЕсли данный параметр 'Auto Game Ready API' включен, то плагин сам выполнит метод Game Ready API сразу после загрузки игры.\r\n\r\nЕсли в Вашей игре имеются свои реализации загрузки игры, например, загрузка первой сцены, то Вам необходимо снять галку 'Auto Game Ready API' и самостоятельно выполнять этот метод (по желанию), когда игра будет полностью загружена. Выполнение метода: `YandexGame.GameReadyAPI();`")]
+        public bool autoGameReadyAPI;
 
 #if UNITY_EDITOR
         [Serializable]
@@ -34,11 +49,8 @@ namespace YG
             public string uniqueID = "000";
             public string photo = photoExample;
         }
-        [ConditionallyVisible(nameof(scopes))]
         public PlayerInfoSimulation playerInfoSimulation;
 #endif
-
-        public bool autoGameReadyAPI = true;
 
         [Header("———————  Advertisement  ———————")]
 
@@ -66,6 +78,9 @@ namespace YG
         [Tooltip("Длительность симуляции показа рекламы."), Min(0)]
         public float durationOfAdSimulation = 0.5f;
 
+        [Tooltip("Задержка открытия полноэкранной рекламы. Может быть полезна для тестирования уведомления о том, что скоро откроется реклама, перед ёё показом (в момент ожидания рекламы)."), Min(0)]
+        public float loadAdWithDelaySimulation = 0.0f;
+
         [Tooltip("Нажмите галочку, чтобы сэмулировать вызов ошибки при просмотре рекламы за вознаграждение. (Только для Unity Editor)")]
         public bool testErrorOfRewardedAdsInEditor;
 #endif
@@ -88,17 +103,37 @@ namespace YG
         [Min(0)]
         public int saveCloudInterval = 5;
 
-        [Tooltip("Выполнять метод 'SaveProgress' при закрытии игры?")]
+        [Tooltip("Выполнять определённый метод при закрытии или обновлении страницы игры.")]
         public bool saveOnQuitGame = false;
+
+        [Serializable]
+        public class QuitGameMethod
+        {
+            [Tooltip("Имя объекта, который содержит нужный метод для выполнения после закрытия игры.")]
+            public string objectName = "YandexGame";
+
+            [Tooltip("Имя метода. Подходит публичный метод без перегрузок.")]
+            public string methodName = "_SaveProgress";
+        }
+        [ConditionallyVisible(nameof(saveOnQuitGame))]
+        public QuitGameMethod quitGameParameters = new QuitGameMethod
+        {
+            objectName = "YandexGame",
+            methodName = "_SaveProgress"
+        };
 
         [Header("———————  Leaderboards  ———————")]
 
         [Tooltip("Вкл/Выкл лидерборды")]
         public bool leaderboardEnable = true;
 
+        [ConditionallyVisible(nameof(leaderboardEnable)), Tooltip("Записывать рекорд анонимных игроков?")]
+        public bool saveScoreAnonymousPlayers = true;
+
         #region LeaderboardSimulation
 #if UNITY_EDITOR
         public static string photoExample = "https://justplaygames.ru/public/icon_player.png";
+
         public LBData[] leaderboardSimulation = new LBData[]
         {
             new LBData
@@ -412,8 +447,9 @@ namespace YG
         [Min(0)]
         public float pixelRatioValue = 1;
 
-        [Min(0), Tooltip("Для более старых версий Unity требуется задержка старта SDK (задержка в кардах в секунду).\nСтавить задержку сдедует, если при запуске игры на Web сервере, после загрузки игры происходит краш или функции SDK не работают. В таком случае, обновите Unity до актуальной версии, либо поставьте задержку (рекомедруется: 20).\nЕсли SDK успешно загружается, задержку ставить не требуется.")]
-        public int SDKStartDelay;
+        //[Tooltip(" •  Load Game Run = false:\nСначала будет происходить полная инициализация SDK Яндекса, затем только загрузка игры.\n\n •  Load Game Run = true:\nИгра будет загружаться вместе с инициализацией SDK Яндекса. В таком случае, игра может загрузиться раньше инициализации.")]
+        [HideInInspector]
+        public bool loadGameRun = false;
 
         [Tooltip("(Для кастомных баннеров, не для рекламных. Они устарели и их нельзя использовать в Я.Играх!). Если данный параметр выключен, то статические баннеры будут отображаться только во время загрузки игры. Если данный параметр включен, то статические баннеры будут отображаться и во время загрузки игры и в самой игре они тоже будут присутствовать.")]
         public bool staticRBTInGame;

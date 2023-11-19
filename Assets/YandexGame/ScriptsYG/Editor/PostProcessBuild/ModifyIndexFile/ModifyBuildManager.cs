@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.IO;
 using UnityEditor;
-using UnityEngine;
 using YG.Insides;
 using System.Text;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace YG.EditorScr.BuildModify
 {
@@ -13,10 +14,8 @@ namespace YG.EditorScr.BuildModify
         private static string BUILD_PATCH;
         private static InfoYG infoYG;
         private static string indexFile;
-        private enum CodeType { js, head, body };
+        private enum CodeType { js, head, body, init };
 
-
-        [MenuItem("Tools/PluginYG/Modify Index", false)]
         public static void ModifyIndex(string buildPatch)
         {
             infoYG = ConfigYG.GetInfoYG();
@@ -40,6 +39,22 @@ namespace YG.EditorScr.BuildModify
             Debug.Log("Modify build complete");
         }
 
+        [MenuItem("Tools/PluginYG/Modify Index", false)]
+        public static void ModifyIndex()
+        {
+            string buildPatch = BuildLog.ReadProperty("Build path");
+
+            if (buildPatch != null)
+            {
+                ModifyIndex(buildPatch);
+                Process.Start("explorer.exe", buildPatch.Replace("/", "\\"));
+            }
+            else
+            {
+                Debug.LogError("Path not found:\n" + buildPatch);
+            }
+        }
+
         static void AddIndexCode(string code, CodeType addCodeType)
         {
             string commentHelper = "// Additional script modules:";
@@ -48,6 +63,8 @@ namespace YG.EditorScr.BuildModify
                 commentHelper = "<!-- Additional head modules -->";
             else if (addCodeType == CodeType.body)
                 commentHelper = "<!-- Additional body modules -->";
+            else if (addCodeType == CodeType.init)
+                commentHelper = "// Additional init modules";
 
             StringBuilder sb = new StringBuilder(indexFile);
             int insertIndex = sb.ToString().IndexOf(commentHelper);

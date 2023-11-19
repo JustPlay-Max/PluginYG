@@ -1,30 +1,10 @@
 mergeInto(LibraryManager.library,
 {
-	InitGame_Internal: function (playerPhotoSize, scopes, gameReadyApi)
+	InitGame_js: function ()
 	{
-		InitGame(UTF8ToString(playerPhotoSize), scopes, gameReadyApi);
+		InitGame();
 	},
-	
-	GameReadyAPI_Internal: function ()
-	{
-		GameReadyAPI();
-	},
-	
-	OpenAuthDialog: function (playerPhotoSize, scopes)
-	{
-		OpenAuthDialog(UTF8ToString(playerPhotoSize), scopes);
-	},
-	
-	SaveYG: function (jsonData, flush)
-	{
-		SaveCloud(UTF8ToString(jsonData), flush);
-	},
-	
-	LoadYG: function ()
-	{
-		LoadCloud();
-	},
-	
+
 	InitLeaderboard: function ()
 	{
 		InitLeaderboard();
@@ -49,16 +29,6 @@ mergeInto(LibraryManager.library,
 	{
 		RewardedShow(id);
 	},
-	
-	LanguageRequestInternal: function ()
-	{
-		LanguageRequest();
-	},
-	
-	RequestingEnvironmentData: function()
-	{
-		RequestingEnvironmentData();
-	},	
 
 	ReviewInternal: function()
 	{
@@ -153,50 +123,11 @@ mergeInto(LibraryManager.library,
     },
 	
 	OpenURL: function (url) {
-		var a = document.createElement("a");
-		a.setAttribute("href", UTF8ToString(url));
-		a.setAttribute("target", "_blank");
-		a.click();
+		window.open(UTF8ToString(url), "_blank");
+	
+		//var a = document.createElement("a");
+		//a.setAttribute("href", UTF8ToString(url));
+		//a.setAttribute("target", "_blank");
+		//a.click();
 	}
 });
-
-var FileIO = {
-
-  SaveToLocalStorage : function(key, data) {
-	try {
-		localStorage.setItem(UTF8ToString(key), UTF8ToString(data));
-	}
-	catch (e) {
-		console.error('Save to Local Storage error: ', e.message);
-	}
-  },
-
-  LoadFromLocalStorage : function(key) {
-    var returnStr = localStorage.getItem(UTF8ToString(key));
-    var bufferSize = lengthBytesUTF8(returnStr) + 1;
-    var buffer = _malloc(bufferSize);
-    stringToUTF8(returnStr, buffer, bufferSize);
-    return buffer;
-  },
-
-  RemoveFromLocalStorage : function(key) {
-    localStorage.removeItem(UTF8ToString(key));
-  },
-
-  HasKeyInLocalStorage : function(key) {
-	try {
-		if (localStorage.getItem(UTF8ToString(key))) {
-		  return 1;
-		}
-		else {
-		  return 0;
-		}
-	}
-	catch (e) {
-		console.error('Has key in Local Storage error: ', e.message);
-		return 0;
-	}
-  }
-};
-
-mergeInto(LibraryManager.library, FileIO);

@@ -1,4 +1,4 @@
-using UnityEditor.PackageManager;
+﻿using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace YG.Insides.Utils

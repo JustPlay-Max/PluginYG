@@ -94,7 +94,7 @@ namespace YG
 
         public void AuthCheckButton()
         {
-            GameObject.FindObjectOfType<YandexGame>().InitializationGame();
+            GameObject.FindObjectOfType<YandexGame>()._RequestAuth();
         }
 
         public void AuthDialogButton()

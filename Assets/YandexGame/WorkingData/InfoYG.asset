@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopes: 1
   playerPhotoSize: 0
+  autoGameReadyAPI: 1
   playerInfoSimulation:
     authorized: 1
     isMobile: 0
@@ -21,20 +22,24 @@ MonoBehaviour:
     name: Player this
     uniqueID: 000
     photo: https://justplaygames.ru/public/icon_player.png
-  autoGameReadyAPI: 1
   AdWhenLoadingScene: 1
-  showFirstAd: 0
+  showFirstAd: 1
   rewardedAfterClosing: 1
   adDisplayCalls: 0
   fullscreenAdInterval: 60
   durationOfAdSimulation: 0.5
+  loadAdWithDelaySimulation: 0
   testErrorOfRewardedAdsInEditor: 0
   saveCloud: 1
   flush: 0
   localSaveSync: 1
   saveCloudInterval: 5
   saveOnQuitGame: 0
+  quitGameParameters:
+    objectName: YandexGame
+    methodName: _SaveProgress
   leaderboardEnable: 1
+  saveScoreAnonymousPlayers: 1
   leaderboardSimulation:
   - technoName: advanced
     entries: 'Test LeaderBoard
@@ -126,7 +131,7 @@ MonoBehaviour:
     thisPlayer:
       rank: 0
       score: 0
-  - technoName: time1
+  - technoName: time
     entries: 'Test LeaderBoard
 
       Name: time
@@ -176,7 +181,7 @@ MonoBehaviour:
       rank: 2
       score: 10
   LocalizationEnable: 1
-  callingLanguageCheck: 1
+  callingLanguageCheck: 0
   translateMethod: 0
   domainAutoLocalization: com
   CSVFileTranslate:
@@ -323,5 +328,5 @@ MonoBehaviour:
   backgroundImageFormat: 3
   pixelRatioEnable: 0
   pixelRatioValue: 1
-  SDKStartDelay: 0
+  loadGameRun: 0
   staticRBTInGame: 0

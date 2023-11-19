@@ -1,4 +1,4 @@
-using UnityEditor;
+п»їusing UnityEditor;
 using UnityEngine;
 
 namespace YG.Insides
@@ -13,21 +13,21 @@ namespace YG.Insides
             GameObject ygPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(patchYGPrefab, typeof(GameObject));
             if (ygPrefab == null)
             {
-                Debug.LogError($"Префаб YandexGame не был найден по пути: {patchYGPrefab}");
+                Debug.LogError($"РџСЂРµС„Р°Р± YandexGame РЅРµ Р±С‹Р» РЅР°Р№РґРµРЅ РїРѕ РїСѓС‚Рё: {patchYGPrefab}");
                 return null;
             }
 
             YandexGame ygScr = ygPrefab.GetComponent<YandexGame>();
             if (ygScr == null)
             {
-                Debug.LogError($"На объекте YandexGame не был найден компонент YandexGame! Префаб объекта расположен по пути: {patchYGPrefab}");
+                Debug.LogError($"РќР° РѕР±СЉРµРєС‚Рµ YandexGame РЅРµ Р±С‹Р» РЅР°Р№РґРµРЅ РєРѕРјРїРѕРЅРµРЅС‚ YandexGame! РџСЂРµС„Р°Р± РѕР±СЉРµРєС‚Р° СЂР°СЃРїРѕР»РѕР¶РµРЅ РїРѕ РїСѓС‚Рё: {patchYGPrefab}");
                 return null;
             }
 
             InfoYG infoYG = ygScr.infoYG;
             if (ygScr == null)
             {
-                Debug.LogError($"На компоненте YandexGame не определено поле InfoYG! Префаб YandexGame расположен по пути: {patchYGPrefab}");
+                Debug.LogError($"РќР° РєРѕРјРїРѕРЅРµРЅС‚Рµ YandexGame РЅРµ РѕРїСЂРµРґРµР»РµРЅРѕ РїРѕР»Рµ InfoYG! РџСЂРµС„Р°Р± YandexGame СЂР°СЃРїРѕР»РѕР¶РµРЅ РїРѕ РїСѓС‚Рё: {patchYGPrefab}");
                 return null;
             }
 

@@ -1,4 +1,4 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.Events;
 
 namespace YG
@@ -6,14 +6,14 @@ namespace YG
     [HelpURL("https://www.notion.so/PluginYG-d457b23eee604b7aa6076116aab647ed#178130fecabe4b3f81118dfe0fd88ccf")]
     public class ReviewYG : MonoBehaviour
     {
-        [Tooltip("Открывать окно авторизации, если пользователь не авторизован.")]
+        [Tooltip("РћС‚РєСЂС‹РІР°С‚СЊ РѕРєРЅРѕ Р°РІС‚РѕСЂРёР·Р°С†РёРё, РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ.")]
         public enum ForUnauthorized { OpenAuthDialog, ReviewNotAvailable, Ignore };
         public ForUnauthorized forUnauthorized;
 
-        [Tooltip("Активировать оценку игры на мобильных устройствах?")]
+        [Tooltip("РђРєС‚РёРІРёСЂРѕРІР°С‚СЊ РѕС†РµРЅРєСѓ РёРіСЂС‹ РЅР° РјРѕР±РёР»СЊРЅС‹С… СѓСЃС‚СЂРѕР№СЃС‚РІР°С…?")]
         public bool showOnMobileDevice;
 
-        [Tooltip("Обновлять информацию при каждой активации объекта (в OnEnable)?")]
+        [Tooltip("РћР±РЅРѕРІР»СЏС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ РїСЂРё РєР°Р¶РґРѕР№ Р°РєС‚РёРІР°С†РёРё РѕР±СЉРµРєС‚Р° (РІ OnEnable)?")]
         public bool updateDataOnEnable;
         [Space(15)]
         public UnityEvent ReviewAvailable;

@@ -1,4 +1,4 @@
-
+﻿
 namespace YG.EditorScr.BuildModify
 {
     public partial class ModifyBuildManager
