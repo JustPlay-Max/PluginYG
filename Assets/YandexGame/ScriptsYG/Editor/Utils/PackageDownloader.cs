@@ -1,5 +1,6 @@
-﻿using UnityEditor.PackageManager;
-using UnityEngine;
+﻿using UnityEditor;
+using UnityEditor.PackageManager;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace YG.Insides.Utils
 {
@@ -12,10 +13,31 @@ namespace YG.Insides.Utils
             return packageInfo != null;
         }
 
-        public static void DownloadPackage(string packageName)
+        public static bool DownloadPackage(string packageName)
         {
-            Client.Add(packageName);
-            Debug.Log($"Downloading package: {packageName}");
+            if (!IsPackageImported(packageName))
+            {
+                if (DialogDownloadPackage(packageName))
+                {
+                    Client.Add(packageName);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        private static bool DialogDownloadPackage(string packageName)
+        {
+            int option = EditorUtility.DisplayDialogComplex("Download package", $"To continue, you need to install the package: {packageName}\nInstall it?", "Yes", "No", "");
+
+            if (option == 0)
+                return true;
+            else
+                return false;
         }
     }
 }

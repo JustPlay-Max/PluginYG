@@ -12,4 +12,15 @@ namespace YG.Utils.Pay
         public string priceValue;
         public bool consumed;
     }
+
+    public class JsonPayments
+    {
+        public string[] id;
+        public string[] title;
+        public string[] description;
+        public string[] imageURI;
+        public string[] priceValue;
+        public bool[] consumed;
+        public string language;
+    }
 }

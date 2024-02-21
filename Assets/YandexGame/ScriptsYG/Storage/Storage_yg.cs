@@ -119,7 +119,8 @@ namespace YG
         public void _ResetSaveProgress()
         {
             Message("Reset Save Progress");
-            savesData = new SavesYG { isFirstSession = false };
+            int idSave = savesData.idSave;
+            savesData = new SavesYG { idSave = idSave, isFirstSession = false };
             onResetProgress?.Invoke();
             GetDataInvoke();
         }

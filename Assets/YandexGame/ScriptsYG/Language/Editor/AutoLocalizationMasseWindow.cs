@@ -22,7 +22,7 @@ namespace YG.Insides
 
         private void OnGUI()
         {
-            if (GameObject.FindObjectOfType<YandexGame>().infoYG.translateMethod == InfoYG.TranslateMethod.AutoLocalization)
+            if (GameObject.FindAnyObjectByType<YandexGame>().infoYG.translateMethod == InfoYG.TranslateMethod.AutoLocalization)
             {
                 GUILayout.Space(10);
 
@@ -30,7 +30,7 @@ namespace YG.Insides
                 {
                     objectsTranlate.Clear();
 
-                    foreach (Text obj in SceneAsset.FindObjectsOfType<Text>(includeInactive: true))
+                    foreach (Text obj in SceneAsset.FindObjectsByType<Text>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                     {
                         objectsTranlate.Add(obj.gameObject);
                     }
@@ -40,7 +40,7 @@ namespace YG.Insides
                 {
                     objectsTranlate.Clear();
 
-                    foreach (TMP_Text obj in SceneAsset.FindObjectsOfType<TMP_Text>(includeInactive: true))
+                    foreach (TMP_Text obj in SceneAsset.FindObjectsByType<TMP_Text>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                     {
                         objectsTranlate.Add(obj.gameObject);
                     }
@@ -50,7 +50,7 @@ namespace YG.Insides
                 {
                     objectsTranlate.Clear();
 
-                    foreach (LanguageYG obj in SceneAsset.FindObjectsOfType<LanguageYG>(includeInactive: true))
+                    foreach (LanguageYG obj in SceneAsset.FindObjectsByType<LanguageYG>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                     {
                         objectsTranlate.Add(obj.gameObject);
                     }

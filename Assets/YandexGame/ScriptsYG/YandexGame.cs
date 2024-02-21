@@ -4,7 +4,6 @@ using UnityEngine.Events;
 using System;
 using UnityEngine.SceneManagement;
 using YG.Utils.LB;
-using YG.Utils.Pay;
 
 namespace YG
 {
@@ -57,7 +56,6 @@ namespace YG
 
         public static bool nowFullAd;
         public static bool nowVideoAd;
-        public static JsonEnvironmentData EnvironmentData = new JsonEnvironmentData();
         public static YandexGame Instance;
         public static Action onAdNotification;
         public static Action GetDataEvent;
@@ -98,24 +96,20 @@ namespace YG
             }
 
             if (!_SDKEnabled)
+            {
+                CallInitBaisYG();
                 CallInitYG();
+            }
         }
 
         [DllImport("__Internal")]
         private static extern void InitGame_js();
-
-        [DllImport("__Internal")]
-        private static extern void StaticRBTDeactivate();
 
         private void Start()
         {
             if (infoYG.AdWhenLoadingScene)
                 FullscreenShow();
 
-#if !UNITY_EDITOR
-            if (!infoYG.staticRBTInGame)
-                StaticRBTDeactivate();
-#endif
             if (!_SDKEnabled)
             {
                 if (infoYG.leaderboardEnable)
@@ -174,8 +168,6 @@ namespace YG
             nowFullAd = false;
             nowVideoAd = false;
             savesData = new SavesYG();
-            EnvironmentData = new JsonEnvironmentData();
-            purchases = new Purchase[0];
             Instance = null;
             timerShowAd = 0;
             GetDataEvent = null;
@@ -189,9 +181,6 @@ namespace YG
             RewardVideoEvent = null;
             ErrorVideoEvent = null;
             onGetLeaderboard = null;
-            GetPaymentsEvent = null;
-            PurchaseSuccessEvent = null;
-            PurchaseFailedEvent = null;
             ReviewSentEvent = null;
             PromptSuccessEvent = null;
             PromptFailEvent = null;
@@ -451,73 +440,6 @@ namespace YG
         }
         #endregion Leaderboard
 
-        #region Payments
-        [DllImport("__Internal")]
-        private static extern void BuyPaymentsInternal(string id);
-
-        public static void BuyPayments(string id)
-        {
-#if !UNITY_EDITOR
-            BuyPaymentsInternal(id);
-#else
-            Message($"Buy Payment. ID: {id}");
-            Instance.OnPurchaseSuccess(id);
-#endif
-        }
-
-        public void _BuyPayments(string id) => BuyPayments(id);
-
-
-        [DllImport("__Internal")]
-        private static extern void GetPaymentsInternal();
-
-        public static void GetPayments()
-        {
-            Message("Get Payments");
-#if !UNITY_EDITOR
-            GetPaymentsInternal();
-#else
-            Instance.PaymentsEntries("");
-#endif
-        }
-
-        public void _GetPayments() => GetPayments();
-
-        public static Purchase PurchaseByID(string ID)
-        {
-            for (int i = 0; i < purchases.Length; i++)
-            {
-                if (purchases[i].id == ID)
-                {
-                    return purchases[i];
-                }
-            }
-
-            return null;
-        }
-
-        [DllImport("__Internal")]
-        private static extern void ConsumePurchaseInternal(string id);
-
-        public static void ConsumePurchaseByID(string id)
-        {
-#if !UNITY_EDITOR
-            ConsumePurchaseInternal(id);
-#endif
-        }
-
-        [DllImport("__Internal")]
-        private static extern void ConsumePurchasesInternal();
-
-        public static void ConsumePurchases()
-        {
-#if !UNITY_EDITOR
-            ConsumePurchasesInternal();
-#endif
-        }
-
-        #endregion Payments
-
         #region Review Show
         [DllImport("__Internal")]
         private static extern void ReviewInternal();
@@ -638,7 +560,7 @@ namespace YG
             OpenVideoEvent?.Invoke();
             OpenVideoAd.Invoke();
             nowVideoAd = true;
-            timeOnOpenRewardedAds = Time.unscaledTime;
+            timeOnOpenRewardedAds = Time.realtimeSinceStartup;
         }
 
         public static Action CloseVideoEvent;
@@ -676,7 +598,7 @@ namespace YG
 #endif
             rewardAdResult = RewardAdResult.None;
 
-            if (Time.unscaledTime > timeOnOpenRewardedAds + 2)
+            if (Time.realtimeSinceStartup > timeOnOpenRewardedAds + 0.5f)
             {
                 if (Instance.infoYG.rewardedAfterClosing)
                 {
@@ -757,48 +679,6 @@ namespace YG
         }
         #endregion Leaderboard
 
-        #region Payments
-        public static Action GetPaymentsEvent;
-        public static Purchase[] purchases = new Purchase[0];
-
-        public void PaymentsEntries(string data)
-        {
-#if !UNITY_EDITOR
-            JsonPayments paymentsData = JsonUtility.FromJson<JsonPayments>(data);
-            purchases = new Purchase[paymentsData.id.Length];
-
-            for (int i = 0; i < purchases.Length; i++)
-            {
-                purchases[i] = new Purchase();
-                purchases[i].id = paymentsData.id[i];
-                purchases[i].title = paymentsData.title[i];
-                purchases[i].description = paymentsData.description[i];
-                purchases[i].imageURI = paymentsData.imageURI[i];
-                purchases[i].priceValue = paymentsData.priceValue[i];
-                purchases[i].consumed = paymentsData.consumed[i];
-            }
-#else
-            purchases = Instance.infoYG.purshasesSimulation;
-#endif
-            GetPaymentsEvent?.Invoke();
-        }
-
-        public static Action<string> PurchaseSuccessEvent;
-        public void OnPurchaseSuccess(string id)
-        {
-            PurchaseByID(id).consumed = true;
-            PurchaseSuccess?.Invoke();
-            PurchaseSuccessEvent?.Invoke(id);
-        }
-
-        public static Action<string> PurchaseFailedEvent;
-        public void OnPurchaseFailed(string id)
-        {
-            PurchaseFailed?.Invoke();
-            PurchaseFailedEvent?.Invoke(id);
-        }
-        #endregion Payments
-
         #region Review
         public static Action<bool> ReviewSentEvent;
         public void ReviewSent(string feedbackSent)
@@ -868,16 +748,6 @@ namespace YG
             public string[] names;
             public int[] scores;
             public string[] uniqueIDs;
-        }
-
-        public class JsonPayments
-        {
-            public string[] id;
-            public string[] title;
-            public string[] description;
-            public string[] imageURI;
-            public string[] priceValue;
-            public bool[] consumed;
         }
         #endregion Json
     }

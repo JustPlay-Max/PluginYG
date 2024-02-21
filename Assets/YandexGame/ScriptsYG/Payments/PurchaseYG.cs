@@ -64,7 +64,7 @@ namespace YG
 
         private string Yan()
         {
-            if (YandexGame.savesData.language == "ru")
+            if (YandexGame.langPayments == "ru")
                 return " Ян";
             else
                 return " Yan";

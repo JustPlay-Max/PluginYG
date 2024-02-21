@@ -47,7 +47,9 @@ namespace YG.Example
                 "\nbrowserLang - " + YandexGame.EnvironmentData.browserLang +
                 "\npayload - " + YandexGame.EnvironmentData.payload +
                 "\npromptCanShow - " + YandexGame.EnvironmentData.promptCanShow +
-                "\nreviewCanShow - " + YandexGame.EnvironmentData.reviewCanShow;
+                "\nreviewCanShow - " + YandexGame.EnvironmentData.reviewCanShow +
+                "\nplatform - " + YandexGame.EnvironmentData.platform +
+                "\nbrowser - " + YandexGame.EnvironmentData.browser; ;
         }
     }
 }

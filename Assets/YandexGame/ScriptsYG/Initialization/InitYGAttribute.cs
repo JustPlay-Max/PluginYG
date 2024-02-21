@@ -5,6 +5,9 @@ using System.Reflection;
 namespace YG
 {
     [AttributeUsage(AttributeTargets.Method)]
+    public class InitBaisYGAttribute : Attribute { }
+
+    [AttributeUsage(AttributeTargets.Method)]
     public class InitYGAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Method)]
@@ -12,8 +15,28 @@ namespace YG
 
     public partial class YandexGame
     {
+        private static List<Action> methodsInitBaisToCall = new List<Action>();
         private static List<Action> methodsInitToCall = new List<Action>();
         private static List<Action> methodsStartToCall = new List<Action>();
+
+        public static void CallInitBaisYG()
+        {
+            Type type = typeof(YandexGame);
+            MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
+
+            foreach (MethodInfo method in methods)
+            {
+                var attributes = method.GetCustomAttributes(typeof(InitBaisYGAttribute), true);
+                if (attributes.Length > 0)
+                {
+                    methodsInitBaisToCall.Add(() => method.Invoke(type, null));
+                }
+            }
+            foreach (var action in methodsInitBaisToCall)
+            {
+                action.Invoke();
+            }
+        }
 
         public static void CallInitYG()
         {

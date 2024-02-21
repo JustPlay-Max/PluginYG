@@ -6,87 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="./style.css">
 
-    <!-- Additional head modules -->
     <!-- Yandex Games SDK -->
     <script src="https://yandex.ru/games/sdk/v2"></script>
-
-    #if BANNER_DYNAMIC_1 && BANNER_DYNAMIC_1 !== "-" && BANNER_DYNAMIC_1 !== " "
-    <style>
-        #RTB1 {
-            position: fixed;
-            display: none;
-        }
-
-            #RTB1.show {
-                display: block;
-            }
-    </style>
-    #endif
-
-    #if BANNER_DYNAMIC_2 && BANNER_DYNAMIC_2 !== "-" && BANNER_DYNAMIC_2 !== " "
-    <style>
-        #RTB2 {
-            position: fixed;
-            display: none;
-        }
-
-            #RTB2.show {
-                display: block;
-            }
-    </style>
-    #endif
-
-    #if BANNER_STATIC_1 && BANNER_STATIC_1 !== "-" && BANNER_STATIC_1 !== " "
-    <style>
-        #RTBStatic1 {
-            position: fixed;
-            width: 80%;
-            height: 15%;
-            left: 10%;
-            bottom: 0;
-            display: none;
-        }
-
-            #RTBStatic1.show {
-                display: block;
-            }
-
-        @media screen and (max-width: 800px) {
-            #RTBStatic1 {
-                width: 320px;
-                height: 50px;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-    </style>
-    #endif
-
-    #if BANNER_STATIC_2 && BANNER_STATIC_2 !== "-" && BANNER_STATIC_2 !== " "
-    <style>
-        #RTBStatic2 {
-            position: fixed;
-            width: 80%;
-            height: 15%;
-            left: 10%;
-            top: 0;
-            display: none;
-        }
-
-            #RTBStatic2.show {
-                display: block;
-            }
-
-        @media screen and (max-width: 800px) {
-            #RTBStatic2 {
-                width: 320px;
-                height: 50px;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-    </style>
-    #endif
 
     <style>
         /* Убираем выделение по нажатию клавиш */
@@ -112,10 +33,10 @@
         }
     </style>
 
+    <!-- Additional head modules -->
+
 </head>
 <body class="{{{ SPLASH_SCREEN_STYLE.toLowerCase() }}}">
-
-    <!-- Additional body modules -->
 
     <div id="unity-container" class="unity-desktop">
         <canvas id="unity-canvas" tabindex="-1"></canvas>
@@ -130,123 +51,7 @@
         </div>
     </div>
 
-    #if BANNER_DYNAMIC_1 && BANNER_DYNAMIC_1 !== "-" && BANNER_DYNAMIC_1 !== " "
-    <div id="RTB1">
-        <script>
-            const rbt1 = document.querySelector('#RTB1');
-
-            function ExecuteCodeRTB1() {
-                try {
-                    { { { BANNER_DYNAMIC_1 && BANNER_DYNAMIC_1 !== "-" && BANNER_DYNAMIC_1 !== " " } } }
-                } catch (e) {
-                    console.error('CRASH Render RTB1: ', e.message);
-                }
-            }
-
-            function ActivityRTB1(state) {
-                try {
-                    if (state) {
-                        rbt1.classList.add('show');
-                    } else {
-                        rbt1.classList.remove('show');
-                    }
-                } catch (e) {
-                    console.error('CRASH Activity RTB1: ', e.message);
-                }
-            }
-
-            function RecalculateRTB1(_width, _height, _left, _top) {
-                try {
-                    document.getElementById('RTB1').style.width = _width;
-                    document.getElementById('RTB1').style.height = _height;
-                    document.getElementById('RTB1').style.left = _left;
-                    document.getElementById('RTB1').style.top = _top;
-                } catch (e) {
-                    console.error('CRASH Recalculate RTB1: ', e.message);
-                }
-            }
-        </script>
-    </div>
-    #endif
-
-    #if BANNER_DYNAMIC_2 && BANNER_DYNAMIC_2 !== "-" && BANNER_DYNAMIC_2 !== " "
-    <div id="RTB2">
-        <script>
-            const rbt2 = document.querySelector('#RTB2');
-
-            function ExecuteCodeRTB2() {
-                try {
-                    { { { BANNER_DYNAMIC_2 && BANNER_DYNAMIC_2 !== "-" && BANNER_DYNAMIC_2 !== " " } } }
-                } catch (e) {
-                    console.error('CRASH Render RTB2: ', e.message);
-                }
-            }
-
-            function ActivityRTB2(state) {
-                try {
-                    if (state) {
-                        rbt2.classList.add('show');
-                    } else {
-                        rbt2.classList.remove('show');
-                    }
-                } catch (e) {
-                    console.error('CRASH Activity RTB2: ', e.message);
-                }
-            }
-
-            function RecalculateRTB2(_width, _height, _left, _top) {
-                try {
-                    document.getElementById('RTB2').style.width = _width;
-                    document.getElementById('RTB2').style.height = _height;
-                    document.getElementById('RTB2').style.left = _left;
-                    document.getElementById('RTB2').style.top = _top;
-                } catch (e) {
-                    console.error('CRASH Recalculate RTB2: ', e.message);
-                }
-            }
-        </script>
-    </div>
-    #endif
-
-    #if BANNER_STATIC_1 && BANNER_STATIC_1 !== "-" && BANNER_STATIC_1 !== " "
-    <div id="RTBStatic1">
-        <script>
-            const rbtLoadGame1 = document.querySelector('#RTBStatic1');
-            rbtLoadGame1.classList.add('show');
-
-            function ExecuteCodeStaticRTB1() {
-                try {
-                    if (document.getElementById('RTBStatic1').style.display !== 'none') {
-                        { { { BANNER_STATIC_1 && BANNER_STATIC_1 !== "-" && BANNER_STATIC_1 !== " " } } }
-                    }
-                } catch (e) {
-                    console.error('CRASH Render Static RTB1: ', e.message);
-                }
-            }
-            ExecuteCodeStaticRTB1();
-        </script>
-    </div>
-    #endif
-
-    #if BANNER_STATIC_2 && BANNER_STATIC_2 !== "-" && BANNER_STATIC_2 !== " "
-    <div id="RTBStatic2">
-        <script>
-            const rbtLoadGame2 = document.querySelector('#RTBStatic2');
-            rbtLoadGame2.classList.add('show');
-
-            function ExecuteCodeStaticRTB2() {
-                try {
-                    if (document.getElementById('RTBStatic2').style.display !== 'none') {
-                        { { { BANNER_STATIC_2 && BANNER_STATIC_2 !== "-" && BANNER_STATIC_2 !== " " } } }
-                    }
-                } catch (e) {
-                    console.error('CRASH Render Static RTB2: ', e.message);
-                }
-            }
-            ExecuteCodeStaticRTB2();
-        </script>
-    </div>
-    #endif
+    <!-- Additional body modules -->
 
     <script>
         const hideFullScreenButton = "";
@@ -357,8 +162,6 @@
             else return false;
         }
 
-        setTimeout(StartUnityInstance_IfUnloaded, 5000);
-
         InitYSDK();
         async function InitYSDK() {
             try {
@@ -367,7 +170,6 @@
                 console.log('Init Yandex SDK');
                 ysdk = await YaGames.init();
 
-                InitPayments();
                 FullAdShow(); // First ad true
 
                 // Additional init modules
@@ -474,131 +276,6 @@
                 })
             } catch (e) {
                 console.error('CRASH Sticky Activity: ', e.message);
-            }
-        }
-
-        function InitPayments() {
-            try {
-                ysdk.getPayments().then(_payments => {
-                    console.log('Purchases are available');
-                    payments = _payments;
-                    return true;
-                }).catch(e => {
-                    console.log('Purchases are not available', e.message);
-                })
-            } catch (e) {
-                console.error('CRASH Init Payments: ', e.message);
-            }
-        }
-
-        function BuyPayments(id) {
-            try {
-                if (payments != null) {
-                    payments.purchase(id).then(() => {
-                        console.log('Purchase Success');
-                        ConsumePurchase(id);
-                        FocusGame();
-                    }).catch(e => {
-                        console.error('Purchase Failed', e.message);
-                        myGameInstance.SendMessage('YandexGame', 'OnPurchaseFailed', id);
-                        FocusGame();
-                    })
-                } else {
-                    console.log('Payments == null');
-                }
-            } catch (e) {
-                console.error('CRASH Buy Payments: ', e.message);
-                FocusGame();
-            }
-        }
-
-        let callCount_GetPayments = 0;
-        function GetPayments() {
-            try {
-                if (payments != null) {
-                    payments.getCatalog()
-                        .then(products => {
-                            let productID = [];
-                            let title = [];
-                            let description = [];
-                            let imageURI = [];
-                            let priceValue = [];
-                            let consumed = [];
-
-                            payments.getPurchases().then(purchases => {
-                                for (let i = 0; i < products.length; i++) {
-                                    productID[i] = products[i].id;
-                                    title[i] = products[i].title;
-                                    description[i] = products[i].description;
-                                    imageURI[i] = products[i].imageURI;
-                                    priceValue[i] = products[i].priceValue;
-
-                                    consumed[i] = true;
-                                    for (i2 = 0; i2 < purchases.length; i2++) {
-                                        if (purchases[i2].productID === productID[i]) {
-                                            consumed[i] = false;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                let jsonPayments = {
-                                    "id": productID,
-                                    "title": title,
-                                    "description": description,
-                                    "imageURI": imageURI,
-                                    "priceValue": priceValue,
-                                    "consumed": consumed
-                                };
-
-                                myGameInstance.SendMessage('YandexGame', 'PaymentsEntries', JSON.stringify(jsonPayments));
-                            });
-                        });
-                }
-                else if (callCount_GetPayments < 2) {
-                    getPayments().
-                        then(_payments => {
-                            payments = _payments;
-                            GetPayments();
-                        });
-                }
-            } catch (e) {
-                console.error('CRASH Get Payments: ', e.message);
-            }
-        }
-
-        function ConsumePurchase(id) {
-            try {
-                if (payments != null) {
-                    payments.getPurchases().then(purchases => {
-                        for (i = 0; i < purchases.length; i++) {
-                            if (purchases[i].productID === id) {
-                                payments.consumePurchase(purchases[i].purchaseToken);
-                                myGameInstance.SendMessage('YandexGame', 'OnPurchaseSuccess', id);
-                            }
-                        }
-                    });
-                }
-                else console.log('Consume purchase: payments null');
-            } catch (e) {
-                console.error('CRASH Consume Purchase: ', e.message);
-            }
-        }
-
-        function ConsumePurchases() {
-            try {
-                if (payments != null) {
-                    payments.getPurchases().then(purchases => {
-                        console.log('Unprocessed purchases: ', purchases.length);
-                        for (i = 0; i < purchases.length; i++) {
-                            payments.consumePurchase(purchases[i].purchaseToken);
-                            myGameInstance.SendMessage('YandexGame', 'OnPurchaseSuccess', purchases[i].productID);
-                        }
-                    });
-                }
-                else console.log('Consume purchases: payments null');
-            } catch (e) {
-                console.error('CRASH Consume purchases: ', e.message);
             }
         }
 
@@ -764,33 +441,6 @@
                 console.error('CRASH Prompt Show: ', e.message);
                 FocusGame();
             }
-        }
-
-        function PaintRBT(rbt) {
-            try {
-                document.getElementById(rbt).style.background = '#ff0000';
-            } catch (e) {
-                console.error('CRASH Paint RBT: ', e.message);
-            }
-        }
-
-        function StaticRBTDeactivate() {
-            #if BANNER_STATIC_1 && BANNER_STATIC_1 !== "-" && BANNER_STATIC_1 !== " "
-            try {
-                rbtLoadGame1.classList.remove('show');
-                document.getElementById('RTBStatic1').style.display = 'none';
-            } catch (e) {
-                console.error('CRASH off RTBStatic1: ', e.message);
-            }
-            #endif
-            #if BANNER_STATIC_2 && BANNER_STATIC_2 !== "-" && BANNER_STATIC_2 !== " "
-            try {
-                rbtLoadGame2.classList.remove('show');
-                document.getElementById('RTBStatic2').style.display = 'none';
-            } catch (e) {
-                console.error('CRASH off RTBStatic2: ', e.message);
-            }
-            #endif
         }
 
         // Additional script modules:
