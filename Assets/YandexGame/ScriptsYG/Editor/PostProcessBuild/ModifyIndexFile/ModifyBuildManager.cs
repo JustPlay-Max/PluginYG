@@ -14,7 +14,7 @@ namespace YG.EditorScr.BuildModify
         private static string BUILD_PATCH;
         private static InfoYG infoYG;
         private static string indexFile;
-        private enum CodeType { js, head, body, init };
+        private enum CodeType { js, head, body, init, start };
 
         public static void ModifyIndex(string buildPatch)
         {
@@ -65,6 +65,8 @@ namespace YG.EditorScr.BuildModify
                 commentHelper = "<!-- Additional body modules -->";
             else if (addCodeType == CodeType.init)
                 commentHelper = "// Additional init modules";
+            else if (addCodeType == CodeType.start)
+                commentHelper = "// Additional start modules";
 
             StringBuilder sb = new StringBuilder(indexFile);
             int insertIndex = sb.ToString().IndexOf(commentHelper);

@@ -7,7 +7,6 @@ namespace YG.Example
     {
         [SerializeField] InputField integerText;
         [SerializeField] InputField stringifyText;
-        [SerializeField] Text systemSavesText;
         [SerializeField] Toggle[] booleanArrayToggle;
 
         private void OnEnable() => YandexGame.GetDataEvent += GetLoad;
@@ -42,10 +41,6 @@ namespace YG.Example
 
             for (int i = 0; i < booleanArrayToggle.Length; i++)
                 booleanArrayToggle[i].isOn = YandexGame.savesData.openLevels[i];
-
-            systemSavesText.text = $"Language - {YandexGame.savesData.language}\n" +
-            $"First Session - {YandexGame.savesData.isFirstSession}\n" +
-            $"Prompt Done - {YandexGame.savesData.promptDone}\n";
         }
     }
 }

@@ -99,6 +99,7 @@ namespace YG
             {
                 CallInitBaisYG();
                 CallInitYG();
+                GetPayments();
             }
         }
 
@@ -121,7 +122,6 @@ namespace YG
                     InitializedLB();
 #endif
                 }
-                GetPayments();
 
                 CallStartYG();
                 _SDKEnabled = true;
@@ -134,7 +134,7 @@ namespace YG
 
         static void Message(string message)
         {
-            if (Instance.infoYG.debug) 
+            if (Instance.infoYG.debug)
                 Debug.Log(message);
         }
 
@@ -151,7 +151,7 @@ namespace YG
                 firstSceneLoad = false;
             else if (infoYG.AdWhenLoadingScene)
                 _FullscreenShow();
-        }  
+        }
 
         #region For ECS
 #if UNITY_EDITOR
@@ -191,7 +191,7 @@ namespace YG
 
         #endregion Methods
 
-        
+
 
         // Sending messages
 
@@ -206,6 +206,7 @@ namespace YG
 #endif
 #if UNITY_EDITOR
             Message("Initialization Leaderboards");
+            InitializedLB();
 #endif
         }
         #endregion Init Leaderboard
@@ -593,8 +594,10 @@ namespace YG
         {
             lastRewardAdID = id;
 #if UNITY_EDITOR
-            if (!Instance.infoYG.testErrorOfRewardedAdsInEditor)
-                timeOnOpenRewardedAds -= 3;
+            if (Instance.infoYG.testErrorOfRewardedAdsInEditor)
+                timeOnOpenRewardedAds += Time.realtimeSinceStartup + 1;
+            else
+                timeOnOpenRewardedAds = 0;
 #endif
             rewardAdResult = RewardAdResult.None;
 

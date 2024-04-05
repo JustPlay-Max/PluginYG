@@ -30,7 +30,6 @@ namespace YG.Example
                 "\nplayerId - " + playerId +
                 "\nauth - " + YandexGame.auth +
                 "\nSDKEnabled - " + YandexGame.SDKEnabled +
-                "\ninitializedLB - " + YandexGame.initializedLB +
                 "\nphotoSize - " + YandexGame.photoSize;
 
             if (imageLoad != null && YandexGame.auth)

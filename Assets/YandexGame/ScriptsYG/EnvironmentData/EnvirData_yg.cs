@@ -41,7 +41,7 @@ namespace YG
         }
         public void _RequesEnvirData() => RequesEnvirData(true);
 
-        public void SetEnvirData(string data) 
+        public void SetEnvirData(string data)
         {
             EnvironmentData = JsonUtility.FromJson<JsonEnvironmentData>(data);
             GetDataInvoke();
@@ -67,6 +67,10 @@ namespace YG
                 EnvironmentData.isDesktop = true;
                 EnvironmentData.isTV = false;
             }
+
+            if (Instance.infoYG.playerInfoSimulation.language != "" &&
+                Instance.infoYG.playerInfoSimulation.language != null)
+                EnvironmentData.language = Instance.infoYG.playerInfoSimulation.language;
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

@@ -102,7 +102,7 @@
 
         // Фоновое изображение при загрузке игры. При сборке билда код меняется взависимости от настроек проекта.
         var backgroundUnity = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
-        canvas.style.background = "url('background.png') center / cover";
+        loadingCover.style.background = "url('background.png') center / cover";
 
         loadingCover.style.display = "";
 
@@ -188,6 +188,8 @@
             if (nowFullAdOpen == true && myGameInstance != null) {
                 myGameInstance.SendMessage('YandexGame', 'OpenFullAd');
             }
+
+            // Additional start modules
         }
 
         function FullAdShow() {

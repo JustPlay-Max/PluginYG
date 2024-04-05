@@ -5,7 +5,7 @@ using YG;
 
 public class TimerBeforeAdsYG : MonoBehaviour
 {
-    [SerializeField, 
+    [SerializeField,
         Tooltip("Объект таймера перед показом рекламы. Он будет активироваться и деактивироваться в нужное время.")]
     private GameObject secondsPanelObject;
     [SerializeField,
@@ -18,9 +18,10 @@ public class TimerBeforeAdsYG : MonoBehaviour
 
     [Space(20)]
     [SerializeField]
-    private UnityEvent onShowTimer; 
+    private UnityEvent onShowTimer;
     [SerializeField]
     private UnityEvent onHideTimer;
+    private int objSecCounter;
 
     private void Start()
     {
@@ -38,8 +39,7 @@ public class TimerBeforeAdsYG : MonoBehaviour
 
     IEnumerator CheckTimerAd()
     {
-        bool checking = true;
-        while (checking)
+        while (true)
         {
             if (YandexGame.timerShowAd >= YandexGame.Instance.infoYG.fullscreenAdInterval)
             {
@@ -49,7 +49,7 @@ public class TimerBeforeAdsYG : MonoBehaviour
                     secondsPanelObject.SetActive(true);
 
                 StartCoroutine(TimerAdShow());
-                yield return checking = false;
+                yield break;
             }
 
             if (!realtimeSeconds)
@@ -59,11 +59,9 @@ public class TimerBeforeAdsYG : MonoBehaviour
         }
     }
 
-    int objSecCounter;
     IEnumerator TimerAdShow()
     {
-        bool process = true;
-        while (process)
+        while (true)
         {
             if (objSecCounter < secondObjects.Length)
             {
@@ -87,11 +85,8 @@ public class TimerBeforeAdsYG : MonoBehaviour
                 while (!YandexGame.nowFullAd)
                     yield return null;
 
-                secondsPanelObject.SetActive(false);
-                onHideTimer?.Invoke();
-                objSecCounter = 0;
-                StartCoroutine(CheckTimerAd());
-                process = false;
+                RestartTimer();
+                yield break;
             }
         }
     }
@@ -102,13 +97,18 @@ public class TimerBeforeAdsYG : MonoBehaviour
             yield return new WaitForSeconds(2.5f);
         else
             yield return new WaitForSecondsRealtime(2.5f);
-        
+
         if (objSecCounter != 0)
         {
-            secondsPanelObject.SetActive(false);
-            onHideTimer?.Invoke();
-            objSecCounter = 0;
-            StopCoroutine(TimerAdShow());
+            RestartTimer();
         }
+    }
+
+    private void RestartTimer()
+    {
+        secondsPanelObject.SetActive(false);
+        onHideTimer?.Invoke();
+        objSecCounter = 0;
+        StartCoroutine(CheckTimerAd());
     }
 }

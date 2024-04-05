@@ -52,8 +52,11 @@ namespace YG
             dropdown.ClearOptions();
             dropdown.AddOptions(QualitySettings.names.ToList());
             dropdown.value = QualitySettings.GetQualityLevel();
+        }
 
-            SwitchLanguage(YandexGame.savesData.language);
+        private void Start()
+        {
+            SwitchLanguage(YandexGame.lang);
         }
 
         private void OnEnable() => YandexGame.SwitchLangEvent += SwitchLanguage;

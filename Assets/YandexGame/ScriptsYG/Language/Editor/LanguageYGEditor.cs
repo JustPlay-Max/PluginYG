@@ -290,15 +290,6 @@ namespace YG.Insides
                     if (labelProcess == false)
                         GUILayout.Label(processTranslateLabel + " Languages", GUILayout.Height(20));
 
-                    try
-                    {
-                        if (!scr.processTranslateLabel.Contains("completed"))
-                            GUILayout.Label("Go back to the inspector!", GUILayout.Height(20));
-                    }
-                    catch
-                    {
-                    }
-
                     GUILayout.EndHorizontal();
 
                     UpdateLanguages(false);

@@ -7,7 +7,7 @@ namespace YG.EditorScr.BuildModify
     {
         public static void SetBackgroundFormat()
         {
-            string searchCode = @"canvas.style.background = ""url('background.png') center / cover"";";
+            string searchCode = @"loadingCover.style.background = ""url('background.png') center / cover"";";
 
             if (!indexFile.Contains(searchCode))
             {

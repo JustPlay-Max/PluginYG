@@ -14,7 +14,7 @@ using TMPro;
 
 namespace YG
 {
-    [HelpURL("https://ash-message-bf4.notion.site/PluginYG-d457b23eee604b7aa6076116aab647ed#00b98bcff9cf45428b137f5565a797a1")]
+    [DefaultExecutionOrder(-101), HelpURL("https://ash-message-bf4.notion.site/PluginYG-d457b23eee604b7aa6076116aab647ed#00b98bcff9cf45428b137f5565a797a1")]
     public class LanguageYG : MonoBehaviour
     {
 #if YG_TEXT_MESH_PRO
@@ -114,7 +114,7 @@ namespace YG
 
         public void SwitchLanguage()
         {
-            if (YandexGame.LangEnable())
+            if (YandexGame.SDKEnabled && YandexGame.LangEnable())
                 SwitchLanguage(YandexGame.lang);
         }
 
@@ -214,7 +214,7 @@ namespace YG
             else if (textMPComponent)
                 textMPComponent.fontSize = baseFontSize;
 #endif
-            if (fontSizeArray.Length != 0 && fontSizeArray.Length -1 >= fontNumber)
+            if (fontSizeArray.Length != 0 && fontSizeArray.Length - 1 >= fontNumber)
             {
                 if (textLComponent)
                     textLComponent.fontSize += fontSizeArray[fontNumber];
@@ -369,40 +369,6 @@ namespace YG
         }
 
         [HideInInspector] public int countLang = 0;
-        IEnumerator TranslateEmptyFields(int countLangAvailable)
-        {
-            countLang = 0;
-            processTranslateLabel = "processing... 0/" + countLangAvailable;
-
-            for (int i = 0; i < languages.Length; i++)
-            {
-                if (LangMethods.LangArr(infoYG)[i] && (languages[i] == null || languages[i] == ""))
-                {
-                    bool complete = false;
-                    string translate = TranslateGoogle(LangMethods.LangName(i));
-
-                    if (translate == null)
-                        yield return null;
-
-                    SetLang(i, translate);
-
-                    if (processTranslateLabel.Contains("error"))
-                    {
-                        processTranslateLabel = countLang + "/" + countLangAvailable + " error";
-                    }
-                    else
-                    {
-                        complete = true;
-                        processTranslateLabel = countLang + "/" + countLangAvailable;
-                    }
-
-                    yield return complete == true;
-                    countLang++;
-                }
-            }
-
-            processTranslateLabel = countLang + "/" + countLangAvailable + " completed";
-        }
 
         private void RunTranslateEmptyFields(int countLangAvailable)
         {

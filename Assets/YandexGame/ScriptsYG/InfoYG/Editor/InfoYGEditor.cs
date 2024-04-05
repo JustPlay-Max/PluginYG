@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using YG.Insides.Utils;
 using YG.EditorScr;
+using System.IO;
 
 namespace YG.Insides
 {
@@ -30,6 +31,7 @@ namespace YG.Insides
                 PlayerPrefs.SetInt("RebootUnityDialogIsRequired", 0);
                 PlayerPrefs.Save();
                 EditorUtility.DisplayDialog("Changing PluginYG settings", "Please restart the Unity editor!", "OK");
+                RecompileScripts();
             }
         }
 
@@ -152,5 +154,21 @@ namespace YG.Insides
                 PlayerPrefs.Save();
             }
         }
+
+        public static void RecompileScripts()
+        {
+            string path = Application.dataPath + "/YandexGame/ScriptsYG/InfoYG/Editor/InfoYGEditor.cs";
+            if (File.Exists(path))
+            {
+                string text = File.ReadAllText(path);
+                text += "\n";
+                File.WriteAllText(path, text);
+            }
+        }
     }
 }
+
+
+
+
+

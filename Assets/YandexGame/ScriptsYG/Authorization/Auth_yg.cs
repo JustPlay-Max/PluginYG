@@ -124,13 +124,17 @@ namespace YG
             GetDataInvoke();
         }
 
-        
+
         [DllImport("__Internal")]
         private static extern void OpenAuthDialog();
 
         public static void AuthDialog()
         {
-            Message("Open Auth Dialog");
+            if (auth)
+                Message("Open Auth Dialog");
+            else
+                Message("SDK Яндекс Игр предлагает войти в аккаунт только тем пользователям, которые еще не вошли.");
+
 #if !UNITY_EDITOR
             OpenAuthDialog();
 #endif

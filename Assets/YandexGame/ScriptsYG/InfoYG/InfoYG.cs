@@ -78,7 +78,7 @@ namespace YG
         [Tooltip("Длительность симуляции показа рекламы."), Min(0)]
         public float durationOfAdSimulation = 0.5f;
 
-        [Tooltip("Задержка открытия полноэкранной рекламы. Может быть полезна для тестирования уведомления о том, что скоро откроется реклама, перед ёё показом (в момент ожидания рекламы)."), Min(0)]
+        [Tooltip("Задержка открытия рекламы. Может быть полезна для тестирования уведомления о том, что скоро откроется реклама, перед ёё показом (в момент ожидания рекламы)."), Min(0)]
         public float loadAdWithDelaySimulation = 0.0f;
 
         [Tooltip("Нажмите галочку, чтобы сэмулировать вызов ошибки при просмотре рекламы за вознаграждение. (Только для Unity Editor)")]
@@ -191,12 +191,12 @@ namespace YG
         public bool LocalizationEnable;
 
         public enum CallingLanguageCheck { FirstLaunchOnly, EveryGameLaunch, DoNotChangeLanguageStartup };
-        [Tooltip("Менять язык игры в соответствии с языком установленным Я.Играми:\nFirstLaunchOnly - Только при первом запуске игры\nEveryGameLaunch - Каждый раз при запуске игры\nDoNotChangeLanguageStartup - Не менять язык при запуске игры.")]
+        [Tooltip("Менять язык игры в соответствии с языком из данных окружения SDK Яндекс Игр:\n\n •  First LaunchOnly - Только при первом запуске игры.\n\n •  Every Game Launch - Каждый раз при запуске игры.\n\n •  Do Not Change Language Startup - Не менять язык при запуске игры.")]
         [ConditionallyVisible(nameof(LocalizationEnable))]
         public CallingLanguageCheck callingLanguageCheck = CallingLanguageCheck.EveryGameLaunch;
 
         public enum TranslateMethod { AutoLocalization, Manual, CSVFile };
-        [Tooltip("Метод перевода. \nAutoLocalization - Автоматический перевод через интернет с помощью Google Translate \nManual - Ручной режим. Вы сами записываете перевод в компоненте LanguageYG \nCSVFile - Перевод с помощью Excel файла.")]
+        [Tooltip("Метод перевода.\n\n •  AutoLocalization - Автоматический перевод через интернет с помощью Google Translate.\n\n •  Manual - Ручной режим. Вы сами записываете перевод в компоненте LanguageYG.\n\n •  CSVFile - Перевод с помощью Excel файла.")]
         [ConditionallyVisible(nameof(LocalizationEnable))]
         public TranslateMethod translateMethod;
 
