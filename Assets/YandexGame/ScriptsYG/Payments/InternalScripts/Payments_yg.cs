@@ -127,7 +127,10 @@ namespace YG
                 purchases[i].title = paymentsData.title[i];
                 purchases[i].description = paymentsData.description[i];
                 purchases[i].imageURI = paymentsData.imageURI[i];
+                purchases[i].price = paymentsData.price[i];
                 purchases[i].priceValue = paymentsData.priceValue[i];
+                purchases[i].priceCurrencyCode = paymentsData.priceCurrencyCode[i];
+                purchases[i].currencyImageURL = paymentsData.currencyImageURL[i];
                 purchases[i].consumed = paymentsData.consumed[i];
             }
             langPayments = paymentsData.language;

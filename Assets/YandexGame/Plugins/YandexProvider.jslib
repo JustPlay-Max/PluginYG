@@ -5,21 +5,6 @@ mergeInto(LibraryManager.library,
 		InitGame();
 	},
 
-	InitLeaderboard: function ()
-	{
-		InitLeaderboard();
-	},
-	
-	SetLeaderboardScores: function (nameLB, score)
-	{
-		SetLeaderboardScores(UTF8ToString(nameLB), score);
-	},
-	
-	GetLeaderboardScores: function (nameLB, maxPlayers, quantityTop, quantityAround, photoSizeLB, auth)
-	{
-		GetLeaderboardScores(UTF8ToString(nameLB), maxPlayers, quantityTop, quantityAround, UTF8ToString(photoSizeLB), auth);
-	},
-
 	FullAdShow: function ()
 	{
 		FullAdShow();
@@ -61,5 +46,52 @@ mergeInto(LibraryManager.library,
 		//a.setAttribute("href", UTF8ToString(url));
 		//a.setAttribute("target", "_blank");
 		//a.click();
+	},
+	
+	GameplayStart_js: function () {
+		if (ysdk !== null && ysdk.features !== undefined && ysdk.features.GameplayAPI !== undefined) {
+			ysdk.features.GameplayAPI.start();
+		}
+		else {
+			if (ysdk == null) console.error('Gameplay start rejected. The SDK is not initialized!');
+			else console.error('Gameplay start undefined!');
+		}
+	},
+	
+	GameplayStop_js: function () {
+		if (ysdk !== null && ysdk.features !== undefined && ysdk.features.GameplayAPI !== undefined) {
+			ysdk.features.GameplayAPI.stop();
+		}
+		else {
+			if (ysdk == null) console.error('Gameplay stop rejected. The SDK is not initialized!');
+			else console.error('Gameplay stop undefined!');
+		}
+	},
+	
+	ServerTime_js: function () {
+		if (ysdk !== null)
+			return ysdk.serverTime();
+		return 0;
+	},
+	
+	SetFullscreen_js: function (fullscreen) {
+		if (ysdk !== null) {
+			if (fullscreen) {
+				if (ysdk.screen.fullscreen.status != 'on')
+					ysdk.screen.fullscreen.request();
+			}
+			else if (ysdk.screen.fullscreen.status != 'off')
+				ysdk.screen.fullscreen.exit();
+		}
+	},
+	
+	IsFullscreen_js: function () {
+		if (ysdk !== null) {
+			if (ysdk.screen.fullscreen.status == 'on')
+				return true;
+			else
+				return false;
+		}
+		return false;
 	}
 });

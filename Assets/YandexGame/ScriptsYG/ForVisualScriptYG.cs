@@ -53,7 +53,6 @@ namespace YG
             auth = YandexGame.auth;
             playerName = YandexGame.playerName;
             playerId = YandexGame.playerId;
-            initializedLB = YandexGame.initializedLB;
             playerPhoto = YandexGame.playerPhoto;
             photoSize = YandexGame.photoSize;
             language = YandexGame.EnvironmentData.language;

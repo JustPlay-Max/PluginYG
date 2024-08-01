@@ -1,114 +1,112 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using YG;
 
-public class TimerBeforeAdsYG : MonoBehaviour
+namespace YG
 {
-    [SerializeField,
-        Tooltip("Объект таймера перед показом рекламы. Он будет активироваться и деактивироваться в нужное время.")]
-    private GameObject secondsPanelObject;
-    [SerializeField,
-        Tooltip("Массив объектов, которые будут показываться по очереди через секунду. Сколько объектов вы поместите в массив, столько секунд будет отчитываться перед показом рекламы.\n\nНапример, поместите в массив три объекта: певый с текстом '3', второй с текстом '2', третий с текстом '1'.\nВ таком случае произойдёт отчет трёх секунд с показом объектов с цифрами перед рекламой.")]
-    private GameObject[] secondObjects;
-
-    [SerializeField,
-        Tooltip("Работа таймера в реальном времени, независимо от time scale.")]
-    private bool realtimeSeconds;
-
-    [Space(20)]
-    [SerializeField]
-    private UnityEvent onShowTimer;
-    [SerializeField]
-    private UnityEvent onHideTimer;
-    private int objSecCounter;
-
-    private void Start()
+    public class TimerBeforeAdsYG : MonoBehaviour
     {
-        if (secondsPanelObject)
-            secondsPanelObject.SetActive(false);
+        [SerializeField,
+            Tooltip("Объект таймера перед показом рекламы. Он будет активироваться и деактивироваться в нужное время.")]
+        private GameObject secondsPanelObject;
+        [SerializeField,
+            Tooltip("Массив объектов, которые будут показываться по очереди через секунду. Сколько объектов вы поместите в массив, столько секунд будет отчитываться перед показом рекламы.\n\nНапример, поместите в массив три объекта: певый с текстом '3', второй с текстом '2', третий с текстом '1'.\nВ таком случае произойдёт отчет трёх секунд с показом объектов с цифрами перед рекламой.")]
+        private GameObject[] secondObjects;
 
-        for (int i = 0; i < secondObjects.Length; i++)
-            secondObjects[i].SetActive(false);
+        [SerializeField, Tooltip("Пазуа с помощью компонента ViewingAdsYG.")]
+        private bool pauseTo_ViewingAdsYG = true;
 
-        if (secondObjects.Length > 0)
-            StartCoroutine(CheckTimerAd());
-        else
-            Debug.LogError("Fill in the array 'secondObjects'");
-    }
+        [Space(20)]
+        [SerializeField] private UnityEvent onShowTimer;
+        [SerializeField] private UnityEvent onHideTimer;
+        [SerializeField] private UnityEvent doPause;
 
-    IEnumerator CheckTimerAd()
-    {
-        while (true)
+        private int objSecCounter;
+
+        private void Start()
         {
-            if (YandexGame.timerShowAd >= YandexGame.Instance.infoYG.fullscreenAdInterval)
-            {
-                onShowTimer?.Invoke();
-                objSecCounter = 0;
-                if (secondsPanelObject)
-                    secondsPanelObject.SetActive(true);
+            if (secondsPanelObject)
+                secondsPanelObject.SetActive(false);
 
-                StartCoroutine(TimerAdShow());
-                yield break;
-            }
+            for (int i = 0; i < secondObjects.Length; i++)
+                secondObjects[i].SetActive(false);
 
-            if (!realtimeSeconds)
-                yield return new WaitForSeconds(1.0f);
+            if (secondObjects.Length > 0)
+                StartCoroutine(CheckTimerAd());
             else
-                yield return new WaitForSecondsRealtime(1.0f);
+                Debug.LogError("Fill in the array 'secondObjects'");
         }
-    }
 
-    IEnumerator TimerAdShow()
-    {
-        while (true)
+        IEnumerator CheckTimerAd()
         {
-            if (objSecCounter < secondObjects.Length)
+            while (true)
             {
-                for (int i2 = 0; i2 < secondObjects.Length; i2++)
-                    secondObjects[i2].SetActive(false);
+                if (YandexGame.timerShowAd >= YandexGame.Instance.infoYG.fullscreenAdInterval
+                    && Time.timeScale != 0)
+                {
+                    onShowTimer?.Invoke();
+                    objSecCounter = 0;
+                    if (secondsPanelObject)
+                        secondsPanelObject.SetActive(true);
 
-                secondObjects[objSecCounter].SetActive(true);
-                objSecCounter++;
+                    StartCoroutine(TimerAdShow());
+                    yield break;
+                }
 
-                if (!realtimeSeconds)
-                    yield return new WaitForSeconds(1.0f);
-                else
-                    yield return new WaitForSecondsRealtime(1.0f);
-            }
-
-            if (objSecCounter == secondObjects.Length)
-            {
-                YandexGame.FullscreenShow();
-                StartCoroutine(BackupTimerClosure());
-
-                while (!YandexGame.nowFullAd)
-                    yield return null;
-
-                RestartTimer();
-                yield break;
+                yield return new WaitForSeconds(1.0f); yield return new WaitForSecondsRealtime(1.0f);
             }
         }
-    }
 
-    IEnumerator BackupTimerClosure()
-    {
-        if (!realtimeSeconds)
-            yield return new WaitForSeconds(2.5f);
-        else
+        IEnumerator TimerAdShow()
+        {
+            if (pauseTo_ViewingAdsYG)
+                ViewingAdsYG.onPause?.Invoke(true);
+
+            doPause?.Invoke();
+
+            while (true)
+            {
+                if (objSecCounter < secondObjects.Length)
+                {
+                    for (int i2 = 0; i2 < secondObjects.Length; i2++)
+                        secondObjects[i2].SetActive(false);
+
+                    secondObjects[objSecCounter].SetActive(true);
+                    objSecCounter++;
+
+                    yield return new WaitForSecondsRealtime(1.0f);
+                }
+
+                if (objSecCounter == secondObjects.Length)
+                {
+                    YandexGame.FullscreenShow();
+                    StartCoroutine(BackupTimerClosure());
+
+                    while (!YandexGame.nowFullAd)
+                        yield return null;
+
+                    RestartTimer();
+                    yield break;
+                }
+            }
+        }
+
+        IEnumerator BackupTimerClosure()
+        {
             yield return new WaitForSecondsRealtime(2.5f);
 
-        if (objSecCounter != 0)
-        {
-            RestartTimer();
+            if (objSecCounter != 0)
+            {
+                RestartTimer();
+            }
         }
-    }
 
-    private void RestartTimer()
-    {
-        secondsPanelObject.SetActive(false);
-        onHideTimer?.Invoke();
-        objSecCounter = 0;
-        StartCoroutine(CheckTimerAd());
+        private void RestartTimer()
+        {
+            secondsPanelObject.SetActive(false);
+            onHideTimer?.Invoke();
+            objSecCounter = 0;
+            StartCoroutine(CheckTimerAd());
+        }
     }
 }

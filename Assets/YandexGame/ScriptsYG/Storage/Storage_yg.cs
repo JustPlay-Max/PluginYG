@@ -97,9 +97,9 @@ namespace YG
             Message("Save Local");
 #if !UNITY_EDITOR
 #if YG_NEWTONSOFT_FOR_SAVES
-            SaveToLocalStorage("savesData", JsonConvert.SerializeObject(savesData));
+            LocalStorage.SetKey("savesData", JsonConvert.SerializeObject(savesData));
 #else
-            SaveToLocalStorage("savesData", JsonUtility.ToJson(savesData));
+            LocalStorage.SetKey("savesData", JsonUtility.ToJson(savesData));
 #endif
 #endif
         }
@@ -108,14 +108,14 @@ namespace YG
         {
             Message("Load Local");
 
-            if (!HasKey("savesData"))
+            if (!LocalStorage.HasKey("savesData"))
                 ResetSaveProgress();
             else
             {
 #if YG_NEWTONSOFT_FOR_SAVES
-                savesData = JsonConvert.DeserializeObject<SavesYG>(LoadFromLocalStorage("savesData"));
+                savesData = JsonConvert.DeserializeObject<SavesYG>(LocalStorage.GetKey("savesData"));
 #else
-                savesData = JsonUtility.FromJson<SavesYG>(LoadFromLocalStorage("savesData"));
+                savesData = JsonUtility.FromJson<SavesYG>(LocalStorage.GetKey("savesData"));
 #endif
             }
         }
@@ -221,14 +221,14 @@ namespace YG
                 return;
             }
 
-            if (HasKey("savesData"))
+            if (LocalStorage.HasKey("savesData"))
             {
                 try
                 {
 #if YG_NEWTONSOFT_FOR_SAVES
-                    localData = JsonConvert.DeserializeObject<SavesYG>(LoadFromLocalStorage("savesData"));
+                    localData = JsonConvert.DeserializeObject<SavesYG>(LocalStorage.GetKey("savesData"));
 #else
-                    localData = JsonUtility.FromJson<SavesYG>(LoadFromLocalStorage("savesData"));
+                    localData = JsonUtility.FromJson<SavesYG>(LocalStorage.GetKey("savesData"));
 #endif
                 }
                 catch (Exception e)
@@ -281,9 +281,9 @@ namespace YG
                 Message("Local Saves - Broken! Data Recovering...");
                 ResetSaveProgress();
 #if YG_NEWTONSOFT_FOR_SAVES
-                savesData = JsonConvert.DeserializeObject<SavesYG>(LoadFromLocalStorage("savesData"));
+                savesData = JsonConvert.DeserializeObject<SavesYG>(LocalStorage.GetKey("savesData"));
 #else
-                savesData = JsonUtility.FromJson<SavesYG>(LoadFromLocalStorage("savesData"));
+                savesData = JsonUtility.FromJson<SavesYG>(LocalStorage.GetKey("savesData"));
 #endif
                 Message("Local Saves Partially Restored!");
             }

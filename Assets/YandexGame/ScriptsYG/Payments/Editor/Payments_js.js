@@ -18,7 +18,10 @@ function GetPayments(sendback) {
                         let title = [];
                         let description = [];
                         let imageURI = [];
+                        let price = [];
                         let priceValue = [];
+                        let priceCurrencyCode = [];
+                        let currencyImageURL = [];
                         let consumed = [];
 
                         payments.getPurchases().then(purchases => {
@@ -27,7 +30,10 @@ function GetPayments(sendback) {
                                 title[i] = products[i].title;
                                 description[i] = products[i].description;
                                 imageURI[i] = products[i].imageURI;
+                                price[i] = products[i].price;
                                 priceValue[i] = products[i].priceValue;
+                                priceCurrencyCode[i] = products[i].priceCurrencyCode;
+                                currencyImageURL[i] = products[i].getPriceCurrencyImage("medium");
 
                                 consumed[i] = true;
                                 for (i2 = 0; i2 < purchases.length; i2++) {
@@ -43,7 +49,10 @@ function GetPayments(sendback) {
                                 "title": title,
                                 "description": description,
                                 "imageURI": imageURI,
+                                "price": price,
                                 "priceValue": priceValue,
+                                "priceCurrencyCode": priceCurrencyCode,
+                                "currencyImageURL": currencyImageURL,
                                 "consumed": consumed,
                                 "language": ysdk.environment.i18n.lang
                             };

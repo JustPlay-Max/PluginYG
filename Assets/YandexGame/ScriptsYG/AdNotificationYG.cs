@@ -6,8 +6,8 @@ public class AdNotificationYG : MonoBehaviour
 {
     [Tooltip("Объект, который будет активироваться перед открытием рекламы. И деактивироваться при открытии.")]
     public GameObject notificationObj;
-    [Min(1), Tooltip("Максимальное время показа объекта нотификации. Если реклама так и не будет показана, то объект скроется через указанное в данном параметре время.")]
-    public float waitingForAds = 3;
+    [Min(0.1f), Tooltip("Максимальное время показа объекта нотификации. Если реклама так и не будет показана, то объект скроется через указанное в данном параметре время.")]
+    public float waitingForAds = 1;
 
     public static bool isShowNotification;
     public static AdNotificationYG Instance;
@@ -40,7 +40,7 @@ public class AdNotificationYG : MonoBehaviour
 
     private void OnAdNotification()
     {
-        YandexGame.OpenFullAdEvent?.Invoke();
+        ViewingAdsYG.onPause?.Invoke(true);
         notificationObj.SetActive(true);
         isShowNotification = true;
         closeNotifCoroutine = StartCoroutine(CloseNotification());
@@ -51,7 +51,7 @@ public class AdNotificationYG : MonoBehaviour
         yield return new WaitForSecondsRealtime(waitingForAds);
         notificationObj.SetActive(false);
         isShowNotification = false;
-        YandexGame.CloseFullAdEvent?.Invoke();
+        ViewingAdsYG.onPause?.Invoke(false);
     }
 
     private void OnOpenAd()

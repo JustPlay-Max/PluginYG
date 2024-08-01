@@ -70,7 +70,6 @@ namespace YG
                     "\nplayerId - " + playerId +
                     "\nauth - " + YandexGame.auth +
                     "\nSDKEnabled - " + YandexGame.SDKEnabled +
-                    "\ninitializedLB - " + YandexGame.initializedLB +
                     "\nphotoSize - " + YandexGame.photoSize +
                     "\ndomain - " + YandexGame.EnvironmentData.domain +
                     "\ndeviceType - " + YandexGame.EnvironmentData.deviceType +

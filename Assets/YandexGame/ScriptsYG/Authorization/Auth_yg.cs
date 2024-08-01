@@ -5,27 +5,13 @@ namespace YG
 {
     public partial class YandexGame
     {
-        private static string _playerName = "unauthorized";
         private static string _playerId;
-        private static string _playerPhoto;
-        private static string _photoSize;
-
-        public static string playerName
-        {
-            get => _playerName;
-            set => _playerName = value;
-        }
         public static string playerId { get => _playerId; }
-        public static string playerPhoto
-        {
-            get => _playerPhoto;
-            set => _playerPhoto = value;
-        }
-        public static string photoSize
-        {
-            get => _photoSize;
-            set => _photoSize = value;
-        }
+
+        public static string playerName = "unauthorized";
+        public static string playerPhoto;
+        public static string photoSize;
+        public static string payingStatus;
 
         JsonAuth jsonAuth = new JsonAuth();
 
@@ -36,7 +22,7 @@ namespace YG
         [InitYG]
         public static void InitializationGame()
         {
-            _photoSize = Instance.infoYG.GetPlayerPhotoSize();
+            photoSize = Instance.infoYG.GetPlayerPhotoSize();
 #if !UNITY_EDITOR
             Debug.Log("Init Auth inGame");
             string playerData = InitPlayer_js();
@@ -68,7 +54,8 @@ namespace YG
                 playerAuth = auth,
                 playerName = name,
                 playerId = Instance.infoYG.playerInfoSimulation.uniqueID,
-                playerPhoto = Instance.infoYG.playerInfoSimulation.photo
+                playerPhoto = Instance.infoYG.playerInfoSimulation.photo,
+                payingStatus = Instance.infoYG.playerInfoSimulation.payingStatus
             };
 
             string json = JsonUtility.ToJson(playerDataSimulation);
@@ -94,9 +81,11 @@ namespace YG
         {
             if (data == "noData" || data == "" || data == null)
             {
-                _playerName = "unauthorized";
                 _playerId = null;
+                playerName = "unauthorized";
                 playerPhoto = null;
+                payingStatus = null;
+
                 RejectedAuthorization.Invoke();
                 Debug.LogError("Failed init player data");
                 GetDataInvoke();
@@ -116,9 +105,10 @@ namespace YG
                 _auth = false;
             }
 
-            _playerName = jsonAuth.playerName.ToString();
             _playerId = jsonAuth.playerId.ToString();
-            _playerPhoto = jsonAuth.playerPhoto.ToString();
+            playerName = jsonAuth.playerName.ToString();
+            playerPhoto = jsonAuth.playerPhoto.ToString();
+            payingStatus = jsonAuth.payingStatus.ToString();
 
             Message("Authorization - " + _auth);
             GetDataInvoke();
@@ -148,6 +138,7 @@ namespace YG
             public string playerName;
             public string playerId;
             public string playerPhoto;
+            public string payingStatus;
         }
     }
 }

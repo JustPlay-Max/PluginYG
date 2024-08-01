@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./style.css">
 
     <!-- Yandex Games SDK -->
-    <script src="https://yandex.ru/games/sdk/v2"></script>
+    <script src="/sdk.js"></script>
 
     <style>
         /* Убираем выделение по нажатию клавиш */
@@ -122,11 +122,38 @@
             FocusGame();
         });
 
+        document.addEventListener('visibilitychange', function () {
+            if (ysdk !== null && initGame == true) {
+                if (document.hidden) {
+                    myGameInstance.SendMessage('YandexGame', 'OnVisibilityGameWindow', 'false');
+                }
+                else {
+                    myGameInstance.SendMessage('YandexGame', 'OnVisibilityGameWindow', 'true');
+
+                    if ((ysdk.deviceInfo.isMobile() || ysdk.deviceInfo.isTablet()) && ysdk.screen.fullscreen.status == 'off')
+                        ysdk.screen.fullscreen.request();
+                }
+            }
+        });
+
+        function ResumeGame() {
+            if (myGameInstance && myGameInstance.Module) {
+                // Возобновление главного цикла Unity
+                myGameInstance.Module.resumeMainLoop();
+
+                // (Курсор снова может быть спрятан, если это требуется игрой)
+            }
+
+            let audioElements = document.querySelectorAll('audio, video');
+            audioElements.forEach(element => {
+                element.muted = false;
+            });
+        }
+
         let StartUnityInstance;
         let myGameInstance = null;
         let ysdk = null;
         let player = null;
-        let leaderboard;
         let payments = null;
         let initGame = false;
         let nowFullAdOpen = false;
@@ -146,7 +173,7 @@
                     console.error(message);
                 });
             };
-            if (LocalHost()) // Delete when setting up: Load Game Run
+            if (LocalHost())
                 StartUnityInstance_IfUnloaded();
         };
 
@@ -238,20 +265,20 @@
                         callbacks:
                         {
                             onOpen: () => {
-                                console.log('Opened Video Ad. Id: ' + id);
+                                console.log('Opened Video Ad');
                                 myGameInstance.SendMessage('YandexGame', 'OpenVideo');
                             },
                             onClose: () => {
-                                console.log('Closed Video Ad. Id: ' + id);
+                                console.log('Closed Video Ad');
                                 myGameInstance.SendMessage('YandexGame', 'CloseVideo');
                                 FocusGame();
                             },
                             onRewarded: () => {
-                                console.log('Reward Video Ad. Id: ' + id);
+                                console.log('Reward Video Ad');
                                 myGameInstance.SendMessage('YandexGame', 'RewardVideo', id);
                             },
                             onError: (e) => {
-                                console.error('Error Video Ad. Id: ' + id, e);
+                                console.error('Error Video Ad', e);
                                 myGameInstance.SendMessage('YandexGame', 'ErrorVideo');
                             }
                         }
@@ -279,121 +306,6 @@
             } catch (e) {
                 console.error('CRASH Sticky Activity: ', e.message);
             }
-        }
-
-        function InitLeaderboard() {
-            try {
-                ysdk.getLeaderboards().then(_lb => {
-                    leaderboard = _lb
-                    myGameInstance.SendMessage('YandexGame', 'InitializedLB');
-                });
-            } catch (e) {
-                console.error('CRASH Init Leaderboard: ', e.message);
-            }
-        }
-
-        function SetLeaderboardScores(_name, score) {
-            try {
-                ysdk.getLeaderboards()
-                    .then(leaderboard => {
-                        leaderboard.setLeaderboardScore(_name, score);
-                    });
-            } catch (e) {
-                console.error('CRASH Set Leader board Scores: ', e.message);
-            }
-        }
-
-        function GetLeaderboardScores(nameLB, maxPlayers, quantityTop, quantityAround, photoSize, auth) {
-            try {
-                var jsonEntries = {
-                    technoName: '',
-                    isDefault: false,
-                    isInvertSortOrder: false,
-                    decimalOffset: 0,
-                    type: '' // , title: ''
-                };
-
-                ysdk.getLeaderboards()
-                    .then(leaderboard => leaderboard.getLeaderboardDescription(nameLB))
-                    .then(res => {
-                        jsonEntries.technoName = nameLB;
-                        jsonEntries.isDefault = res.default;
-                        jsonEntries.isInvertSortOrder = res.description.invert_sort_order;
-                        jsonEntries.decimalOffset = res.description.score_format.options.decimal_offset;
-                        jsonEntries.type = res.description.type; // Не определяется на момент 18.07.23
-                        //jsonEntries.title = res.title; // Реализуйте по предпочтениям
-
-                        return leaderboard.getLeaderboardEntries(nameLB, {
-                            quantityTop: quantityTop,
-                            includeUser: auth,
-                            quantityAround: quantityAround
-                        });
-                    })
-                    .then(res => {
-                        let jsonPlayers = EntriesLB(res, maxPlayers, photoSize);
-                        let combinedJson = { ...jsonEntries, ...jsonPlayers };
-
-                        myGameInstance.SendMessage('YandexGame', 'LeaderboardEntries', JSON.stringify(combinedJson));
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
-            catch (e) {
-                console.error('CRASH Get Leaderboard: ', e.message);
-            }
-        }
-
-        function EntriesLB(res, maxPlayers, photoSize) {
-            let LeaderboardEntriesText = '';
-            let playersCount;
-
-            if (res.entries.length < maxPlayers) {
-                playersCount = res.entries.length;
-            } else {
-                playersCount = maxPlayers;
-            }
-
-            let ranks = new Array(playersCount);
-            let photos = new Array(playersCount);
-            let mames = new Array(playersCount);
-            let scores = new Array(playersCount);
-            let uniqueIDs = new Array(playersCount);
-
-            for (i = 0; i < playersCount; i++) {
-                ranks[i] = res.entries[i].rank;
-                scores[i] = res.entries[i].score;
-                uniqueIDs[i] = res.entries[i].player.uniqueID;
-
-                if (photoSize === 'nonePhoto' || res.entries[i].player.scopePermissions.avatar !== "allow") {
-                    photos[i] = 'nonePhoto';
-                } else {
-                    photos[i] = res.entries[i].player.getAvatarSrc(photoSize);
-                }
-
-                if (res.entries[i].player.scopePermissions.public_name !== "allow") {
-                    mames[i] = "anonymous";
-                } else {
-                    mames[i] = res.entries[i].player.publicName;
-                }
-
-                LeaderboardEntriesText += ranks[i] + '. ' + mames[i] + ": " + scores[i] + '\n';
-            }
-
-            if (playersCount === 0) {
-                LeaderboardEntriesText = 'no data';
-            }
-
-            let jsonPlayers = {
-                "entries": LeaderboardEntriesText,
-                "ranks": ranks,
-                "photos": photos,
-                "names": mames,
-                "scores": scores,
-                "uniqueIDs": uniqueIDs
-            };
-
-            return jsonPlayers;
         }
 
         function Review() {

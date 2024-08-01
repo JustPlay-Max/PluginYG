@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 20, y: 20.000004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3210080491720745230
 CanvasRenderer:
@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.11320752, g: 0.11320752, b: 0.11320752, a: 1}
+  m_Color: {r: 0.1792453, g: 0.1792453, b: 0.1792453, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 0
@@ -223,4 +223,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   notificationObj: {fileID: 3210080492572906392}
-  waitingForAds: 3
+  waitingForAds: 1
