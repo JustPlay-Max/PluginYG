@@ -735,7 +735,7 @@ RectTransform:
   m_Children:
   - {fileID: 2061948339}
   m_Father: {fileID: 1865091179}
-  m_RootOrder: 24
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -5192,8 +5192,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -189.12518, y: -125.44676}
-  m_SizeDelta: {x: 155.5155, y: 257.9064}
+  m_AnchoredPosition: {x: -189.12518, y: -134.75}
+  m_SizeDelta: {x: 155.5155, y: 276.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &586868929
 MonoBehaviour:
@@ -7232,7 +7232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3137143749428029584, guid: 96a4c910f8df9c948aecac7088022219, type: 3}
       propertyPath: m_RootOrder
-      value: 29
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 3137143749428029584, guid: 96a4c910f8df9c948aecac7088022219, type: 3}
       propertyPath: m_AnchorMax.x
@@ -16601,9 +16601,9 @@ RectTransform:
   - {fileID: 741986842}
   - {fileID: 915778385}
   - {fileID: 1108930814}
+  - {fileID: 58435421}
   - {fileID: 2005570341}
   - {fileID: 1688205271}
-  - {fileID: 58435421}
   - {fileID: 1898143396}
   - {fileID: 1573741288}
   - {fileID: 1595734078}
@@ -19350,12 +19350,16 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2211564899198745199, guid: caf9732433f4dc044845763962493607, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.1317
+      objectReference: {fileID: 0}
+    - target: {fileID: 2211564899198745199, guid: caf9732433f4dc044845763962493607, type: 3}
       propertyPath: m_LocalPosition.x
       value: 702.2839
       objectReference: {fileID: 0}
     - target: {fileID: 2211564899198745199, guid: caf9732433f4dc044845763962493607, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 345.1205
+      value: 332.5342
       objectReference: {fileID: 0}
     - target: {fileID: 2211564899198745199, guid: caf9732433f4dc044845763962493607, type: 3}
       propertyPath: m_LocalPosition.z

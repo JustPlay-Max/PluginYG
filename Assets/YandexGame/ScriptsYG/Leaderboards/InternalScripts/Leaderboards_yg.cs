@@ -24,10 +24,10 @@ namespace YG
                     return;
 
 #if !UNITY_EDITOR
-                Message("New Liderboard Record: " + score);
+                Message("New Leaderboard Record: " + score);
                 SetLeaderboardScores(nameLB, (int)score);
 #else
-                Message($"New Liderboard '{nameLB}' Record: {score}");
+                Message($"New Leaderboard '{nameLB}' Record: {score}");
 #endif
             }
         }

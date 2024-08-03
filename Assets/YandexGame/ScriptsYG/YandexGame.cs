@@ -439,14 +439,20 @@ namespace YG
         #region Server Time
 
         [DllImport("__Internal")]
-        private static extern long ServerTime_js();
+        private static extern IntPtr ServerTime_js();
 
         public static long ServerTime()
         {
 #if UNITY_EDITOR
             return Instance.infoYG.playerInfoSimulation.serverTime;
 #else
-            return ServerTime_js();
+            IntPtr serverTimePtr = ServerTime_js();
+            string serverTimeStr = Marshal.PtrToStringAuto(serverTimePtr);
+            if (long.TryParse(serverTimeStr, out long serverTime))
+            {
+                return serverTime;
+            }
+            return 0;
 #endif
         }
         #endregion Server Time
