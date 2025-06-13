@@ -16,8 +16,7 @@ async function InitPlayer(sendback) {
                 player = await ysdk.getPlayer({ scopes: _scopes });
 
                 if (!player.isAuthorized()) {
-                    await ysdk.auth.openAuthDialog();
-                    return InitPlayer(sendback).then(resolve);
+                    return resolve(NotAuthorized());
                 }
 
                 let playerName = player.getName();
