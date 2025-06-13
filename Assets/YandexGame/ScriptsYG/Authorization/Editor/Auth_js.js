@@ -1,59 +1,51 @@
 ﻿
 var playerData = 'noData';
 
-function InitPlayer(sendback) {
-    return new Promise((resolve) => {
+async function InitPlayer(sendback) {
+    return new Promise(async (resolve) => {
         try {
             if (ysdk == null) {
                 NotAuthorized();
                 if (sendback)
                     myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', NotAuthorized());
-                resolve(NotAuthorized());
+                return resolve(NotAuthorized());
             }
             else {
                 let _scopes = ___scopes___;
-                ysdk.getPlayer({ scopes: _scopes })
-                    .then(_player => {
-                        player = _player;
 
-                        let playerName = player.getName();
-                        let playerPhoto = player.getPhoto('___photoSize___');
+                player = await ysdk.getPlayer({ scopes: _scopes });
 
-                        if (!_scopes) {
-                            playerName = "anonymous";
-                            playerPhoto = "null";
-                        }
+                if (!player.isAuthorized()) {
+                    await ysdk.auth.openAuthDialog();
+                    return InitPlayer(sendback).then(resolve);
+                }
 
-                        if (player.getMode() === 'lite') {
+                let playerName = player.getName();
+                let playerPhoto = player.getPhoto('___photoSize___');
 
-                            console.log('Not Authorized');
-                            if (sendback)
-                                myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', NotAuthorized());
-                            resolve(NotAuthorized());
-                        } else {
-                            let authJson = {
-                                "playerAuth": "resolved",
-                                "playerName": playerName,
-                                "playerId": player.getUniqueID(),
-                                "playerPhoto": playerPhoto,
-                                "payingStatus": player.getPayingStatus()
-                            };
-                            if (sendback)
-                                myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', JSON.stringify(authJson));
-                            resolve(JSON.stringify(authJson));
-                        }
-                    }).catch(e => {
-                        console.error('Authorized err: ', e.message);
-                        if (sendback)
-                            myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', NotAuthorized());
-                        resolve(NotAuthorized());
-                    });
+                if (!_scopes) {
+                    playerName = "anonymous";
+                    playerPhoto = "null";
+                }
+
+                let authJson = {
+                    "playerAuth": "resolved",
+                    "playerName": playerName,
+                    "playerId": player.getUniqueID(),
+                    "playerPhoto": playerPhoto,
+                    "payingStatus": player.getPayingStatus()
+                };
+
+                if (sendback)
+                    myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', JSON.stringify(authJson));
+
+                return resolve(JSON.stringify(authJson));
             }
         } catch (e) {
             console.error('CRASH init Player: ', e.message);
             if (sendback)
                 myGameInstance.SendMessage('YandexGame', 'SetInitializationSDK', NotAuthorized());
-            resolve(NotAuthorized());
+            return resolve(NotAuthorized());
         }
     });
 }

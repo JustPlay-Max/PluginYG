@@ -278,27 +278,12 @@ namespace YG
 
         public void _OnURL_Yandex_DefineDomain(string url)
         {
-            url = "https://yandex." + EnvironmentData.domain + "/games/" + url;
-            Message("URL Transition (yandexGames.DefineDomain) url: " + url);
-#if !UNITY_EDITOR
-            if (EnvironmentData.domain != null && EnvironmentData.domain != "")
-            {
-                OnURL(url);
-            }
-            else Debug.LogError("OnURL_Yandex_DefineDomain: Domain not defined!");
-#else
-            Application.OpenURL(url);
-#endif
+            Debug.LogError("The _OnURL_Yandex_DefineDomain method is outdated and no longer works!");
         }
 
         public void _OnAnyURL(string url)
         {
-            Message("Any URL Transition. url: " + url);
-#if !UNITY_EDITOR
-            OnURL(url);
-#else
-            Application.OpenURL(url);
-#endif
+            Debug.LogError("The _OnAnyURL method is outdated and no longer works!");
         }
         #endregion URL
 

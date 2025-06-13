@@ -1,34 +1,6 @@
 ﻿
-let leaderboard = null;
-
-function InitLeaderboards() {
-    ysdk.getLeaderboards()
-        .then(_lb => leaderboard = _lb);
-}
-
-function WaitForLeaderboard() {
-    return new Promise((resolve, reject) => {
-        const interval = setInterval(() => {
-            if (leaderboard !== null) {
-                clearInterval(interval);
-                clearTimeout(timeout);
-                resolve();
-            }
-        }, 100);
-
-        const timeout = setTimeout(() => {
-            clearInterval(interval);
-            reject(new Error("Leaderboard initialization timeout"));
-        }, 5000);
-    });
-}
-
 async function GetLeaderboardScores(nameLB, maxPlayers, quantityTop, quantityAround, photoSize, auth) {
     try {
-        if (leaderboard === null) {
-            await WaitForLeaderboard();
-        }
-
         var jsonEntries = {
             technoName: '',
             isDefault: false,
@@ -37,8 +9,7 @@ async function GetLeaderboardScores(nameLB, maxPlayers, quantityTop, quantityAro
             type: '' // , title: ''
         };
 
-        ysdk.getLeaderboards()
-            .then(leaderboard => leaderboard.getLeaderboardDescription(nameLB))
+        ysdk.leaderboards.getDescription(nameLB)
             .then(res => {
                 jsonEntries.technoName = nameLB;
                 jsonEntries.isDefault = res.default;
@@ -47,7 +18,7 @@ async function GetLeaderboardScores(nameLB, maxPlayers, quantityTop, quantityAro
                 jsonEntries.type = res.description.type; // Не определяется на момент 18.07.23
                 //jsonEntries.title = res.title; // Реализуйте по предпочтениям
 
-                return leaderboard.getLeaderboardEntries(nameLB, {
+                return ysdk.leaderboards.getEntries(nameLB, {
                     quantityTop: quantityTop,
                     includeUser: auth,
                     quantityAround: quantityAround
@@ -70,16 +41,9 @@ async function GetLeaderboardScores(nameLB, maxPlayers, quantityTop, quantityAro
 
 async function SetLeaderboardScores(_name, score) {
     try {
-        if (leaderboard === null) {
-            await WaitForLeaderboard();
-        }
-
-        ysdk.getLeaderboards()
-            .then(leaderboard => {
-                leaderboard.setLeaderboardScore(_name, score);
-            });
+        ysdk.leaderboards.setScore(_name, score);
     } catch (e) {
-        console.error('CRASH Set Leader board Scores: ', e.message);
+        console.error('CRASH Set Leaderboard Scores: ', e.message);
     }
 }
 
